@@ -1,0 +1,10 @@
+
+sudo: true   #run build in virtualized machine with root access
+language: node_js
+node_js:
+  - node   #use latest stable Node.js
+cache:
+  directories:
+    - node_modules
+#    - /home/travis/.cache/Cypress
+
