@@ -1,10 +1,9 @@
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
 
     // webpack will take the files from ./src/index
-    entry: './src/index',
+    entry: path.join(__dirname, '/src/index.tsx'),
 
     // and output it into /dist as bundle.js
     output: {
@@ -29,16 +28,17 @@ module.exports = {
                 },
             },
 
-            // css-loader to bundle all the css files into one file and style-loader to add all the styles  inside the style tag of the document
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            }
+            // // css-loader to bundle all the css files into one file and style-loader to add all the styles  inside the style tag of the document
+            // {
+            //     test: /\.css$/,
+            //     use: ['style-loader', 'css-loader']
+            // }
         ]
     },
+
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: path.join(__dirname, '/src/index.html')
         })
     ]
 };
