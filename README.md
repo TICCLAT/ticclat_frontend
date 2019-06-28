@@ -10,7 +10,7 @@ The downside of using a cli like create-react-app are that you have to rely on t
 It provides a way of ejecting the tooling where you can let go of create-react-app if you want to extend the configuration further.
 But,once you eject, there is going to be an increase in the dependencies of your project, half of which you might not even need.
 
-To avoid all this we have created project without any starter kit or cli.
+To avoid all this we have created project without any starter kit or create-react-app cli.
 
 ## Includes
 * React v.16.8
