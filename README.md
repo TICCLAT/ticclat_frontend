@@ -1,8 +1,9 @@
 ## ticclat_frontend
 
 This project is created with [React](https://reactjs.org/) and [Typescript](https://www.typescriptlang.org/).
-There are good resources out there if you want to use [create-react-app](https://www.npmjs.com/package/create-react-app) cli or any other react starter kit.
 
+
+There are good resources out there if you want to use [create-react-app](https://www.npmjs.com/package/create-react-app) cli or any other react starter kit.
 Typescript support is now default feature of create-react-app.
 [How to add Typescript to React?](https://facebook.github.io/create-react-app/docs/adding-typescript).
 
