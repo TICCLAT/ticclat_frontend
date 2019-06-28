@@ -8,7 +8,8 @@ module.exports = {
     // and output it into /dist as bundle.js
     output: {
         path: path.join(__dirname, '/dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath: '/'
     },
     devtool: 'inline-source-map',
     // adding .ts and .tsx to resolve.extensions will help babel look for .ts and .tsx files to transpile
@@ -35,7 +36,9 @@ module.exports = {
             // }
         ]
     },
-
+    devServer: {
+        historyApiFallback: true,
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: path.join(__dirname, '/src/index.html')
