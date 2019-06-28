@@ -22,7 +22,7 @@ class App extends React.Component {
             <MuiThemeProvider theme={theme}>
                 <CssBaseline></CssBaseline>
                 <Header open={showSideDrawer} drawerToggle={this.sideDrawerToggleHandler}></Header>
-                <Content></Content>
+                <Content open={showSideDrawer}></Content>
             </MuiThemeProvider>
         );
     }

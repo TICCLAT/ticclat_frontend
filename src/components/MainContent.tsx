@@ -1,8 +1,8 @@
 import React from 'react';
-import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-
+import Routes from '../pages/Routes';
+import clsx from 'clsx'
+const drawerWidth = 240
 const useStyles = makeStyles(theme => ({
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -10,50 +10,25 @@ const useStyles = makeStyles(theme => ({
         height: '100vh',
         overflow: 'auto',
     },
-    container: {
-        paddingTop: theme.spacing(4),
-        paddingBottom: theme.spacing(4),
+    contentShift: {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
     },
-    paper: {
-        padding: theme.spacing(2),
-        display: 'flex',
-        overflow: 'auto',
-        flexDirection: 'column',
-    },
-    fixedHeight: {
-        height: 240,
-
-    },
-
 }));
-const MainContent = () => {
+export interface IProps {
+    open: boolean;
+}
+const MainContent = (props: IProps) => {
     const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const { open } = props;
     return (
-        <main className={classes.content}>
+        <main className={clsx(classes.content, open && classes.contentShift)}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                    {/* Chart */}
-                    <Grid item xs={12} md={8} lg={9}>
-                        <Paper className={fixedHeightPaper}>
-                            <div style={{ height: 200 }}></div>
-                        </Paper>
-                    </Grid>
-                    {/* Recent Deposits */}
-                    <Grid item xs={12} md={4} lg={3}>
-                        <Paper className={fixedHeightPaper}>
-
-                        </Paper>
-                    </Grid>
-                    {/* Recent Orders */}
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-
-                        </Paper>
-                    </Grid>
-                </Grid>
-            </Container>
+            <Routes></Routes>
         </main>
     )
 }
