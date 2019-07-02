@@ -1,15 +1,16 @@
 {
     "extends": [
-        "tslint:latest",
-        "tslint-config-prettier",
+        "tslint:recommended",
         "tslint-react"
     ],
-    "rulesDirectory": [
-        "tslint-plugin-prettier"
-    ],
     "rules": {
-        "prettier": true,
-        "interface-name": false
+        "interface-name": false,
+        "object-literal-sort-keys": false,
+        "arrow-parens": false,
+        "quotemark": [true, "single", "jsx-double"],
+        "ordered-imports": false,
+        "member-access": [true, "no-public"],
+        "jsx-no-multiline-js": false
     },
     "linterOptions": {
         "exclude": [

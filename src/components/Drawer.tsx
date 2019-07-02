@@ -6,13 +6,13 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import MailIcon from '@material-ui/icons/Mail';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
-const drawerWidth = 240;
+const drawerWidth = 240
 const useStyles = makeStyles(theme => ({
     hide: {
         display: 'none',
     },
     gutter: {
-        padding: 20
+        padding: 20,
     },
     drawer: {
         width: drawerWidth,
@@ -38,21 +38,22 @@ const useStyles = makeStyles(theme => ({
     },
     navLink: {
         textDecoration: 'none',
-        color: '#757575'
+        color: '#757575',
     },
     selectedItem: {
-        color: 'red'
-    }
+        color: 'red',
+    },
 
 }));
 export interface IProps {
-    open: boolean,
-    drawerToggle: () => void
+    open: boolean;
+    drawerToggle: () => void;
 }
 const SideNav = (props: IProps) => {
     const classes = useStyles();
     return (
-        <Drawer variant='permanent'
+        <Drawer
+            variant="permanent"
             className={clsx(classes.drawer, {
                 [classes.drawerOpen]: props.open,
                 [classes.drawerClose]: !props.open,
@@ -83,6 +84,6 @@ const SideNav = (props: IProps) => {
             </List>
 
         </Drawer>
-    )
-}
+    );
+};
 export default SideNav;

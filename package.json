@@ -7,7 +7,8 @@
     "bundle": "webpack",
     "start": "webpack-dev-server --mode development  --open --hot ",
     "build": "webpack --mode production",
-    "check-types": "tsc"
+    "check-types": "tsc --noEmit",
+    "lint": "tslint --project ."
   },
   "repository": {
     "type": "git",
@@ -35,8 +36,6 @@
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.23.1",
     "tslint": "^5.18.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-immutable": "^6.0.0",
     "tslint-react": "^4.0.0",
     "typescript": "^3.5.2",
     "webpack": "^4.35.0",

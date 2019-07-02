@@ -1,10 +1,18 @@
-
-sudo: true   #run build in virtualized machine with root access
+#sudo: true   #run build in virtualized machine with root access
 language: node_js
 node_js:
   - node   #use latest stable Node.js
 cache:
   directories:
     - node_modules
-#   
+jobs:
+  include:
+    - stage: "prepare cache"
+      script: true
+    - stage: "checks"
+      name: "Type check"
+      script: npm run check-types
+    - stage: "checks"
+      name: "Lint"
+      script: npm run lint
 
