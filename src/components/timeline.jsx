@@ -74,8 +74,8 @@ class Timeline extends React.Component {
                         .style("fill", color(i))
                         .text(d.name)
                         .attr("text-anchor", "middle")
-                        .attr("x", 0)
-                        .attr("y", 0);
+                        .attr("x", width/2)
+                        .attr("y", height/2);
                 })
                 .on("mouseout", function(d) {
                     svg.select(".title-text").remove();
@@ -120,8 +120,8 @@ class Timeline extends React.Component {
                         .append("text")
                         .attr("class", "text")
                         .text(`${d.freq}`)
-                        .attr("x", d2 => xScale(d2.year))
-                        .attr("y", d2 => yScale(d2.freq));
+                        .attr("x", d2 => xScale(d2.year) + 10)
+                        .attr("y", d2 => yScale(d2.freq) - 10);
                 })
                 .on("mouseout", function(d) {
                     d3.select(this)
