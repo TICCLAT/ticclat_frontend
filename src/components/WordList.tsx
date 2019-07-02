@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   makeStyles,
   IconButton,
-  Paper,
   TableBody,
   TextField,
   TableRow,
@@ -17,9 +16,6 @@ import {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginTop: '80px',
-    marginLeft: '80px',
-    padding: theme.spacing(3),
     maxWidth: '350px',
   },
   input: {
@@ -28,25 +24,35 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const WordList = () => {
+interface IProps {
+  onChange?: (words: string[]) => any;
+}
+
+const WordList = (props: IProps) => {
   const [ words, setWords ] = React.useState<string[]>([]);
   const [ wordInputValue, setWordInputValue ] = React.useState<string>('');
   const wordInputRef = React.createRef<HTMLInputElement>();
-  const onAdd = (word: string) => {
+  const handleChange = (w: string[]) => {
+    setWords(w);
+    if (props.onChange) {
+      props.onChange(w);
+    }
+  };
+  const handleAdd = (word: string) => {
     const trimmedWord = word.trim();
     if (trimmedWord && !words.includes(trimmedWord)) {
-      setWords([...words, trimmedWord]);
+      handleChange([...words, trimmedWord]);
       setWordInputValue('');
       wordInputRef.current!.focus();
     }
   };
-  const onRemove = (word: string) => {
-    setWords(words.filter(w => w !== word));
+  const handleRemove = (word: string) => {
+    handleChange(words.filter(w => w !== word));
   };
   const classes = useStyles();
 
   return (
-    <Paper className={classes.root}>
+    <div className={classes.root}>
       <Typography component="h1" variant="h6" color="inherit">
         Word list
       </Typography>
@@ -56,12 +62,12 @@ const WordList = () => {
           value={wordInputValue}
           label="Add word"
           onChange={e => setWordInputValue(e.target.value)}
-          onKeyPress={ev => ev.key === 'Enter' && onAdd(wordInputValue)}
+          onKeyPress={ev => ev.key === 'Enter' && handleAdd(wordInputValue)}
           margin="normal"
         />
         <IconButton
           color="primary"
-          onClick={() => onAdd(wordInputValue)}
+          onClick={() => handleAdd(wordInputValue)}
         >
           <AddIcon />
         </IconButton>
@@ -76,7 +82,7 @@ const WordList = () => {
               <TableCell align="right">
                 <IconButton
                   color="primary"
-                  onClick={() => onRemove(word)}
+                  onClick={() => handleRemove(word)}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -85,7 +91,7 @@ const WordList = () => {
           ))}
         </TableBody>
       </Table>
-    </Paper>
+    </div>
   );
 };
 

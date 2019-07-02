@@ -9,10 +9,9 @@ class Timeline extends React.Component {
         return  <div id="chart"/>;
     }
     drawChart() {
-
-        const width = 1550;
+        const width = 1500;
         const height = 500;
-        const margin = 150;
+        const margin = 60;
         const duration = 50;
 
         const lineOpacity = "0.25";
@@ -40,23 +39,23 @@ class Timeline extends React.Component {
                     parseDate(info.metadata.min_year),
                     parseDate(info.metadata.max_year),
                 ])
-                .range([0, width - margin]);
+                .range([0, width]);
 
             const yScale = d3.scaleLinear()
                 .domain([
                     info.metadata.min_freq,
                     info.metadata.max_freq,
                 ])
-                .range([height - margin, 0]);
+                .range([height, 0]);
 
             const color = d3.scaleOrdinal(d3.schemeCategory10);
             // var zoom = d3.zoom().scaleExtent([1, 1]).on("zoom", zoomed);
 
             const svg = d3.select("#chart").append("svg")
-                .attr("width", (width + margin) + "px")
-                .attr("height", (height + margin) + "px")
-                .append("g")
-                .attr("transform", `translate(${margin}, ${margin})`);
+                .attr("viewBox", `-${margin} -${margin} ${width+2*margin} ${height+2*margin}`)
+                .attr("width", "100%")
+                // .attr("height", "100%")
+                .append("g");
 
             const line = d3.line()
                 .x(d => xScale(d.year))
@@ -70,14 +69,13 @@ class Timeline extends React.Component {
                 .append("g")
                 .attr("class", "line-group")
                 .on("mouseover", function(d, i) {
-
                     svg.append("text")
                         .attr("class", "title-text")
                         .style("fill", color(i))
                         .text(d.name)
                         .attr("text-anchor", "middle")
-                        .attr("x", (width - margin) / 2)
-                        .attr("y", 5);
+                        .attr("x", 0)
+                        .attr("y", 0);
                 })
                 .on("mouseout", function(d) {
                     svg.select(".title-text").remove();
@@ -122,8 +120,8 @@ class Timeline extends React.Component {
                         .append("text")
                         .attr("class", "text")
                         .text(`${d.freq}`)
-                        .attr("x", d2 => xScale(d2.year) + 5)
-                        .attr("y", d2 => yScale(d2.freq) - 10);
+                        .attr("x", d2 => xScale(d2.year))
+                        .attr("y", d2 => yScale(d2.freq));
                 })
                 .on("mouseout", function(d) {
                     d3.select(this)
@@ -155,7 +153,7 @@ class Timeline extends React.Component {
 
             svg.append("g")
                 .attr("class", "x axis")
-                .attr("transform", `translate(0, ${height - margin})`)
+                .attr("transform", `translate(0, ${height})`)
                 .call(xAxis)
                 .append("text")
                 .attr("x", 700)

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import WordList from '../components/WordList';
 import Timeline from '../components/timeline';
-import clsx from 'clsx';
+
 const useStyles = makeStyles(theme => ({
     container: {
         maxWidth: 1800,
@@ -17,25 +18,23 @@ const useStyles = makeStyles(theme => ({
     },
     fixedHeight: {
         height: 240,
-
     },
-
 }));
 const overview = () => {
     const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
         <Container maxWidth="lg" className={classes.container}>
             <Grid container={true} spacing={3}>
-
-                <Grid item={true} xs={12} md={12} lg={12}>
-                    <Paper >
+                <Grid item={true} xs={12} md={12} lg={9}>
+                    <Paper>
                         <Timeline/>
                     </Paper>
                 </Grid>
 
                 <Grid item={true} xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}/>
+                    <Paper className={classes.paper}>
+                        <WordList onChange={console.log} />
+                    </Paper>
                 </Grid>
 
                 <Grid item={true} xs={12}>

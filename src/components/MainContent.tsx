@@ -8,6 +8,7 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         height: '100vh',
+        marginLeft: '73px',
         overflow: 'auto',
     },
     contentShift: {
