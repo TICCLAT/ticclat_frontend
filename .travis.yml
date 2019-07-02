@@ -7,8 +7,6 @@ cache:
     - node_modules
 jobs:
   include:
-    - stage: "prepare cache"
-      script: true
     - stage: "checks"
       name: "Type check"
       script: npm run check-types
