@@ -52,7 +52,7 @@ class Timeline extends React.Component {
             // var zoom = d3.zoom().scaleExtent([1, 1]).on("zoom", zoomed);
 
             const svg = d3.select("#chart").append("svg")
-                .attr("viewBox", `-${margin} -${margin} ${width+2*margin} ${height+2*margin}`)
+                .attr("viewBox", `-${margin} -${margin} ${width + 2 * margin} ${height + 2 * margin}`)
                 .attr("width", "100%")
                 // .attr("height", "100%")
                 .append("g");
@@ -74,8 +74,8 @@ class Timeline extends React.Component {
                         .style("fill", color(i))
                         .text(d.name)
                         .attr("text-anchor", "middle")
-                        .attr("x", width/2)
-                        .attr("y", height/2);
+                        .attr("x", width / 2)
+                        .attr("y", height / 2);
                 })
                 .on("mouseout", function(d) {
                     svg.select(".title-text").remove();
@@ -171,7 +171,7 @@ class Timeline extends React.Component {
                 .attr("fill", "#000")
                 .text("Frequency");
 
-        });
+        } );
     }
 }
 
