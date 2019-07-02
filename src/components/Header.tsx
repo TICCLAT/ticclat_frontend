@@ -2,9 +2,9 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu'
+import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from './Drawer';
-const drawerWidth = 240
+const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
 
     toolbar: {
@@ -53,21 +53,23 @@ const Header = ({ open, drawerToggle }: IProps) => {
         <>
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
                 <Toolbar className={classes.toolbar}>
-                    <IconButton onClick={drawerToggle}
+                    <IconButton
+                        onClick={drawerToggle}
                         edge="start"
                         color="inherit"
                         aria-label="Open drawer"
-                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}>
+                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+                    >
                         <MenuIcon />
                     </IconButton>
-                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                    <Typography component="h1" variant="h6" color="inherit" noWrap={true} className={classes.title}>
                         Ticclat Explorer
                 </Typography>
                 </Toolbar>
             </AppBar>
-            <Drawer open={open} drawerToggle={drawerToggle}></Drawer>
+            <Drawer open={open} drawerToggle={drawerToggle}/>
         </>
-    )
-}
+    );
+};
 
 export default Header;

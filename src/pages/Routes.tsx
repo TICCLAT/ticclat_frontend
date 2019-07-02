@@ -7,13 +7,13 @@ import Tutorial from './Tutorial';
 const Routes = () => {
     return (
         <Switch>
-            <Route exact path='/overview' component={Overview} />
-            <Route exact path='/about' component={About} />
-            <Route exact path='/glossary' component={Glossary} />
-            <Route exact path='/tutorial' component={Tutorial} />
-            <Redirect from="/" exact to="/overview" />
+            <Route exact={true} path="/overview" component={Overview} />
+            <Route exact={true} path="/about" component={About} />
+            <Route exact={true} path="/glossary" component={Glossary} />
+            <Route exact={true} path="/tutorial" component={Tutorial} />
+            <Redirect from="/" exact={true} to="/overview" />
         </Switch>
-    )
-}
+    );
+};
 
 export default Routes;

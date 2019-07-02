@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Routes from '../pages/Routes';
-import clsx from 'clsx'
-const drawerWidth = 240
+import clsx from 'clsx';
+const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -28,9 +28,9 @@ const MainContent = (props: IProps) => {
     return (
         <main className={clsx(classes.content, open && classes.contentShift)}>
             <div className={classes.appBarSpacer} />
-            <Routes></Routes>
+            <Routes/>
         </main>
-    )
-}
+    );
+};
 
 export default MainContent;

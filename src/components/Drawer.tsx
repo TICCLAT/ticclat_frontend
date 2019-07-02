@@ -6,7 +6,7 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import MailIcon from '@material-ui/icons/Mail';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
-const drawerWidth = 240
+const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
     hide: {
         display: 'none',
@@ -64,7 +64,8 @@ const SideNav = (props: IProps) => {
                     [classes.drawerClose]: !props.open,
                 }),
             }}
-            open={props.open}>
+            open={props.open}
+        >
             <div>
                 <IconButton onClick={props.drawerToggle}>
                     <ChevronLeftIcon />
@@ -73,7 +74,12 @@ const SideNav = (props: IProps) => {
             <Divider />
             <List>
                 {['Overview', 'About', 'Glossary', 'Tutorial'].map((text, index) => (
-                    <NavLink to={text.toLowerCase()} key={text} className={classes.navLink} activeClassName={classes.selectedItem} >
+                    <NavLink
+                      to={text.toLowerCase()}
+                      key={text}
+                      className={classes.navLink}
+                      activeClassName={classes.selectedItem}
+                    >
                         <ListItem key={text} title={text} classes={{ gutters: classes.gutter }}>
                             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                             <ListItemText primary={text} />

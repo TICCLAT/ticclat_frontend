@@ -11,13 +11,13 @@
         "member-access": [true, "no-public"],
         "no-console": false,
         "object-literal-sort-keys": false,
+        "only-arrow-functions": false,
         "ordered-imports": false,
         "quotemark": [true, "single", "jsx-double"]
     },
     "linterOptions": {
         "exclude": [
-            "node_modules/**/*.ts",
-            "src/comp[onents/timeline.tsx"
+            "node_modules/**/*.ts"
         ]
     }
 }

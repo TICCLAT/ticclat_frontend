@@ -26,28 +26,24 @@ const overview = () => {
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
         <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
+            <Grid container={true} spacing={3}>
 
-                <Grid item xs={12} md={12} lg={12}>
+                <Grid item={true} xs={12} md={12} lg={12}>
                     <Paper >
-                        <Timeline></Timeline>
+                        <Timeline/>
                     </Paper>
                 </Grid>
 
-                <Grid item xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}>
-
-                    </Paper>
+                <Grid item={true} xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}/>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-
-                    </Paper>
+                <Grid item={true} xs={12}>
+                    <Paper className={classes.paper}/>
                 </Grid>
             </Grid>
         </Container>
-    )
-}
+    );
+};
 
 export default overview;

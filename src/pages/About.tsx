@@ -24,8 +24,8 @@ const about = () => {
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
         <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={8} lg={9}>
+            <Grid container={true} spacing={3}>
+                <Grid item={true} xs={12} md={8} lg={9}>
                     <Paper className={fixedHeightPaper}>
                         <div style={{ height: 200 }}>
                             <p>About info will be loaded soon...</p>
@@ -34,7 +34,7 @@ const about = () => {
                 </Grid>
             </Grid>
         </Container>
-    )
-}
+    );
+};
 
 export default about;
