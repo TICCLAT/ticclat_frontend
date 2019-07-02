@@ -35,6 +35,13 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('sm')]: {
             width: theme.spacing(9) + 1,
         },
+    },
+    navLink: {
+        textDecoration: 'none',
+        color: '#757575'
+    },
+    selectedItem: {
+        color: 'red'
     }
 
 }));
@@ -65,7 +72,7 @@ const SideNav = (props: IProps) => {
             <Divider />
             <List>
                 {['Overview', 'About', 'Glossary', 'Tutorial'].map((text, index) => (
-                    <NavLink to={text.toLowerCase()} key={text} style={{ textDecoration: 'none', color: '#757575' }} >
+                    <NavLink to={text.toLowerCase()} key={text} className={classes.navLink} activeClassName={classes.selectedItem} >
                         <ListItem key={text} title={text} classes={{ gutters: classes.gutter }}>
                             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                             <ListItemText primary={text} />
@@ -74,6 +81,7 @@ const SideNav = (props: IProps) => {
                 ))}
 
             </List>
+
         </Drawer>
     )
 }

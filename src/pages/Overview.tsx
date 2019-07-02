@@ -1,9 +1,11 @@
 import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Timeline from '../components/timeline';
 import clsx from 'clsx';
 const useStyles = makeStyles(theme => ({
     container: {
+        maxWidth: 1800,
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
@@ -26,9 +28,9 @@ const overview = () => {
         <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
 
-                <Grid item xs={12} md={8} lg={9}>
-                    <Paper className={fixedHeightPaper}>
-                        <div style={{ height: 200 }}></div>
+                <Grid item xs={12} md={12} lg={12}>
+                    <Paper >
+                        <Timeline></Timeline>
                     </Paper>
                 </Grid>
 
