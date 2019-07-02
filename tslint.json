@@ -4,13 +4,15 @@
         "tslint-react"
     ],
     "rules": {
-        "interface-name": false,
-        "object-literal-sort-keys": false,
         "arrow-parens": false,
-        "quotemark": [true, "single", "jsx-double"],
-        "ordered-imports": false,
+        "interface-name": false,
+        "jsx-no-lambda": false,
+        "jsx-no-multiline-js": false,
         "member-access": [true, "no-public"],
-        "jsx-no-multiline-js": false
+        "no-console": false,
+        "object-literal-sort-keys": false,
+        "ordered-imports": false,
+        "quotemark": [true, "single", "jsx-double"]
     },
     "linterOptions": {
         "exclude": [
