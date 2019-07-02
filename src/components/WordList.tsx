@@ -43,8 +43,8 @@ const WordList = (props: IProps) => {
     if (trimmedWord && !words.includes(trimmedWord)) {
       handleChange([...words, trimmedWord]);
       setWordInputValue('');
-      wordInputRef.current!.focus();
     }
+    wordInputRef.current!.focus();
   };
   const handleRemove = (word: string) => {
     handleChange(words.filter(w => w !== word));

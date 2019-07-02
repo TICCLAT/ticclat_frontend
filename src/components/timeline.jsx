@@ -9,9 +9,9 @@ class Timeline extends React.Component {
         return  <div id="chart"/>;
     }
     drawChart() {
-        const width = 1500;
-        const height = 500;
-        const margin = 60;
+        const width = 750;
+        const height = 250;
+        const margin = 30;
         const duration = 50;
 
         const lineOpacity = "0.25";
