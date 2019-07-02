@@ -7,7 +7,8 @@ import {
   TextField,
   TableRow,
   TableCell,
-  Table, Typography
+  Table,
+  Typography,
 } from '@material-ui/core';
 import {
   Add as AddIcon,
