@@ -10,9 +10,9 @@ class Timeline extends React.Component {
     }
     drawChart() {
 
-        var width = 1550;
-        var height = 500;
-        var margin = 150;
+        var width = 1000;
+        var height = 400;
+        var margin = 70;
         var duration = 50;
 
         var lineOpacity = "0.25";
@@ -53,11 +53,13 @@ class Timeline extends React.Component {
             var color = d3.scaleOrdinal(d3.schemeCategory10);
             //var zoom = d3.zoom().scaleExtent([1, 1]).on("zoom", zoomed);
 
-            var svg = d3.select("#chart").append("svg")
-                .attr("width", (width + margin) + "px")
-                .attr("height", (height + margin) + "px")
+            var svg = d3.select("#chart").append("svg").attr("width", 1000)
+                .attr("height", 500)
+                .call(d3.zoom().on("zoom", function () {
+                    svg.attr("transform", d3.event.transform)
+                }))
                 .append('g')
-                .attr("transform", `translate(${margin}, ${margin})`);
+                .attr("transform", `translate(${margin}, ${margin - 30})`);
 
 
 

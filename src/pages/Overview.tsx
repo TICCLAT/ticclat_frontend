@@ -1,11 +1,10 @@
 import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Timeline from '../components/timeline';
+import Ngram from '../components/N-Gram';
 import clsx from 'clsx';
 const useStyles = makeStyles(theme => ({
     container: {
-        maxWidth: 1800,
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
@@ -30,7 +29,7 @@ const overview = () => {
 
                 <Grid item xs={12} md={12} lg={12}>
                     <Paper >
-                        <Timeline></Timeline>
+                        <Ngram></Ngram>
                     </Paper>
                 </Grid>
 
