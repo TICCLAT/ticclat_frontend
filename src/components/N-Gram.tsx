@@ -57,7 +57,7 @@ class Timeline extends React.Component {
         var context = svg.append("g")
             .attr("transform", "translate(" + contextMargin.left + "," + contextMargin.top + ")");
 
-        d3.json('src/data/data.json').then(function (info) {
+        d3.json('http://145.100.59.165:8000/word_frequency_per_corpus_per_year/regering').then(function (info) {
             var parseDate = d3.timeParse("%Y");
             info.data.forEach(function (d) {
                 d.data.forEach(function (d) {

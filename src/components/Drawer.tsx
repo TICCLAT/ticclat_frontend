@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, Divider } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import InboxIcon from '@material-ui/icons/Inbox';
+import InboxIcon from '@material-ui/icons/BarChart';
 import MailIcon from '@material-ui/icons/Mail';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
