@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Timeline from '../components/Timeline';
+import Timeline from '../components/timeline';
 import clsx from 'clsx';
 const useStyles = makeStyles(theme => ({
     container: {
