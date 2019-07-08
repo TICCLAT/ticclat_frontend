@@ -9,7 +9,7 @@ import Content from './MainContent'
 
 class App extends React.Component {
     state = {
-        showSideDrawer: false
+        showSideDrawer: true
     }
     sideDrawerToggleHandler = () => {
         this.setState(prevState => {

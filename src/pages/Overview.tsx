@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Ngram from '../components/N-Gram';
+import Timeline from '../components/Timeline';
 import clsx from 'clsx';
 const useStyles = makeStyles(theme => ({
     container: {
@@ -29,7 +29,7 @@ const overview = () => {
 
                 <Grid item xs={12} md={12} lg={12}>
                     <Paper >
-                        <Ngram></Ngram>
+                        <Timeline></Timeline>
                     </Paper>
                 </Grid>
 

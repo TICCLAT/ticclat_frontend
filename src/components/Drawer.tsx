@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, Divider } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import InboxIcon from '@material-ui/icons/BarChart';
-import MailIcon from '@material-ui/icons/Mail';
+import Menu from '../data/Menu';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 const drawerWidth = 240;
@@ -50,6 +49,7 @@ export interface IProps {
     drawerToggle: () => void
 }
 const SideNav = (props: IProps) => {
+
     const classes = useStyles();
     return (
         <Drawer variant='permanent'
@@ -71,11 +71,11 @@ const SideNav = (props: IProps) => {
             </div>
             <Divider />
             <List>
-                {['Overview', 'About', 'Glossary', 'Tutorial'].map((text, index) => (
-                    <NavLink to={text.toLowerCase()} key={text} className={classes.navLink} activeClassName={classes.selectedItem} >
-                        <ListItem key={text} title={text} classes={{ gutters: classes.gutter }}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
+                {Menu.map((item, index) => (
+                    <NavLink to={item.name.toLowerCase()} key={index} className={classes.navLink} activeClassName={classes.selectedItem} >
+                        <ListItem key={index} title={item.name} classes={{ gutters: classes.gutter }}>
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText primary={item.name} />
                         </ListItem>
                     </NavLink>
                 ))}

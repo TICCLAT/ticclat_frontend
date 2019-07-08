@@ -1,14 +1,46 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-class Timeline extends React.Component {
-    componentDidMount() {
-        this.drawChart();
+import { IData } from '../../types/'
+import { Typography } from '@material-ui/core';
+interface IState {
+    data: IData | null
+}
+class Timeline extends React.Component<{}, IState> {
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            data: null
+        }
     }
+    componentDidMount() {
+        fetch('http://145.100.59.165:8000/word_frequency_per_corpus_per_year/regering')
+            .then(results => {
+                return results.json();
+            })
+            .then(data => {
+                this.setState({ data })
+                this.drawChart()
+            })
+    }
+
     render() {
-        return <div id="chart"></div>
+        const { data } = this.state;
+        if (data) {
+            let title = data.wordform
+            title = title.charAt(0).toUpperCase() + title.slice(1);
+            return (
+                <>
+                    <div id="chart" ></div>
+                    <Typography variant="h5" align='center' style={{ margin: 10 }}> {title}</Typography>
+                </>
+            )
+        }
+        return null
     }
     drawChart() {
+        const { data } = this.state
         var focusMargin = { top: 10, right: 10, bottom: 100, left: 70 },
             contextMargin = { top: 430, right: 10, bottom: 20, left: 70 },
             focusWidth = 1000 - focusMargin.left - focusMargin.right,
@@ -57,27 +89,27 @@ class Timeline extends React.Component {
         var context = svg.append("g")
             .attr("transform", "translate(" + contextMargin.left + "," + contextMargin.top + ")");
 
-        d3.json('http://145.100.59.165:8000/word_frequency_per_corpus_per_year/regering').then(function (info) {
+        if (data) {
             var parseDate = d3.timeParse("%Y");
-            info.data.forEach(function (d) {
-                d.data.forEach(function (d) {
+            data.corpora.forEach(function (d) {
+                d.frequencies.forEach(function (d) {
                     d.year = parseDate(d.year);
                     d.freq = +d.freq;
                 });
             });
 
 
-            var intialXDomain = focusX.domain([parseDate(info.metadata.min_year),
-            parseDate(info.metadata.max_year)]);
+            var intialXDomain = focusX.domain([parseDate(data.metadata.min_year),
+            parseDate(data.metadata.max_year)]);
             var initiaYDomain = focusY.domain([
-                info.metadata.min_freq,
-                info.metadata.max_freq
+                data.metadata.min_freq,
+                data.metadata.max_freq
             ]);
             contextX.domain(focusX.domain());
             contextY.domain(focusY.domain());
 
             var focuslineGroups = focus.selectAll("g")
-                .data(info.data)
+                .data(data.corpora)
                 .enter().append("g")
                 .attr('class', 'line-group')
                 .on("mouseover", function (d, i) {
@@ -97,7 +129,7 @@ class Timeline extends React.Component {
             var focuslines = focuslineGroups.append("path")
                 .style('fill', 'none')
                 .attr("class", "line")
-                .attr("d", function (d) { return focusLine(d.data); })
+                .attr("d", function (d) { return focusLine(d.frequencies); })
                 .style("stroke", function (d, i) { return color(i); })
                 .attr("clip-path", "url(#clip)")
 
@@ -122,13 +154,13 @@ class Timeline extends React.Component {
                 .text("Frequency");;
 
             var contextlineGroups = context.selectAll("g")
-                .data(info.data)
+                .data(data.corpora)
                 .enter().append("g");
 
             var contextLines = contextlineGroups.append("path")
                 .style('fill', 'none')
                 .attr("class", "contextline")
-                .attr("d", function (d) { return contextLine(d.data); })
+                .attr("d", function (d) { return contextLine(d.frequencies); })
                 .style("stroke", function (d) { return color(d.name); })
                 .attr("clip-path", "url(#clip)");
 
@@ -145,12 +177,13 @@ class Timeline extends React.Component {
                 .attr("height", contextHeight + 7);
 
 
-        });
+
+        }
 
         function brush() {
             focusX.domain(d3.event.selection === null ? contextX.domain() : d3.event.selection.map(contextX.invert, contextX));
             focus.selectAll("path.line").attr("d", function (d) {
-                return focusLine(d.data)
+                return focusLine(d.frequencies)
             });
             focus.select(".x.axis").call(focusXAxis);
             focus.select(".y.axis").call(focusYAxis);
