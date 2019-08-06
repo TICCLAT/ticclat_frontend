@@ -3,6 +3,7 @@ import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Timeline from '../components/timeline';
 import clsx from 'clsx';
+import Paradigms from '../components/Paradigms';
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(4),
@@ -34,9 +35,9 @@ const overview = () => {
                 </Grid>
 
                 <Grid item xs={12} md={4} lg={3}>
-                    <Paper className={fixedHeightPaper}>
 
-                    </Paper>
+                    <Paradigms wordform='regering'></Paradigms>
+
                 </Grid>
 
                 <Grid item xs={12}>

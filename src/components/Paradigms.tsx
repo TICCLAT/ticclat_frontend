@@ -18,13 +18,15 @@ export interface ILemma {
 }
 
 const Paradigms = ({ wordform }: IProps) => {
-  const [ lemmas, setLemmas ] = React.useState<ILemma[]>([]);
+  const [lemmas, setLemmas] = React.useState<ILemma[]>([]);
+
   React.useEffect(() => {
     fetch(`${backendURL}/lemmas_for_wordform/${wordform}`)
       .then(result => result.json())
       .then(setLemmas);
   }, [wordform]);
 
+  debugger;
   const Cards = lemmas.map(lemma => (
     <Card key={lemma.paradigm_id}>
       <Paradigm id={lemma.paradigm_id} />
