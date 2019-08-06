@@ -25,11 +25,11 @@ export const ShoppingBagProvider = (props: { children: JSX.Element[] | JSX.Eleme
     if (storedWords) {
       setWords(JSON.parse(storedWords));
     }
-  }, [])
+  }, []);
 
   React.useEffect(() => {
     localStorage.setItem('shoppingBag', JSON.stringify(words));
-  }, [words])
+  }, [words]);
 
   const addWord = (word: string) => {
     if (!words.includes(word)) {

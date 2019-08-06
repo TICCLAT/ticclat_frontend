@@ -7,12 +7,6 @@
             "es6",
             "dom"
         ],
-        "baseUrl": ".",
-        "paths": {
-            "src/*": [
-                "src/*"
-            ]
-        },
         "plugins": [
             {
                 "name": "typescript-tslint-plugin",
