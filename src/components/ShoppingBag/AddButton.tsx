@@ -20,6 +20,7 @@ const AddButton = (props: { word: string }) => {
         color={isInBag ? "primary" : "default"}
         label={word}
         onDelete={handleClick}
+        onClick={handleClick}
         deleteIcon={isInBag ? <DeleteIcon /> : <AddIcon />}
     />
   );
