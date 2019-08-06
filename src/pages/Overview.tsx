@@ -5,8 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Timeline from '../components/timeline';
 import clsx from 'clsx';
 import Paradigms from '../components/Paradigms';
-import { width } from '@material-ui/system';
-import { values } from 'd3';
+import Lexica from '../components/Lexica';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -49,15 +48,16 @@ const overview = () => {
                 <Grid item={true} xs={12} md={12} lg={12}>
                     <SearchBar onSearch={setValue} />
                 </Grid>
-                <Grid item={true} xs={12} md={9} lg={9}>
+                <Grid item={true} xs={12} md={8} lg={8}>
                     <Paper >
-                        <Timeline wordform={searchValue} />
+                        <Timeline />
                     </Paper>
                 </Grid>
 
-                <Grid item={true} xs={12} md={4} lg={3}>
+                <Grid item={true} xs={12} md={4} lg={4}>
                     <Paper className={fixedHeightPaper}>
-                        <Typography variant="subtitle1" align="center">Lexicon</Typography>
+                        <Typography variant="subtitle1" align="center">Lexica</Typography>
+                        {searchValue !== '' ? <Lexica wordform={searchValue} /> : null}
                     </Paper>
                 </Grid>
                 <Typography variant="h4" gutterBottom={true} className={classes.title} color="primary">Paradigms</Typography>
