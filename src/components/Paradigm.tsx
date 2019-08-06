@@ -11,6 +11,11 @@ export interface IVariant {
   V: number,
   word_type_code: string,
   wordform: string,
+  min_year: number | null,
+  max_year: number | null,
+  num_corpora: number,
+  num_lexica: number,
+  num_paradigms: number,
 }
 
 const Paradigm = ({ id }: IProps) => {
@@ -26,6 +31,11 @@ const Paradigm = ({ id }: IProps) => {
       <TableCell>{variant.wordform}</TableCell>
       <TableCell>{variant.V}</TableCell>
       <TableCell>{variant.word_type_code}</TableCell>
+      <TableCell>{variant.min_year || '?'}</TableCell>
+      <TableCell>{variant.max_year || '?'}</TableCell>
+      <TableCell>{variant.num_corpora}</TableCell>
+      <TableCell>{variant.num_lexica}</TableCell>
+      <TableCell>{variant.num_paradigms}</TableCell>
     </TableRow>
   ));
 
@@ -43,6 +53,11 @@ const Paradigm = ({ id }: IProps) => {
             <TableCell>Wordform</TableCell>
             <TableCell>V</TableCell>
             <TableCell>Code</TableCell>
+            <TableCell>Min year</TableCell>
+            <TableCell>Max year</TableCell>
+            <TableCell># Corpora</TableCell>
+            <TableCell># Lexica</TableCell>
+            <TableCell># Paradigms</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
