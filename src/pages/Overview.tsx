@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import SearchBar from '../components/SearchBar';
 import { makeStyles } from '@material-ui/core/styles';
-import Timeline from '../components/timeline';
+import Timeline from '../components/OldTimeline';
 import clsx from 'clsx';
 import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
@@ -41,7 +41,7 @@ const overview = () => {
     }
     const [searchValue, setSearchValue] = useState('regering');
     const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
     return (
         <Container maxWidth="xl" className={classes.container}>
             <Grid container={true} spacing={3}>
@@ -50,12 +50,12 @@ const overview = () => {
                 </Grid>
                 <Grid item={true} xs={12} md={8} lg={8}>
                     <Paper >
-                        <Timeline />
+                        <Timeline wordform={searchValue} />
                     </Paper>
                 </Grid>
 
                 <Grid item={true} xs={12} md={4} lg={4}>
-                    <Paper className={fixedHeightPaper}>
+                    <Paper>
                         <Typography variant="subtitle1" align="center">Lexica</Typography>
                         {searchValue !== '' ? <Lexica wordform={searchValue} /> : null}
                     </Paper>

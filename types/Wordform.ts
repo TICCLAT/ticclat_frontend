@@ -1,5 +1,7 @@
+
+
 export interface ICorpora {
-    frequencies: [],
+    frequencies: IFrequency[],
     name: ''
 }
 export interface IMetadata {
@@ -12,4 +14,8 @@ export interface IData {
     corpora: Array<ICorpora>,
     metadata: IMetadata,
     wordform: string
+}
+export interface IFrequency {
+    freq: number,
+    year: string,
 }
