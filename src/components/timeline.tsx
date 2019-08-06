@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 interface IState {
     data: IData | null
 }
+
 class Timeline extends React.Component<{}, IState> {
 
     constructor(props: any) {

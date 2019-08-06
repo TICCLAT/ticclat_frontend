@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Paradigms from '../components/Paradigms';
+import StackedNGram from '../components/StackedNGram';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -28,7 +28,7 @@ const about = () => {
         <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={8} lg={9}>
-                    <Paradigms wordform="fiets" />
+                    <StackedNGram word_forms={['fiets', 'fietske', 'fietsie']} />
                 </Grid>
             </Grid>
         </Container>
