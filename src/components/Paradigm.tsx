@@ -33,11 +33,11 @@ const Paradigm = ({ id }: IProps) => {
   const title = lemma ? lemma.wordform : id;
 
   return (
-    <div>
-      <Typography variant="h6" id="tableTitle">
+    <>
+      <Typography variant="h6" id="tableTitle" align='center'>
         {title}
       </Typography>
-      <Table>
+      <Table >
         <TableHead>
           <TableRow>
             <TableCell>Wordform</TableCell>
@@ -49,7 +49,7 @@ const Paradigm = ({ id }: IProps) => {
           {Rows}
         </TableBody>
       </Table>
-    </div>
+    </>
   );
 }
 

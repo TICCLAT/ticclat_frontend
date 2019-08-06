@@ -1,7 +1,7 @@
 import React from 'react';
 import { backendURL } from '../settings';
 
-import { Card } from '@material-ui/core';
+import { Card, Grid } from '@material-ui/core';
 import Paradigm from './Paradigm';
 
 export interface IProps {
@@ -26,11 +26,12 @@ const Paradigms = ({ wordform }: IProps) => {
       .then(setLemmas);
   }, [wordform]);
 
-  debugger;
   const Cards = lemmas.map(lemma => (
-    <Card key={lemma.paradigm_id}>
-      <Paradigm id={lemma.paradigm_id} />
-    </Card>
+    <Grid item={true} xs={3} md={3} lg={3} key={lemma.paradigm_id}>
+      <Card style={{ height: 400, overflowY: 'scroll' }}>
+        <Paradigm id={lemma.paradigm_id} />
+      </Card>
+    </Grid>
   ));
 
   return (
