@@ -1,13 +1,18 @@
-import React from 'react';
-import { Container, Grid, Paper } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Container, Grid, Paper, Typography } from '@material-ui/core';
+import SearchBar from '../components/SearchBar';
 import { makeStyles } from '@material-ui/core/styles';
 import Timeline from '../components/timeline';
 import clsx from 'clsx';
 import Paradigms from '../components/Paradigms';
+import { width } from '@material-ui/system';
+import { values } from 'd3';
+
 const useStyles = makeStyles(theme => ({
     container: {
-        paddingTop: theme.spacing(4),
-        paddingBottom: theme.spacing(4),
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(3),
+        paddingLeft: theme.spacing(10),
     },
     paper: {
         padding: theme.spacing(2),
@@ -17,33 +22,47 @@ const useStyles = makeStyles(theme => ({
     },
     fixedHeight: {
         height: 240,
+    },
+    cardContainer: {
+        paddingLeft: 10
 
     },
+    title: {
+        padding: 10,
+        margin: '20px 0',
+        borderBottom: '1px solid #ddd',
+        width: '100%'
 
+    }
 }));
+
 const overview = () => {
+    const setValue = (value: string) => {
+        setSearchValue(value.toLowerCase())
+    }
+    const [searchValue, setSearchValue] = useState('regering');
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
-        <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-
-                <Grid item xs={12} md={12} lg={12}>
+        <Container maxWidth="xl" className={classes.container}>
+            <Grid container={true} spacing={3}>
+                <Grid item={true} xs={12} md={12} lg={12}>
+                    <SearchBar onSearch={setValue} />
+                </Grid>
+                <Grid item={true} xs={12} md={9} lg={9}>
                     <Paper >
-                        <Timeline></Timeline>
+                        <Timeline wordform={searchValue} />
                     </Paper>
                 </Grid>
 
-                <Grid item xs={12} md={4} lg={3}>
-
-                    <Paradigms wordform='regering'></Paradigms>
-
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-
+                <Grid item={true} xs={12} md={4} lg={3}>
+                    <Paper className={fixedHeightPaper}>
+                        <Typography variant="subtitle1" align="center">Lexicon</Typography>
                     </Paper>
+                </Grid>
+                <Typography variant="h4" gutterBottom={true} className={classes.title} color="primary">Paradigms</Typography>
+                <Grid container={true} spacing={3} className={classes.cardContainer}>
+                    {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
                 </Grid>
             </Grid>
         </Container>
