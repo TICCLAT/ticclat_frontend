@@ -108,6 +108,7 @@ class Timeline extends React.Component<IProps, IState> {
                     d.freq = +d.freq;
                 });
             });
+            debugger;
             var intialXDomain = focusX.domain([parseDate(info.metadata.min_year),
             parseDate(info.metadata.max_year)]);
             var initiaYDomain = focusY.domain([

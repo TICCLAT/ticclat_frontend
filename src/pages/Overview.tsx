@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import SearchBar from '../components/SearchBar';
 import { makeStyles } from '@material-ui/core/styles';
-import Timeline from '../components/OldTimeline';
-import clsx from 'clsx';
+import Timeline from '../components/timeline';
 import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
-
+import NGramTimeline from '../components/NGramTimeline';
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(3),
@@ -50,7 +49,8 @@ const overview = () => {
                 </Grid>
                 <Grid item={true} xs={12} md={8} lg={8}>
                     <Paper >
-                        <Timeline wordform={searchValue} />
+                        {/* <Timeline wordform={searchValue} /> */}
+                        <NGramTimeline wordform={searchValue} />
                     </Paper>
                 </Grid>
 

@@ -5,10 +5,10 @@ export interface ICorpora {
     name: ''
 }
 export interface IMetadata {
-    max_freq: string,
-    max_year: string,
-    min_freq: string,
-    min_year: string
+    max_freq: number,
+    max_year: number,
+    min_freq: number,
+    min_year: number
 }
 export interface IData {
     corpora: Array<ICorpora>,
@@ -17,5 +17,5 @@ export interface IData {
 }
 export interface IFrequency {
     freq: number,
-    year: string,
+    year: number,
 }

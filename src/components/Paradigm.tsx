@@ -38,7 +38,6 @@ const Paradigm = ({ id }: IProps) => {
       <TableCell>{variant.num_paradigms}</TableCell>
     </TableRow>
   ));
-
   const lemma = variants.filter(v => v.word_type_code === 'HCL')[0]
   const title = lemma ? lemma.wordform : id;
 
