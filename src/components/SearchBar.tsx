@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InputBase, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -35,21 +35,28 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 interface IProps {
     onSearch: (searchValue: string) => void
+    wordform: string
 }
 const SearchBar = (props: IProps) => {
     const classes = useStyles({});
-    const { onSearch } = props;
-    const [serachValue, setSearchValue] = useState('');
+    const { onSearch, wordform } = props;
+    const [searchValue, setSearchValue] = useState('');
+    useEffect(() => {
+        if (wordform) {
+            return setSearchValue(wordform)
+        }
+    }, [wordform])
     return (
         <div className={classes.search}>
             <InputBase
+                value={searchValue}
                 placeholder="Enter Word To Search For..."
                 classes={{ input: classes.inputSearch }}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={(event) => setSearchValue(event.target.value)}
             />
             <div className={classes.searchIcon}>
-                <IconButton onClick={() => onSearch(serachValue)} color="primary">
+                <IconButton onClick={() => onSearch(searchValue)} color="primary">
                     <SearchIcon />
                 </IconButton>
             </div>

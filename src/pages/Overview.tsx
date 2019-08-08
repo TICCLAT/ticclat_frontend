@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import SearchBar from '../components/SearchBar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,6 +17,8 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         overflow: 'auto',
         flexDirection: 'column',
+        justifyContent: 'center',
+        minHeight: 300
     },
     fixedHeight: {
         height: 240,
@@ -34,21 +36,29 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const overview = () => {
+const overview = ({ history }) => {
     const setValue = (value: string) => {
         setSearchValue(value.toLowerCase())
     }
-    const [searchValue, setSearchValue] = useState('regering');
+    const [searchValue, setSearchValue] = useState();
     const classes = useStyles();
+    useEffect(() => {
+        if (location.search) {
+            const param = new URLSearchParams(location.search)
+            const value = param.get('searching')
+            return setSearchValue(value!)
+        }
+        setSearchValue('regering')
+    }, [history.location])
 
     return (
         <Container maxWidth="xl" className={classes.container}>
             <Grid container={true} spacing={3}>
                 <Grid item={true} xs={12} md={12} lg={12}>
-                    <SearchBar onSearch={setValue} />
+                    <SearchBar onSearch={setValue} wordform={searchValue} />
                 </Grid>
                 <Grid item={true} xs={12} md={8} lg={8}>
-                    <Paper >
+                    <Paper className={classes.paper}>
                         {/* <Timeline wordform={searchValue} /> */}
                         <NGramTimeline wordform={searchValue} />
                     </Paper>
