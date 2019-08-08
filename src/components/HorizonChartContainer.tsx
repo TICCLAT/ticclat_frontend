@@ -17,18 +17,23 @@ export default class HorizonChartContainer extends React.Component<IProps> {
     }
     public fetchData() {
         const { wordform } = this.props;
-        fetch(`${backendURL}/variants/${wordform}`)
-            .then(results => {
-                return results.json();
-            })
-            .then(data => {
-                this.setState({ info: data }, () => drawChart(data))
-            })
+        if (wordform) {
+            fetch(`${backendURL}/variants/${wordform}`)
+              .then(results => {
+                  return results.json();
+              })
+              .then(data => {
+                  this.setState({ info: data }, () => {
+                      document.getElementById('horizonchart')!.innerHTML = '';
+                      drawChart(data);
+                  })
+              })
+        }
 
     }
 
     render() {
-        const { wordform } = this.props;
+        const wordform = this.props.wordform || 'wordform';
         return (
             <>
                 <div id="horizonchart"></div>
