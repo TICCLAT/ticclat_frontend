@@ -5,7 +5,7 @@ export const drawChart = (info: IData) => {
 
     // Set Margins, width and Height for NGram
     const nGramMargin = { top: 10, right: 10, bottom: 100, left: 70 }
-    const nGramWidth = 1000 - nGramMargin.left - nGramMargin.right
+    const nGramWidth = 800 - nGramMargin.left - nGramMargin.right
     const nGramHeight = 500 - nGramMargin.top - nGramMargin.bottom
 
     // Set Margins, width and Height for Brush
@@ -176,6 +176,7 @@ export const drawChart = (info: IData) => {
         });
         NGram.select(".x.axis").call(nGramXAxis);
         NGram.select(".y.axis").call(nGramYAxis);
+        // brush.clear()
     }
 
 

@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import SearchBar from '../components/SearchBar';
 import { makeStyles } from '@material-ui/core/styles';
-import Timeline from '../components/timeline';
 import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
 import NGramTimeline from '../components/NGramTimeline';
+
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3),
-        paddingLeft: theme.spacing(10),
+        paddingLeft: theme.spacing(15),
     },
     paper: {
         padding: theme.spacing(2),
