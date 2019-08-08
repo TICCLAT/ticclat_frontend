@@ -10,7 +10,7 @@ import Content from './MainContent'
 
 class App extends React.Component<{}, { showSideDrawer: boolean }> {
     state = {
-        showSideDrawer: true
+        showSideDrawer: false
     }
     sideDrawerToggleHandler = () => {
         this.setState(prevState => {

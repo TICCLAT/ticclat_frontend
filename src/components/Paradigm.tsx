@@ -20,7 +20,7 @@ export interface IVariant {
 }
 
 const Paradigm = ({ id }: IProps) => {
-  const [ variants, setVariants ] = React.useState<IVariant[]>([]);
+  const [variants, setVariants] = React.useState<IVariant[]>([]);
   React.useEffect(() => {
     fetch(`${backendURL}/morphological_variants_for_lemma/${id}`)
       .then(result => result.json())
@@ -39,16 +39,15 @@ const Paradigm = ({ id }: IProps) => {
       <TableCell>{variant.num_paradigms}</TableCell>
     </TableRow>
   ));
-
-  const lemma = variants.filter(v => v.word_type_code==='HCL')[0]
+  const lemma = variants.filter(v => v.word_type_code === 'HCL')[0]
   const title = lemma ? lemma.wordform : id;
 
   return (
-    <div>
-      <Typography variant="h6" id="tableTitle">
+    <>
+      <Typography variant="h6" id="tableTitle" align='center'>
         {title}
       </Typography>
-      <Table>
+      <Table >
         <TableHead>
           <TableRow>
             <TableCell>Wordform</TableCell>
@@ -62,10 +61,10 @@ const Paradigm = ({ id }: IProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-         {Rows}
+          {Rows}
         </TableBody>
       </Table>
-    </div>
+    </>
   );
 }
 

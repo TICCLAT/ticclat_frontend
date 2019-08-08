@@ -17,9 +17,27 @@ interface IHorizonchartData {
     path: any
 }
 
-const drawChart = (variants_data: IVariantsQueryData, chart: HTMLDivElement) => {
+var clips = 0;
+
+function clipuid () {
+    const clipid = clips++;
+    const id = 'O-clip-'+clipid;
+
+    return {id, href: window.location +"#" + id , s: "url(" + window.location +"#" + id +")"}
+}
+
+var paths = 0;
+
+function pathuid () {
+    const pathid = paths++;
+    const id = 'O-path-'+pathid;
+
+    return {id, href: window.location +"#" + id , s: "url(" + window.location +"#" + id +")"}
+}
+
+export const drawChart = (variants_data: IVariantsQueryData, chart: HTMLDivElement) => {
     const horizonchart_margin = ({ top: 30, right: 10, bottom: 0, left: 10 });
-    const horizonchart_width = 1000;
+    const horizonchart_width = 800;
 
     var parseDate = d3.timeParse("%Y");
 
@@ -109,17 +127,17 @@ const drawChart = (variants_data: IVariantsQueryData, chart: HTMLDivElement) => 
                 .attr("transform", (d: any, i: number) => `translate(0,${i * (horizonchart_step + 1) + horizonchart_margin.top})`);
 
             g.append("clipPath")
-                .attr("id", (d: any) => (d.clip = Guid.create()); //DOM.uid("clip")).id)
+                .attr("id", (d: any) => (d.clip = clipuid()).id)
                 .append("rect")
                 .attr("width", horizonchart_width)
                 .attr("height", horizonchart_step);
 
             g.append("defs").append("path")
-                .attr("id", (d: any) => (d.path = Guid.create()); //DOM.uid("path")).id)
+                .attr("id", (d: any) => (d.path = pathuid()).id)
                 .attr("d", (d: any) => horizonchart_area(d.values));
 
             g.append("g")
-                .attr("clip-path", (d: any) => d.clip)
+                .attr("clip-path", (d: any) => d.clip.s)
                 .selectAll("use")
                 .data((d: any) => new Array(horizonchart_overlap).fill(d))
                 .join("use")
@@ -138,5 +156,3 @@ const drawChart = (variants_data: IVariantsQueryData, chart: HTMLDivElement) => 
         }
     }
 }
-
-export default drawChart;

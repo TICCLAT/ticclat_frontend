@@ -6,11 +6,6 @@ import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
         display: 'inline-flex',
-
-        // backgroundColor: fade(theme.palette.common.black, 0.15),
-        // '&:hover': {
-        //     backgroundColor: fade(theme.palette.common.black, 0.25),
-        // },
         marginRight: theme.spacing(2),
         marginLeft: 0,
         [theme.breakpoints.up('sm')]: {
@@ -49,9 +44,7 @@ const SearchBar = (props: IProps) => {
         <div className={classes.search}>
             <InputBase
                 placeholder="Enter Word To Search For..."
-                classes={{
-                    input: classes.inputSearch,
-                }}
+                classes={{ input: classes.inputSearch }}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={(event) => setSearchValue(event.target.value)}
             />

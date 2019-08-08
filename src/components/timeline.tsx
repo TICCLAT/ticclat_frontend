@@ -25,6 +25,7 @@ class Timeline extends React.Component<{}, IState> {
             })
     }
 
+
     render() {
         const { data } = this.state;
         if (data) {
@@ -180,6 +181,7 @@ class Timeline extends React.Component<{}, IState> {
         });
 
         function brush() {
+            debugger;
             focusX.domain(d3.event.selection === null ? contextX.domain() : d3.event.selection.map(contextX.invert, contextX));
             focus.selectAll("path.line").attr("d", function (d) {
                 return focusLine(d.frequencies)
