@@ -11,6 +11,7 @@
         "ordered-imports": false,
         "member-ordering": false,
         "jsx-no-lambda": false,
+        "jsx-boolean-value": false,
         "object-literal-sort-keys": false
     },
     "linterOptions": {
