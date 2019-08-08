@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
 import NGramTimeline from '../components/NGramTimeline';
+import HorizonChartContainer from '../components/HorizonChartContainer';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -73,6 +74,11 @@ const overview = ({ history }) => {
                 <Typography variant="h4" gutterBottom={true} className={classes.title} color="primary">Paradigms</Typography>
                 <Grid container={true} spacing={3} className={classes.cardContainer}>
                     {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
+                </Grid>
+                <Grid item={true} xs={12} md={8} lg={8}>
+                    <Paper >
+                        <HorizonChartContainer wordform={searchValue} />
+                    </Paper>
                 </Grid>
             </Grid>
         </Container>

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Container, Grid, Paper } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Paradigms from '../components/Paradigms';
+import BokehPlot from '../components/BokehPlot';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -15,20 +14,28 @@ const useStyles = makeStyles(theme => ({
         overflow: 'auto',
         flexDirection: 'column',
     },
-    fixedHeight: {
-        height: 240,
-
+    plotContainerSmall: {
+        minHeight: 300,
+    },
+    plotContainerBig: {
+        minHeight: 600,
     },
 
 }));
+
 const about = () => {
     const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
         <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
-                <Grid item xs={12} md={8} lg={9}>
-                    <Paradigms wordform="fiets" />
+                <Grid item xs={12} md={6} className={classes.plotContainerSmall}>
+                    <BokehPlot source="/plots/lexicon_size" />
+                </Grid>
+                <Grid item xs={12} md={6} className={classes.plotContainerSmall}>
+                    <BokehPlot source="/plots/corpus_size" />
+                </Grid>
+                <Grid item xs={12} className={classes.plotContainerBig}>
+                    <BokehPlot source="/plots/word_count_per_year" />
                 </Grid>
             </Grid>
         </Container>

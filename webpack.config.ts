@@ -14,7 +14,8 @@ module.exports = {
     devtool: 'inline-source-map',
     // adding .ts and .tsx to resolve.extensions will help babel look for .ts and .tsx files to transpile
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js'],
+        mainFields: ['main', 'module']
     },
 
     module: {
