@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import SearchBar from '../components/SearchBar';
 import { makeStyles } from '@material-ui/core/styles';
-import Timeline from '../components/timeline';
-import clsx from 'clsx';
+import Paradigms from '../components/Paradigms';
+import Lexica from '../components/Lexica';
+import NGramTimeline from '../components/NGramTimeline';
+
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3),
-        paddingLeft: theme.spacing(10),
+        paddingLeft: theme.spacing(15),
     },
     paper: {
         padding: theme.spacing(2),
@@ -18,48 +20,49 @@ const useStyles = makeStyles(theme => ({
     },
     fixedHeight: {
         height: 240,
+    },
+    cardContainer: {
+        paddingLeft: 10
 
     },
+    title: {
+        padding: 10,
+        margin: '20px 0',
+        borderBottom: '1px solid #ddd',
+        width: '100%'
 
+    }
 }));
 
 const overview = () => {
-
+    const setValue = (value: string) => {
+        setSearchValue(value.toLowerCase())
+    }
+    const [searchValue, setSearchValue] = useState('regering');
     const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
     return (
         <Container maxWidth="xl" className={classes.container}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={12} lg={12}>
-                    <SearchBar onSearch={(value) => { alert(value) }} />
+            <Grid container={true} spacing={3}>
+                <Grid item={true} xs={12} md={12} lg={12}>
+                    <SearchBar onSearch={setValue} />
                 </Grid>
-                <Grid item xs={12} md={9} lg={9}>
+                <Grid item={true} xs={12} md={8} lg={8}>
                     <Paper >
-                        <Timeline></Timeline>
+                        {/* <Timeline wordform={searchValue} /> */}
+                        <NGramTimeline wordform={searchValue} />
                     </Paper>
                 </Grid>
 
-                <Grid item xs={12} md={3} lg={3}>
-                    <Paper className={fixedHeightPaper}>
-                        <Typography variant="subtitle1" align="center">Lexicon</Typography>
+                <Grid item={true} xs={12} md={4} lg={4}>
+                    <Paper>
+                        <Typography variant="subtitle1" align="center">Lexica</Typography>
+                        {searchValue !== '' ? <Lexica wordform={searchValue} /> : null}
                     </Paper>
                 </Grid>
-                <Grid container xs={12} md={12} lg={12} spacing={3}>
-                    <Grid item xs={3} md={3} lg={3}>
-                        <Paper className={fixedHeightPaper}>
-                            <Typography variant="subtitle1" align="center">Paradigm 1</Typography>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={3} md={3} lg={3}>
-                        <Paper className={fixedHeightPaper}>
-                            <Typography variant="subtitle1" align="center">Paradigm 2</Typography>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={3} md={3} lg={3}>
-                        <Paper className={fixedHeightPaper}>
-                            <Typography variant="subtitle1" align="center">Paradigm 3</Typography>
-                        </Paper>
-                    </Grid>
+                <Typography variant="h4" gutterBottom={true} className={classes.title} color="primary">Paradigms</Typography>
+                <Grid container={true} spacing={3} className={classes.cardContainer}>
+                    {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
                 </Grid>
             </Grid>
         </Container>

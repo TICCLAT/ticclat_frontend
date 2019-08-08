@@ -1,7 +1,7 @@
 import React from 'react';
 import { backendURL } from '../settings';
 
-import { Card } from '@material-ui/core';
+import { Card, Grid } from '@material-ui/core';
 import Paradigm from './Paradigm';
 
 export interface IProps {
@@ -18,7 +18,8 @@ export interface ILemma {
 }
 
 const Paradigms = ({ wordform }: IProps) => {
-  const [ lemmas, setLemmas ] = React.useState<ILemma[]>([]);
+  const [lemmas, setLemmas] = React.useState<ILemma[]>([]);
+
   React.useEffect(() => {
     fetch(`${backendURL}/lemmas_for_wordform/${wordform}`)
       .then(result => result.json())
@@ -26,9 +27,11 @@ const Paradigms = ({ wordform }: IProps) => {
   }, [wordform]);
 
   const Cards = lemmas.map(lemma => (
-    <Card key={lemma.paradigm_id}>
-      <Paradigm id={lemma.paradigm_id} />
-    </Card>
+    <Grid item={true} xs={6} md={6} lg={6} key={lemma.paradigm_id}>
+      <Card style={{ height: 400, overflowY: 'scroll' }}>
+        <Paradigm id={lemma.paradigm_id} />
+      </Card>
+    </Grid>
   ));
 
   return (

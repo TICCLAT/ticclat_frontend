@@ -1,159 +1,183 @@
-import React from 'react';
 import * as d3 from 'd3';
-import { IData } from '../../../types/'
-const drawChart = (data: IData, chart: HTMLDivElement) => {
+import { IData } from '../../../types';
 
-    var focusMargin = { top: 10, right: 10, bottom: 100, left: 70 },
-        contextMargin = { top: 430, right: 10, bottom: 20, left: 70 },
-        focusWidth = 1000 - focusMargin.left - focusMargin.right,
-        focusHeight = 500 - focusMargin.top - focusMargin.bottom,
-        contextHeight = 500 - contextMargin.top - contextMargin.bottom;
+export const drawChart = (info: IData) => {
+
+    // Set Margins, width and Height for NGram
+    const nGramMargin = { top: 10, right: 10, bottom: 100, left: 70 }
+    const nGramWidth = 800 - nGramMargin.left - nGramMargin.right
+    const nGramHeight = 500 - nGramMargin.top - nGramMargin.bottom
+
+    // Set Margins, width and Height for Brush
+    const brushMargin = { top: 430, right: 10, bottom: 20, left: 70 }
+    const brushHeight = 500 - brushMargin.top - brushMargin.bottom;
+
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    // Set Scales for NGram
+    const nGramXScale = d3.scaleTime().range([0, nGramWidth])
+    const nGramYScale = d3.scaleLinear().range([nGramHeight, 0])
+
+    // Set Scales for brush
+    const brushXScale = d3.scaleTime().range([0, nGramWidth])
+    const brushYScale = d3.scaleLinear().range([brushHeight, 0])
+
+    // Set X and Y axis for NGram
+    const nGramXAxis = d3.axisBottom(nGramXScale)
+    const nGramYAxis = d3.axisLeft(nGramYScale);
+
+    // set X axis for brush
+    const brushXAxis = d3.axisBottom(brushXScale)
 
 
-    var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-
-
-    var focusX = d3.scaleTime().range([0, focusWidth]),
-        contextX = d3.scaleTime().range([0, focusWidth]),
-        focusY = d3.scaleLinear().range([focusHeight, 0]),
-        contextY = d3.scaleLinear().range([contextHeight, 0]);
-
-    var focusXAxis = d3.axisBottom(focusX),
-        contextXAxis = d3.axisBottom(contextX),
-        focusYAxis = d3.axisLeft(focusY);
-
-    var brush = d3.brushX(contextX)
+    const brush = d3.brushX(brushXScale)
+        .extent([[0, 0], [nGramWidth, brushHeight]])
         .on("brush", brushed);
 
-    var focusLine = d3.line()
-        .x(function (d) { return focusX(d.year); })
-        .y(function (d) { return focusY(d.freq); });
+    // set line for NGram
+    const nGramLine = d3.line()
+        .x(function (d) { return nGramXScale(d.year); })
+        .y(function (d) { return nGramYScale(d.freq); });
 
-    var contextLine = d3.line()
-        .x(function (d) { return contextX(d.year); })
-        .y(function (d) { return contextY(d.freq); });
+    // set line for brush
+    const brushLine = d3.line()
+        .x((d) => { return brushXScale(d.year); })
+        .y((d) => { return brushYScale(d.freq); });
 
-    var svg = d3.select("#chart").append("svg")
+    d3.select("#chart").selectAll("svg").remove()
+
+    const svg = d3.select("#chart").append("svg")
         .attr("width", '100%')
-        .attr("height", focusHeight + focusMargin.top + focusMargin.bottom);
+        .attr("height", nGramHeight + nGramMargin.top + nGramMargin.bottom);
 
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
-        .attr("width", focusWidth)
-        .attr("height", focusHeight);
+        .attr("width", nGramWidth)
+        .attr("height", nGramHeight);
 
-    var focus = svg.append("g")
-        .attr("transform", "translate(" + focusMargin.left + "," + focusMargin.top + ")")
+    // set NGram
+    const NGram = svg.append("g")
+        .attr("transform", "translate(" + nGramMargin.left + "," + nGramMargin.top + ")")
         .attr('class', 'lines');
 
-    var context = svg.append("g")
-        .attr("transform", "translate(" + contextMargin.left + "," + contextMargin.top + ")");
+    // set brush chart
+    const brushChart = svg.append("g")
+        .attr("transform", "translate(" + brushMargin.left + "," + brushMargin.top + ")");
 
-    if (data) {
-        var parseDate = d3.timeParse("%Y");
-        data.corpora.forEach(function (d) {
-            d.frequencies.forEach(function (d) {
-                d.year = parseDate(d.year);
+    const parseDate = d3.timeParse("%Y");
+
+    if (info) {
+        info.corpora.forEach((d) => {
+            d.frequencies.forEach((d) => {
+                d.year = parseDate(d.year!.toString());
                 d.freq = +d.freq;
             });
         });
 
+        const nGramXDomain = nGramXScale.domain(
+            [
+                parseDate(info.metadata.min_year),
+                parseDate(info.metadata.max_year)
+            ]
+        );
+        const nGramYDomain = nGramYScale.domain(
+            [
+                info.metadata.min_freq,
+                info.metadata.max_freq
+            ]
+        );
 
-        var intialXDomain = focusX.domain([
-            parseDate(data.metadata.min_year),
-            parseDate(data.metadata.max_year)]);
-        var initiaYDomain = focusY.domain([
-            data.metadata.min_freq,
-            data.metadata.max_freq
-        ]);
-        contextX.domain(focusX.domain());
-        contextY.domain(focusY.domain());
+        // set brush scale domain
+        brushXScale.domain(nGramXScale.domain());
+        brushYScale.domain(nGramYScale.domain());
 
-        var focuslineGroups = focus.selectAll("g")
-            .data(data.corpora)
+        const nGramLineGroups = NGram.selectAll("g")
+            .data(info.corpora)
             .enter().append("g")
             .attr('class', 'line-group')
-            .on("mouseover", function (d, i) {
-
+            .on("mouseover", (d, i) => {
                 svg.append("text")
                     .attr("class", "title-text")
                     .style("fill", color(i))
                     .text(d.name)
                     .attr("text-anchor", "middle")
-                    .attr("x", (focusWidth) / 2)
+                    .attr("x", (nGramWidth) / 2)
                     .attr("y", 15);
             })
-            .on("mouseout", function (d) {
+            .on("mouseout", (d) => {
                 svg.select(".title-text").remove();
             });
 
-        var focuslines = focuslineGroups.append("path")
+        const nGramlines = nGramLineGroups.append("path")
             .style('fill', 'none')
             .style('stroke-width', 2)
             .attr("class", "line")
-            .attr("d", function (d) { return focusLine(d.frequencies); })
-            .style("stroke", function (d, i) { return color(i); })
+            .attr("d", (d) => { return nGramLine(d.frequencies); })
+            .style("stroke", (d, i) => { return color(i); })
             .attr("clip-path", "url(#clip)")
 
-        focus.append("g")
+        NGram.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + focusHeight + ")")
-            .call(focusXAxis)
+            .attr("transform", "translate(0," + nGramHeight + ")")
+            .call(nGramXAxis)
             .append('text')
-            .attr("x", focusWidth / 2)
+            .attr("x", nGramWidth / 2)
             .attr("y", 40)
             .attr("fill", "#000")
             .text("Year");;
 
-        focus.append("g")
+        NGram.append("g")
             .attr("class", "y axis")
-            .call(focusYAxis)
+            .call(nGramYAxis)
             .append('text')
-            .attr("x", -(focusHeight / 2))
+            .attr("x", -(nGramHeight / 2))
             .attr("y", -50)
             .attr("transform", "rotate(-90)")
             .attr("fill", "#000")
-            .text("Frequency");;
+            .text("Frequency");
 
-        var contextlineGroups = context.selectAll("g")
-            .data(data.corpora)
+        // set brush lines
+        const brushLineGroups = brushChart.selectAll("g")
+            .data(info.corpora)
             .enter().append("g");
 
-        var contextLines = contextlineGroups.append("path")
+        const brushLines = brushLineGroups.append("path")
             .style('fill', 'none')
-            .style('stroke-width', 2)
             .attr("class", "contextline")
-            .attr("d", function (d) { return contextLine(d.frequencies); })
-            .style("stroke", function (d) { return color(d.name); })
+            .attr("d", (d) => { return brushLine(d.frequencies); })
+            .style("stroke", (d) => { return color(d.name); })
             .attr("clip-path", "url(#clip)");
 
-        context.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + contextHeight + ")")
-            .call(contextXAxis);
 
-        context.append("g")
+        // draw brush X axis
+
+        brushChart.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + brushHeight + ")")
+            .call(brushXAxis);
+        // set brush
+
+
+        brushChart.append("g")
             .attr("class", "x brush")
-            .call(brushed)
+            .call(brush)
             .selectAll("rect")
             .attr("y", -6)
-            .attr("height", contextHeight + 7);
-
+            .attr("height", brushHeight + 7);
 
     }
 
+
     function brushed() {
-        focusX.domain(d3.event.selection === null ? contextX.domain() : d3.event.selection.map(contextX.invert, contextX));
-        focus.selectAll("path.line").attr("d", function (d) {
-            return focusLine(d.corpora)
+        nGramXScale.domain(d3.event.selection === null ? brushXScale.domain() : d3.event.selection.map(brushXScale.invert, brushXScale));
+        NGram.selectAll("path.line").attr("d", function (d) {
+            return nGramLine(d.frequencies)
         });
-        focus.select(".x.axis").call(focusXAxis);
-        focus.select(".y.axis").call(focusYAxis);
+        NGram.select(".x.axis").call(nGramXAxis);
+        NGram.select(".y.axis").call(nGramYAxis);
+        // brush.clear()
     }
 
 
 }
-
-export default drawChart;

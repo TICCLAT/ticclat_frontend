@@ -1,46 +1,48 @@
-import React from 'react';
 import * as d3 from 'd3';
-
-import { IData } from '../../types/'
+import React from 'react';
+import { IData } from '../../types/';
+import { backendURL } from '../settings';
 import { Typography } from '@material-ui/core';
 interface IState {
-    data: IData | null
-}
-class Timeline extends React.Component<{}, IState> {
+    info: IData
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            data: null
+}
+interface IProps {
+    wordform: string
+}
+
+class Timeline extends React.Component<IProps, IState> {
+
+    public componentDidUpdate(prevProps: IProps) {
+        if (prevProps.wordform !== this.props.wordform) {
+            this.fetchData();
         }
     }
-    componentDidMount() {
-        fetch('http://145.100.59.165:8000/word_frequency_per_corpus_per_year/regering')
+    public componentDidMount() {
+        this.fetchData()
+    }
+    public fetchData() {
+        const { wordform } = this.props;
+        fetch(`${backendURL}/word_frequency_per_corpus_per_year/${wordform}`)
             .then(results => {
                 return results.json();
             })
             .then(data => {
-                this.setState({ data })
-                this.drawChart()
+                this.setState({ info: data }, () => this.setScales())
             })
-    }
 
-    render() {
-        const { data } = this.state;
-        if (data) {
-            let title = data.wordform
-            title = title.charAt(0).toUpperCase() + title.slice(1);
-            return (
-                <>
-                    <div id="chart" ></div>
-                    <Typography variant="h5" align='center' style={{ margin: 10 }}> {title}</Typography>
-                </>
-            )
-        }
-        return null
     }
-    drawChart() {
-        const { data } = this.state
+    public render() {
+
+        return (
+            <>
+                <div id="chart" />
+                <Typography variant="h5" align='center' style={{ margin: 10 }}> {this.props.wordform}</Typography>
+            </>
+        )
+
+    }
+    public setScales() {
         var focusMargin = { top: 10, right: 10, bottom: 100, left: 70 },
             contextMargin = { top: 430, right: 10, bottom: 20, left: 70 },
             focusWidth = 1000 - focusMargin.left - focusMargin.right,
@@ -49,8 +51,6 @@ class Timeline extends React.Component<{}, IState> {
 
 
         var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-
 
         var focusX = d3.scaleTime().range([0, focusWidth]),
             contextX = d3.scaleTime().range([0, focusWidth]),
@@ -61,8 +61,6 @@ class Timeline extends React.Component<{}, IState> {
             contextXAxis = d3.axisBottom(contextX),
             focusYAxis = d3.axisLeft(focusY);
 
-        var brush = d3.brushX(contextX)
-            .on("brush", brush);
 
         var focusLine = d3.line()
             .x(function (d) { return focusX(d.year); })
@@ -71,7 +69,7 @@ class Timeline extends React.Component<{}, IState> {
         var contextLine = d3.line()
             .x(function (d) { return contextX(d.year); })
             .y(function (d) { return contextY(d.freq); });
-
+        var existingSvg = d3.select("#chart").selectAll("svg").remove()
         var svg = d3.select("#chart").append("svg")
             .attr("width", '100%')
             .attr("height", focusHeight + focusMargin.top + focusMargin.bottom);
@@ -85,31 +83,43 @@ class Timeline extends React.Component<{}, IState> {
         var focus = svg.append("g")
             .attr("transform", "translate(" + focusMargin.left + "," + focusMargin.top + ")")
             .attr('class', 'lines');
-
+        // focus.exit().remove()
         var context = svg.append("g")
             .attr("transform", "translate(" + contextMargin.left + "," + contextMargin.top + ")");
+        // context.exit().remove()
+        const parseDate = d3.timeParse("%Y");
+        const info = this.state.info;
+        const brush = () => {
+            debugger;
+            focusX.domain(d3.event.selection === null ? contextX.domain() : d3.event.selection.map(contextX.invert, contextX));
+            focus.selectAll("path.line").attr("d", function (d) {
+                return focusLine(d.frequencies)
+            });
+            focus.select(".x.axis").call(focusXAxis);
+            focus.select(".y.axis").call(focusYAxis);
+        }
+        const brushed = d3.brushX(contextX)
+            .on("brush", brush);
 
-        if (data) {
-            var parseDate = d3.timeParse("%Y");
-            data.corpora.forEach(function (d) {
-                d.frequencies.forEach(function (d) {
-                    d.year = parseDate(d.year);
+        if (info) {
+            info.corpora.forEach((d) => {
+                d.frequencies.forEach((d) => {
+                    d.year = parseDate(d.year!.toString());
                     d.freq = +d.freq;
                 });
             });
-
-
-            var intialXDomain = focusX.domain([parseDate(data.metadata.min_year),
-            parseDate(data.metadata.max_year)]);
+            debugger;
+            var intialXDomain = focusX.domain([parseDate(info.metadata.min_year),
+            parseDate(info.metadata.max_year)]);
             var initiaYDomain = focusY.domain([
-                data.metadata.min_freq,
-                data.metadata.max_freq
+                info.metadata.min_freq,
+                info.metadata.max_freq
             ]);
             contextX.domain(focusX.domain());
             contextY.domain(focusY.domain());
 
             var focuslineGroups = focus.selectAll("g")
-                .data(data.corpora)
+                .data(info.corpora)
                 .enter().append("g")
                 .attr('class', 'line-group')
                 .on("mouseover", function (d, i) {
@@ -125,9 +135,11 @@ class Timeline extends React.Component<{}, IState> {
                 .on("mouseout", function (d) {
                     svg.select(".title-text").remove();
                 });
+            // focuslineGroups.exit().remove()
 
             var focuslines = focuslineGroups.append("path")
                 .style('fill', 'none')
+                .style('stroke-width', 2)
                 .attr("class", "line")
                 .attr("d", function (d) { return focusLine(d.frequencies); })
                 .style("stroke", function (d, i) { return color(i); })
@@ -154,8 +166,9 @@ class Timeline extends React.Component<{}, IState> {
                 .text("Frequency");;
 
             var contextlineGroups = context.selectAll("g")
-                .data(data.corpora)
+                .data(info.corpora)
                 .enter().append("g");
+            // contextlineGroups.exit().remove()
 
             var contextLines = contextlineGroups.append("path")
                 .style('fill', 'none')
@@ -171,26 +184,15 @@ class Timeline extends React.Component<{}, IState> {
 
             context.append("g")
                 .attr("class", "x brush")
-                .call(brush)
+                .call(brushed)
                 .selectAll("rect")
+                .enter()
                 .attr("y", -6)
                 .attr("height", contextHeight + 7);
-
-
-
         }
-
-        function brush() {
-            focusX.domain(d3.event.selection === null ? contextX.domain() : d3.event.selection.map(contextX.invert, contextX));
-            focus.selectAll("path.line").attr("d", function (d) {
-                return focusLine(d.frequencies)
-            });
-            focus.select(".x.axis").call(focusXAxis);
-            focus.select(".y.axis").call(focusYAxis);
-        }
-
 
     }
+
 }
 
 export default Timeline;
