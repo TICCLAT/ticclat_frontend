@@ -54,6 +54,11 @@ const SearchBar = (props: IProps) => {
                 classes={{ input: classes.inputSearch }}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={(event) => setSearchValue(event.target.value)}
+                onKeyPress={(event) => {
+                 
+                    event.key === 'Enter' ? onSearch(searchValue) : null
+                }
+                }
             />
             <div className={classes.searchIcon}>
                 <IconButton onClick={() => onSearch(searchValue)} color="primary">

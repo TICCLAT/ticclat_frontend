@@ -29,22 +29,20 @@ const Lexica = ({ wordform }: IProps) => {
         </TableRow>
     ));
 
-
-    return (
-        <>
-            <Table >
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Lexicon</TableCell>
-                        <TableCell>Correct</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {Rows}
-                </TableBody>
-            </Table>
-        </>
-    );
+    const content = lexica.length > 0 ? (
+        <Table >
+            <TableHead>
+                <TableRow>
+                    <TableCell>Lexicon</TableCell>
+                    <TableCell>Correct</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {Rows}
+            </TableBody>
+        </Table>
+    ) : <p>No Lexica found for the word <strong>{wordform}</strong></p>
+    return content
 }
 
 export default Lexica;
