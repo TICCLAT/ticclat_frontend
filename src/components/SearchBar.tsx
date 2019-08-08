@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     inputSearch: {
         padding: theme.spacing(1, 1, 1, 1),
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.black, 0.15),
+        backgroundColor: fade(theme.palette.primary.main, 0.11),
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.black, 0.25),
+            backgroundColor: fade(theme.palette.primary.main, 0.25),
         },
         transition: theme.transitions.create('width'),
         width: '100%',
@@ -54,6 +54,11 @@ const SearchBar = (props: IProps) => {
                 classes={{ input: classes.inputSearch }}
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={(event) => setSearchValue(event.target.value)}
+                onKeyPress={(event) => {
+                 
+                    event.key === 'Enter' ? onSearch(searchValue) : null
+                }
+                }
             />
             <div className={classes.searchIcon}>
                 <IconButton onClick={() => onSearch(searchValue)} color="primary">

@@ -36,20 +36,19 @@ export const drawChart = (info: IData) => {
 
     // set line for NGram
     const nGramLine = d3.line()
-        .x(function (d) { return nGramXScale(d.year); })
-        .y(function (d) { return nGramYScale(d.freq); });
+        .x((d) => nGramXScale(d.year))
+        .y((d) => nGramYScale(d.freq));
 
     // set line for brush
     const brushLine = d3.line()
-        .x((d) => { return brushXScale(d.year); })
-        .y((d) => { return brushYScale(d.freq); });
+        .x((d) => brushXScale(d.year))
+        .y((d) => brushYScale(d.freq));
 
     d3.select("#chart").selectAll("svg").remove()
 
     const svg = d3.select("#chart").append("svg")
         .attr("width", '100%')
         .attr("height", nGramHeight + nGramMargin.top + nGramMargin.bottom);
-
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")
@@ -75,13 +74,14 @@ export const drawChart = (info: IData) => {
             });
         });
 
-        const nGramXDomain = nGramXScale.domain(
+        // Set nGram domain
+        nGramXScale.domain(
             [
                 parseDate(info.metadata.min_year),
                 parseDate(info.metadata.max_year)
             ]
         );
-        const nGramYDomain = nGramYScale.domain(
+        nGramYScale.domain(
             [
                 info.metadata.min_freq,
                 info.metadata.max_freq
@@ -109,12 +109,12 @@ export const drawChart = (info: IData) => {
                 svg.select(".title-text").remove();
             });
 
-        const nGramlines = nGramLineGroups.append("path")
+        nGramLineGroups.append("path")
             .style('fill', 'none')
             .style('stroke-width', 2)
             .attr("class", "line")
-            .attr("d", (d) => { return nGramLine(d.frequencies); })
-            .style("stroke", (d, i) => { return color(i); })
+            .attr("d", (d) => nGramLine(d.frequencies))
+            .style("stroke", (d, i) => color(i))
             .attr("clip-path", "url(#clip)")
 
         NGram.append("g")
@@ -142,11 +142,11 @@ export const drawChart = (info: IData) => {
             .data(info.corpora)
             .enter().append("g");
 
-        const brushLines = brushLineGroups.append("path")
+        brushLineGroups.append("path")
             .style('fill', 'none')
             .attr("class", "contextline")
-            .attr("d", (d) => { return brushLine(d.frequencies); })
-            .style("stroke", (d) => { return color(d.name); })
+            .attr("d", (d) => brushLine(d.frequencies))
+            .style("stroke", (d) => color(d.name))
             .attr("clip-path", "url(#clip)");
 
 
@@ -171,9 +171,7 @@ export const drawChart = (info: IData) => {
 
     function brushed() {
         nGramXScale.domain(d3.event.selection === null ? brushXScale.domain() : d3.event.selection.map(brushXScale.invert, brushXScale));
-        NGram.selectAll("path.line").attr("d", function (d) {
-            return nGramLine(d.frequencies)
-        });
+        NGram.selectAll("path.line").attr("d", (d) => nGramLine(d.frequencies));
         NGram.select(".x.axis").call(nGramXAxis);
         NGram.select(".y.axis").call(nGramYAxis);
         // brush.clear()

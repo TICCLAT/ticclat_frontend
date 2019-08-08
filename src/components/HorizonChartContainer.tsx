@@ -19,15 +19,15 @@ export default class HorizonChartContainer extends React.Component<IProps> {
         const { wordform } = this.props;
         if (wordform) {
             fetch(`${backendURL}/variants/${wordform}`)
-              .then(results => {
-                  return results.json();
-              })
-              .then(data => {
-                  this.setState({ info: data }, () => {
-                      document.getElementById('horizonchart')!.innerHTML = '';
-                      drawChart(data);
-                  })
-              })
+                .then(results => {
+                    return results.json();
+                })
+                .then(data => {
+                    this.setState({ info: data }, () => {
+                        document.getElementById('horizonchart')!.innerHTML = '';
+                        drawChart(data);
+                    })
+                })
         }
 
     }
@@ -36,8 +36,9 @@ export default class HorizonChartContainer extends React.Component<IProps> {
         const wordform = this.props.wordform || 'wordform';
         return (
             <>
+                <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
                 <div id="horizonchart"></div>
-                <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform.charAt(0).toUpperCase() + wordform.slice(1)}</Typography>
+
             </>
         );
     }
