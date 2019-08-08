@@ -1,11 +1,12 @@
-import { Badge, Card, CardContent, Popover } from '@material-ui/core';
+import { Badge, Card, CardContent, Popover, IconButton } from '@material-ui/core';
+
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import React from 'react';
 import { ShoppingBagContext } from '../../context/ShoppingBag';
 import ShoppingBag from './index';
 
 const ShoppingBagIndicator = () => {
-  const [ shoppingBagVisible, setShoppingBagVisible ] = React.useState<boolean>(false);
+  const [shoppingBagVisible, setShoppingBagVisible] = React.useState<boolean>(false);
   const anchorEl = React.useRef<HTMLButtonElement>();
   const shoppingBag = React.useContext(ShoppingBagContext);
 
@@ -15,29 +16,24 @@ const ShoppingBagIndicator = () => {
         open={shoppingBagVisible}
         anchorEl={anchorEl.current}
         onClose={() => setShoppingBagVisible(!shoppingBagVisible)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Card>
+        <Card >
           <CardContent>
-            <ShoppingBag/>
+            <ShoppingBag />
           </CardContent>
         </Card>
       </Popover>
-      <Badge
-        badgeContent={shoppingBag.words.length}
-        color="primary"
-        ref={anchorEl}
-        onClick={() => setShoppingBagVisible(!shoppingBagVisible)}
-      >
-        <ShoppingBasketIcon />
-      </Badge>
+      <IconButton title="Bag Of Words" color="inherit" onClick={() => setShoppingBagVisible(!shoppingBagVisible)}>
+        <Badge
+          badgeContent={shoppingBag.words.length}
+          color="primary"
+          ref={anchorEl}
+        >
+          <ShoppingBasketIcon />
+        </Badge>
+      </IconButton>
     </>
   )
 }

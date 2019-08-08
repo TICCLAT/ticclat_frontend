@@ -17,11 +17,13 @@ const AddButton = (props: { word: string }) => {
   }
   return (
     <Chip
-        color={isInBag ? "primary" : "default"}
-        label={word}
-        onDelete={handleClick}
-        onClick={handleClick}
-        deleteIcon={isInBag ? <DeleteIcon /> : <AddIcon />}
+      title={isInBag ? "Remove from Bag" : "Add To Bag"}
+      color={isInBag ? "primary" : "default"}
+      label={word}
+      onDelete={handleClick}
+      onClick={handleClick}
+      deleteIcon={isInBag ? <DeleteIcon /> : <AddIcon />}
+
     />
   );
 }
