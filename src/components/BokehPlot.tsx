@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as Bokeh from 'bokehjs';
+// import * as Bokeh from 'bokehjs';
 import { backendURL } from '../settings';
 
 import { CircularProgress } from '@material-ui/core';
@@ -13,7 +13,7 @@ const BokehPlot = React.memo((props: { source: string }) => {
       while (container && container.firstChild) {
         container.removeChild(container.firstChild);
       }
-      Bokeh.embed.embed_item(data, id);
+      (window as any).Bokeh.embed.embed_item(data, id);
     });
   }, [props.source]);
 
