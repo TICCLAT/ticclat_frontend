@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     inputSearch: {
         padding: theme.spacing(1, 1, 1, 1),
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.black, 0.15),
+        backgroundColor: fade(theme.palette.primary.main, 0.11),
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.black, 0.25),
+            backgroundColor: fade(theme.palette.primary.main, 0.25),
         },
         transition: theme.transitions.create('width'),
         width: '100%',
