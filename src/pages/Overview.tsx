@@ -77,7 +77,7 @@ const overview = ({ history }) => {
                 </Grid>
                 <Grid item={true} xs={12} md={8} lg={8}>
                     <Paper >
-                        {/* <HorizonChartContainer wordform={searchValue} /> */}
+                        <HorizonChartContainer wordform={searchValue} />
                     </Paper>
                 </Grid>
             </Grid>

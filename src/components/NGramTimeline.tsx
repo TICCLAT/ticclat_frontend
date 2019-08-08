@@ -52,7 +52,7 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
                     (
                         <>
                             <div id="chart" />
-                            <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform.charAt(0).toUpperCase() + wordform.slice(1)}</Typography>
+                            <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
                         </>
                     ) : <Typography variant="h5" align='center' style={{ margin: 10 }}>Word does not exist in any corpora</Typography>
             }
