@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(4),
@@ -19,6 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
 
 }));
+
 const glossary = () => {
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);

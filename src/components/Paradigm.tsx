@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/
 import TableHead from '@material-ui/core/TableHead';
 import React from 'react';
 import { backendURL } from '../settings';
+import AddButton from './ShoppingBag/AddButton';
 
 export interface IProps {
   id: number;
@@ -28,7 +29,7 @@ const Paradigm = ({ id }: IProps) => {
 
   const Rows = variants.map(variant => (
     <TableRow key={variant.wordform}>
-      <TableCell>{variant.wordform}</TableCell>
+      <TableCell><AddButton word={variant.wordform} /></TableCell>
       <TableCell>{variant.V}</TableCell>
       <TableCell>{variant.word_type_code}</TableCell>
       <TableCell>{variant.min_year || '?'}</TableCell>

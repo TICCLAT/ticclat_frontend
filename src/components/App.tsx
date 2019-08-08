@@ -1,5 +1,6 @@
 import React from 'react';
 import { MuiThemeProvider } from '@material-ui/core/styles'
+import { ShoppingBagProvider } from '../context/ShoppingBag';
 import theme from './Theme';
 
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -7,7 +8,7 @@ import Header from './Header';
 import Content from './MainContent'
 
 
-class App extends React.Component {
+class App extends React.Component<{}, { showSideDrawer: boolean }> {
     state = {
         showSideDrawer: true
     }
@@ -19,11 +20,13 @@ class App extends React.Component {
     render() {
         const { showSideDrawer } = this.state;
         return (
-            <MuiThemeProvider theme={theme}>
-                <CssBaseline></CssBaseline>
-                <Header open={showSideDrawer} drawerToggle={this.sideDrawerToggleHandler}></Header>
-                <Content open={showSideDrawer}></Content>
-            </MuiThemeProvider>
+            <ShoppingBagProvider>
+                <MuiThemeProvider theme={theme}>
+                    <CssBaseline/>
+                    <Header open={showSideDrawer} drawerToggle={this.sideDrawerToggleHandler}/>
+                    <Content open={showSideDrawer}/>
+                </MuiThemeProvider>
+            </ShoppingBagProvider>
         );
     }
 }
