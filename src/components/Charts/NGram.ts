@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
-import { IData, ICorpora, ICorpusFrequencyEntry, ICorpus } from '../../../types';
-import { red } from '@material-ui/core/colors';
+import { IData, ICorpus } from '../../../types';
 
 export class NGramChart {
     domainXMin = 0;
@@ -67,7 +66,6 @@ export class NGramChart {
     brush = d3.brushX()
         .extent([[0, 0], [this.nGramWidth, this.brushHeight]])
         .on("end", this.brushed.bind(this))
-        .on("brush", this.brushed.bind(this));
 
 
     clear() {
@@ -89,7 +87,7 @@ export class NGramChart {
         this.svg = d3.select("#chart").append("svg");
 
         this.svg
-            .attr("width", '100%')
+            .attr("width", this.currentWidth)
             .attr("height", this.nGramHeight + this.nGramMargin.top + this.nGramMargin.bottom)
 
         this.svg.append("defs").append("clipPath")
@@ -180,19 +178,20 @@ export class NGramChart {
     }
 
     nGramLine = d3.line()
-        .x((d: any) => this.nGramXScale(d.year))
+        .x((d: any) => {
+            return this.nGramXScale(d.year)
+        })
         .y((d: any) => this.nGramYScale(d.freq));
 
     ngramUpdate() {
+        const existingLineGroups = this.nGram.selectAll('g.ngramCorpus')
+        existingLineGroups.remove()
         const nGramLineGroups = this.nGram.append("g")
             .attr('class', 'ngramCorpus')
             .selectAll("g")
             .data(this.chartData.corpora)
-            
             .enter().append("g")
             .attr('class', 'line-group');
-
-        nGramLineGroups.exit().remove();
 
         nGramLineGroups.append("path")
             .style('fill', 'none')
@@ -204,17 +203,22 @@ export class NGramChart {
             .attr("clip-path", "url(#clip)");
 
         // Add the data points
-        const corpusEnter = nGramLineGroups.selectAll("data-points")
-            .data(this.chartData.corpora)
-            .enter().append("g")
+
+        const pointGroup = nGramLineGroups.append("g")
+            .attr('class', 'pointGroup')
+        pointGroup
+            .append("g")
             .style("stroke", (d: any) => this.color(d.name))
             .style("fill", (d: any) => this.color(d.name))
             .selectAll("circle")
-            .data((d: any) => d.frequencies);
-
-        corpusEnter.enter().append("circle")
+            .data((d: any) => d.frequencies)
+            .enter()
+            .filter(d => (this.nGramXScale(d.year) >= 0 && this.nGramXScale(d.year) <= this.nGramWidth))
+            .append("circle")
             .attr("class", "circle")
-            .attr("cx", (d: any) => this.nGramXScale(d.year))
+            .attr("cx", (d: any) => {
+                return this.nGramXScale(d.year)
+            })
             .attr("cy", (d: any) => this.nGramYScale(d.freq))
             .attr("r", 3)
             .on("mouseover", (d: any, i: number) => {
@@ -230,7 +234,7 @@ export class NGramChart {
                 nGramLineGroups.select(".frequency-text").remove();
             });
 
-        corpusEnter.exit().remove();
+
     }
 
     drawBrushChartContents() {
@@ -254,11 +258,10 @@ export class NGramChart {
     }
 
     brushed() {
-        var s = d3.event.selection;
-        console.log(s);
-        if (s) {
-            this.nGramXScale.domain(d3.event.selection === null ?
-                this.brushXScale.domain() : d3.event.selection.map(this.brushXScale.invert, this.brushXScale));
+        const selection = d3.event.selection;
+
+        if (selection) {
+            this.nGramXScale.domain(selection.map(this.brushXScale.invert, this.brushXScale));
         } else {
             const minDate = this.parseDate('' + this.chartData.metadata.min_year);
             const maxDate = this.parseDate('' + this.chartData.metadata.max_year);
@@ -267,14 +270,8 @@ export class NGramChart {
                 this.nGramXScale.domain([minDate, maxDate]);
             }
         }
-
-        this.update();
-
-        // this.nGram.selectAll("path.line").attr("d", (d: any) => this.nGramLine(d.frequencies));
-        // this.nGram.selectAll(".circle").attr("cx", (d: any) => this.nGramXScale(d.year))
-        //     .attr("cy", (d: any) => this.nGramYScale(d.freq));
-
-        // this.nGram.select(".x.axis").call(this.nGramXAxis as any);
-        // this.nGram.select(".y.axis").call(this.nGramYAxis as any);
+        this.nGram.select(".x.axis").call(this.nGramXAxis as any);
+        this.nGram.select(".y.axis").call(this.nGramYAxis as any);
+        this.ngramUpdate();
     }
 }
