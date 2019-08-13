@@ -11,7 +11,7 @@ module.exports = {
         filename: 'bundle.js',
         publicPath: '/'
     },
-    devtool: false,
+    devtool: "source-map",
     // adding .ts and .tsx to resolve.extensions will help babel look for .ts and .tsx files to transpile
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],

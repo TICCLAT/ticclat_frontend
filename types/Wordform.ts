@@ -1,5 +1,5 @@
 export interface ICorpora {
-    frequencies: IFrequency[],
+    frequencies: Array<ICorpusFrequencyEntry>,
     name: ''
 }
 export interface IMetadata {
