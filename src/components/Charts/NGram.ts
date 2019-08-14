@@ -9,13 +9,13 @@ export class NGramChart {
     // Set Margins, width and Height for NGram
     currentWidth = parseInt(d3.select('#chart').style('width'), 10);
 
-    nGramMargin = { top: 20, right: 20, bottom: 100, left: 70 }
+    nGramMargin = { top: 20, right: 20, bottom: 150, left: 70 }
     nGramWidth = this.currentWidth - this.nGramMargin.left - this.nGramMargin.right
-    nGramHeight = 500 - this.nGramMargin.top - this.nGramMargin.bottom
+    nGramHeight = 600 - this.nGramMargin.top - this.nGramMargin.bottom
 
     // Set Margins, width and Height for Brush
-    brushMargin = { top: 430, right: 20, bottom: 20, left: 70 }
-    brushHeight = 500 - this.brushMargin.top - this.brushMargin.bottom;
+    brushMargin = { top: 530, right: 20, bottom: 30, left: 70 }
+    brushHeight = 600 - this.brushMargin.top - this.brushMargin.bottom;
 
     color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -137,8 +137,8 @@ export class NGramChart {
             .selectAll("text")
             .data(this.chartData.corpora)
             .enter().append('text')
-            .attr("x", this.nGramWidth / 2)
-            .attr("y", (d, i) => 40 + (i * 30))
+            .attr("x", (d, i) => 0 + (i * 290))
+            .attr("y", (d, i) => -10)
             .attr("class", "legend")
             .style("fill", (d: any) => this.color(d.name))
             .text((d: any) => d.name);
@@ -150,8 +150,8 @@ export class NGramChart {
             .enter().append("rect")
             .attr("width", 10)
             .attr("height", 10)
-            .attr("x", this.nGramWidth / 2 - 30)
-            .attr("y", (d, i) => 30 + (i * 30))
+            .attr("x", (d, i) => 0 + (i * 290) - 20)
+            .attr("y", (d, i) => -20)
             .style("fill", (d: any) => this.color(d.name));
     }
 
