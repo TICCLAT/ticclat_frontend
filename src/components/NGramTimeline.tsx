@@ -17,7 +17,7 @@ interface IState {
 export default class NGramTimeline extends React.Component<IProps, IState> {
     state = {
         info: null,
-        isLoading: true, 
+        isLoading: true,
         chart: null
     }
 
@@ -39,19 +39,23 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
                     return results.json();
                 })
                 .then(data => {
-                    const chart = new NGramChart();
-                    this.setState({ info: data, isLoading: false, chart });
-                    if (data.corpora.length > 0) {                        
-                        chart.init(data);
-                    }
+                    this.setState({ info: data, isLoading: false }, () => {
 
-                    chart.draw();
+                        if (data.corpora.length > 0) {
+                            const chart = new NGramChart();
+                            chart.init(data);
+                            chart.draw();
+                        }
+
+                    });
+
                 })
         }
 
     }
 
     render() {
+        debugger;
         const { wordform } = this.props;
         const { info, isLoading } = this.state;
         let content = null;
@@ -61,14 +65,15 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
         else if (info !== null) {
             content = info.corpora.length > 0 ?
                 (
-                    <>                        
+                    <>
                         <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
+                        <div id="chart" />
                     </>
                 ) : <Typography variant="h5" align='center' style={{ margin: 10 }}>Word does not exist in any corpora</Typography>
         }
         return (
             <div>
-                <div id="chart" />
+
                 {content}
             </div>
         );
