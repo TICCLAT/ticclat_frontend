@@ -1,5 +1,5 @@
 export interface ICorpora {
-    frequencies: Array<ICorpusFrequencyEntry>,
+    frequencies: ICorpusFrequencyEntry[],
     name: ''
 }
 export interface IMetadata {
@@ -20,13 +20,13 @@ export interface ICorpusFrequencyEntry {
 }
 
 export interface ICorpus {
-    frequencies: Array<ICorpusFrequencyEntry>,
+    frequencies: ICorpusFrequencyEntry[],
     name: ''
 }
 
 export interface IVariant {
     V: 1,
-    corpora: Array<ICorpus>,
+    corpora: ICorpus[],
     word_type_code: string,
     word_type_number: number,
     wordform: string
@@ -35,7 +35,7 @@ export interface IVariant {
 export interface ILemma {
     lemma: string,
     paradigm_code: string,
-    variants: Array<IVariant>
+    variants: IVariant[]
 }
 
 export interface IVariantsMetadata {
@@ -49,7 +49,7 @@ export interface IVariantsMetadata {
 
 export interface IVariantsQueryData {
     metadata: IVariantsMetadata,
-    paradigms: Array<ILemma>,
+    paradigms: ILemma[],
     wordform: string
 }
 

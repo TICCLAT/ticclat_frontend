@@ -7,7 +7,8 @@
     "bundle": "webpack",
     "start": "webpack-dev-server --mode development  --open --hot ",
     "build": "webpack --mode production",
-    "check-types": "tsc"
+    "check-types": "tsc",
+    "lint": "tslint --project ."
   },
   "repository": {
     "type": "git",

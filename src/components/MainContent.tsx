@@ -28,7 +28,7 @@ const MainContent = (props: IProps) => {
     return (
         <main className={clsx(classes.content, open && classes.contentShift)}>
             <div className={classes.appBarSpacer} />
-            <Routes></Routes>
+            <Routes />
         </main>
     )
 }

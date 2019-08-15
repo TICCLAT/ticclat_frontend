@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Guid } from "guid-typescript";
+// import { Guid } from "guid-typescript";
 
 import { IVariantsQueryData, ILemma, IVariant, ICorpus, ICorpusFrequencyEntry } from '../../../types/'
 
@@ -11,73 +11,73 @@ interface IHorizonchartFrequencyEntry {
 
 interface IHorizonchartData {
     key: string,
-    values: Array<IHorizonchartFrequencyEntry>,
+    values: IHorizonchartFrequencyEntry[],
     sum: number,
     clip: any,
     path: any
 }
 
-var clips = 0;
+let clips = 0;
 
-function clipuid () {
+function clipuid() {
     const clipid = clips++;
-    const id = 'O-clip-'+clipid;
+    const id = 'O-clip-' + clipid;
 
-    return {id, href: window.location +"#" + id , s: "url(" + window.location +"#" + id +")"}
+    return { id, href: window.location + "#" + id, s: "url(" + window.location + "#" + id + ")" }
 }
 
-var paths = 0;
+let paths = 0;
 
-function pathuid () {
+function pathuid() {
     const pathid = paths++;
-    const id = 'O-path-'+pathid;
+    const id = 'O-path-' + pathid;
 
-    return {id, href: window.location +"#" + id , s: "url(" + window.location +"#" + id +")"}
+    return { id, href: window.location + "#" + id, s: "url(" + window.location + "#" + id + ")" }
 }
 
-export const drawChart = (variants_data: IVariantsQueryData, chart: HTMLDivElement) => {
-    const horizonchart_margin = ({ top: 30, right: 10, bottom: 0, left: 10 });
-    const horizonchart_width = 800;
+export const drawChart = (variantsData: IVariantsQueryData, chart: HTMLDivElement) => {
+    const horizonchartMargin = ({ top: 30, right: 10, bottom: 0, left: 10 });
+    const horizonchartWidth = 800;
 
-    var parseDate = d3.timeParse("%Y");
+    const parseDate = d3.timeParse("%Y");
 
-    var horizonchart_step = 50;
-    var horizonchart_overlap = 7;
+    const horizonchartStep = 50;
+    const horizonchartOverlap = 7;
 
-    var horizonchart_scheme = "schemeReds";
-    var horizonchart_color = (i: any) => d3[horizonchart_scheme][Math.max(3, horizonchart_overlap)][i + Math.max(0, 3 - horizonchart_overlap)];
+    const horizonchartScheme = "schemeReds";
+    const horizonchartColor = (i: any) => d3[horizonchartScheme][Math.max(3, horizonchartOverlap)][i + Math.max(0, 3 - horizonchartOverlap)];
 
-    var getParadigms = function (wordform_data: IVariantsQueryData): Array<IHorizonchartData> {
-        const wordforms = wordform_data.paradigms.map((d: ILemma) => d.lemma);
-        const result: Array<IHorizonchartData> = [];
+    const getParadigms = (wordformData: IVariantsQueryData): IHorizonchartData[] => {
+        const wordforms = wordformData.paradigms.map((d: ILemma) => d.lemma);
+        const result: IHorizonchartData[] = [];
 
-        wordforms.forEach(function (wordform) {
-            const paradigm = wordform_data.paradigms[wordforms.indexOf(wordform)];
+        wordforms.forEach((wordform) => {
+            const paradigm = wordformData.paradigms[wordforms.indexOf(wordform)];
             const variants = paradigm.variants;
 
-            variants.forEach(function (variant: IVariant) {
-                const all_frequencies = {};
-                var sum = 0;
-                variant.corpora.forEach(function (corpus: ICorpus) {
-                    corpus.frequencies.forEach(function (entry: ICorpusFrequencyEntry) {
+            variants.forEach((variant: IVariant) => {
+                const allFrequencies = {};
+                let sum = 0;
+                variant.corpora.forEach((corpus: ICorpus) => {
+                    corpus.frequencies.forEach((entry: ICorpusFrequencyEntry) => {
                         const date = parseDate(entry.year);
                         if (date !== null) {
-                            if (all_frequencies[date.toISOString()]) {
-                                all_frequencies[date.toISOString()] += entry.freq;
+                            if (allFrequencies[date.toISOString()]) {
+                                allFrequencies[date.toISOString()] += entry.freq;
                             } else {
-                                all_frequencies[date.toISOString()] = entry.freq;
+                                allFrequencies[date.toISOString()] = entry.freq;
                             }
                             sum += entry.freq;
                         }
                     });
                 });
-                const listed_frequencies: Array<IHorizonchartFrequencyEntry> = [];
-                for (let [key, value] of Object.entries(all_frequencies)) {
-                    listed_frequencies.push({ name: variant.wordform, date: new Date(key), value });
+                const listedFrequencies: IHorizonchartFrequencyEntry[] = [];
+                for (const [key, value] of Object.entries(allFrequencies)) {
+                    listedFrequencies.push({ name: variant.wordform, date: new Date(key), value });
                 }
-                listed_frequencies.sort((a, b) => a.date.getTime() - b.date.getTime());
-                if (listed_frequencies.length > 0) {
-                    result.push({ key: variant.wordform, values: listed_frequencies, sum, clip: {}, path: {} });
+                listedFrequencies.sort((a, b) => a.date.getTime() - b.date.getTime());
+                if (listedFrequencies.length > 0) {
+                    result.push({ key: variant.wordform, values: listedFrequencies, sum, clip: {}, path: {} });
                 }
             });
         });
@@ -85,74 +85,74 @@ export const drawChart = (variants_data: IVariantsQueryData, chart: HTMLDivEleme
         return result;
     }
 
-    if (variants_data) {
-        const horizonchart_data = getParadigms(variants_data);
+    if (variantsData) {
+        const horizonchartData = getParadigms(variantsData);
 
-        var horizonchart_height = horizonchart_step * (horizonchart_data.length + 1);
+        const horizonchartHeight = horizonchartStep * (horizonchartData.length + 1);
 
-        var svg = d3.select("#horizonchart").append("svg")
-            .attr("width", horizonchart_width + horizonchart_margin.left + horizonchart_margin.right)
-            .attr("height", horizonchart_height + horizonchart_margin.top + horizonchart_margin.bottom)
+        const svg = d3.select("#horizonchart").append("svg")
+            .attr("width", horizonchartWidth + horizonchartMargin.left + horizonchartMargin.right)
+            .attr("height", horizonchartHeight + horizonchartMargin.top + horizonchartMargin.bottom)
             .style("font", "10px sans-serif");
 
-        const minDate = parseDate(variants_data.metadata.min_year.toString());
-        const maxDate = parseDate(variants_data.metadata.max_year.toString());
+        const minDate = parseDate(variantsData.metadata.min_year.toString());
+        const maxDate = parseDate(variantsData.metadata.max_year.toString());
         if (minDate !== null && maxDate !== null) {
-            var horizonchart_x = d3.scaleTime()
+            const horizonchartX = d3.scaleTime()
                 .domain([minDate, maxDate])
-                .range([0, horizonchart_width])
+                .range([0, horizonchartWidth])
                 .nice();
 
-            var horizonchart_y = d3.scaleLinear()
-                .domain([0, d3.max(horizonchart_data, d => d3.max(d.values, d => d.value))])
-                .range([0, -horizonchart_overlap * horizonchart_step]);
+            const horizonchartY = d3.scaleLinear()
+                .domain([0, d3.max(horizonchartData, d => d3.max(d.values, d => d.value))])
+                .range([0, -horizonchartOverlap * horizonchartStep]);
 
-            var horizonchart_xAxis = (g: any) => g
-                .attr("transform", `translate(0,${horizonchart_margin.top})`)
-                .call(d3.axisTop(horizonchart_x).ticks(horizonchart_width / 80).tickSizeOuter(0))
-                .call((g: any) => g.selectAll(".tick").filter((d: any) => horizonchart_x(d) < horizonchart_margin.left || horizonchart_x(d) >= horizonchart_width - horizonchart_margin.right).remove())
+            const horizonchartXAxis = (g: any) => g
+                .attr("transform", `translate(0,${horizonchartMargin.top})`)
+                .call(d3.axisTop(horizonchartX).ticks(horizonchartWidth / 80).tickSizeOuter(0))
+                .call((g: any) => g.selectAll(".tick").filter((d: any) => horizonchartX(d) < horizonchartMargin.left || horizonchartX(d) >= horizonchartWidth - horizonchartMargin.right).remove())
                 .call((g: any) => g.select(".domain").remove());
 
-            var horizonchart_area = d3.area()
+            const horizonchartArea = d3.area()
                 .curve(d3.curveBasis)
                 .defined((d: any) => !isNaN(d.value))
-                .x((d: any) => horizonchart_x(d.date))
+                .x((d: any) => horizonchartX(d.date))
                 .y0(0)
-                .y1((d: any) => horizonchart_y(d.value));
+                .y1((d: any) => horizonchartY(d.value));
 
             const g = svg.append("g")
                 .selectAll("g")
-                .data(horizonchart_data)
+                .data(horizonchartData)
                 .join("g")
-                .attr("transform", (d: any, i: number) => `translate(0,${i * (horizonchart_step + 1) + horizonchart_margin.top})`);
+                .attr("transform", (d: any, i: number) => `translate(0,${i * (horizonchartStep + 1) + horizonchartMargin.top})`);
 
             g.append("clipPath")
                 .attr("id", (d: any) => (d.clip = clipuid()).id)
                 .append("rect")
-                .attr("width", horizonchart_width)
-                .attr("height", horizonchart_step);
+                .attr("width", horizonchartWidth)
+                .attr("height", horizonchartStep);
 
             g.append("defs").append("path")
                 .attr("id", (d: any) => (d.path = pathuid()).id)
-                .attr("d", (d: any) => horizonchart_area(d.values));
+                .attr("d", (d: any) => horizonchartArea(d.values));
 
             g.append("g")
                 .attr("clip-path", (d: any) => d.clip.s)
                 .selectAll("use")
-                .data((d: any) => new Array(horizonchart_overlap).fill(d))
+                .data((d: any) => new Array(horizonchartOverlap).fill(d))
                 .join("use")
-                .attr("fill", (d: any, i: number) => horizonchart_color(i))
-                .attr("transform", (d: any, i: number) => `translate(0,${(i + 1) * horizonchart_step})`)
+                .attr("fill", (d: any, i: number) => horizonchartColor(i))
+                .attr("transform", (d: any, i: number) => `translate(0,${(i + 1) * horizonchartStep})`)
                 .attr("xlink:href", (d: any) => d.path.href);
 
             g.append("text")
                 .attr("x", 4)
-                .attr("y", horizonchart_step / 2)
+                .attr("y", horizonchartStep / 2)
                 .attr("dy", "0.35em")
                 .text((d: any) => d.key);
 
             svg.append("g")
-                .call(horizonchart_xAxis);
+                .call(horizonchartXAxis);
         }
     }
 }

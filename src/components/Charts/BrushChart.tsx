@@ -33,7 +33,7 @@ class BrushChart extends React.Component<IProps, IState> {
                     <g transform={'translate(70, 430)'}>
                         {content}
                     </g>
-                    <g className='xAxis' transform={`translate(0, ${height})`}></g>
+                    <g className='xAxis' transform={`translate(0, ${height})`} />
                 </svg>
             </div>
         )

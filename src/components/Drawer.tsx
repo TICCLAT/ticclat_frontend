@@ -51,7 +51,7 @@ export interface IProps extends RouteComponentProps {
 const SideNav = withRouter((props: IProps) => {
 
     const classes = useStyles();
-    const isActive = (match) => {
+    const isActive = (match: string) => {
         return match === props.location.pathname.slice(1) ? classes.selectedItem : '';
     }
     return (
@@ -67,7 +67,8 @@ const SideNav = withRouter((props: IProps) => {
                     [classes.drawerClose]: !props.open,
                 }),
             }}
-            open={props.open}>
+            open={props.open}
+        >
             <div>
                 <IconButton onClick={props.drawerToggle}>
                     <ChevronLeftIcon />

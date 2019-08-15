@@ -51,10 +51,10 @@ export class NGramChart {
         this.domainXMax = info.metadata.max_year;
 
         info.corpora.forEach((d: ICorpus) => {
-            d.frequencies.forEach((d: any) => {
-                const newDate = this.parseDate(d.year!.toString());
-                d.year = newDate !== null ? newDate : new Date();
-                d.freq = +d.freq;
+            d.frequencies.forEach((item: any) => {
+                const newDate = this.parseDate(item.year!.toString());
+                item.year = newDate !== null ? newDate : new Date();
+                item.freq = +item.freq;
             });
         });
 
