@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Chip, Fab } from '@material-ui/core';
-import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import { Chip } from '@material-ui/core';
+import { Add as AddIcon, Delete as DeleteIcon, Search as SearchIcon } from '@material-ui/icons';
 import ReactDOM from 'react-dom';
 import { ShoppingBagContext } from '../../context/ShoppingBag';
-
-const AddButton = (props: { word: string, index: number }) => {
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+const AddButton = withRouter((props: { word: string, index: number } & RouteComponentProps) => {
   const shoppingBag = React.useContext(ShoppingBagContext);
   const { word } = props;
   const isInBag = shoppingBag.words.includes(word);
@@ -38,13 +38,11 @@ const AddButton = (props: { word: string, index: number }) => {
       if (type === "add") {
         itemClone.style.left = cartleft + 'px';
         itemClone.style.top = carttop + 'px';
-        //itemClone.style.width = '40px';
         itemClone.style.opacity = '0';
       }
       else {
         itemClone.style.left = left + 'px';
         itemClone.style.top = top + 'px';
-        //itemClone.style.width = '80px';
         itemClone.style.opacity = '0';
       }
 
@@ -57,7 +55,15 @@ const AddButton = (props: { word: string, index: number }) => {
   const handleClick = (event: any) => {
     const parent = ReactDOM.findDOMNode(event.target.parentElement) as Element
     const target = event.target.parentElement;
-
+    if (event.target.id === 'search' || event.target.parentElement.id === 'search') {
+      props.history.push({
+        pathname: '/overview',
+        search: '?searching=' + word
+      })
+      const chart = document.getElementById('chart')
+      if (chart !== null) { chart.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
+      return
+    }
     if (isInBag) {
       animate(parent, target, "delete")
       shoppingBag.removeWord(word)
@@ -69,7 +75,7 @@ const AddButton = (props: { word: string, index: number }) => {
   }
   const handleDelete = (event: any) => {
     const parent = ReactDOM.findDOMNode(event.target.parentElement.parentElement) as Element
-    const target = parent.children[0];
+    const target = parent
     if (event.target.parentElement.id === 'delete') {
       animate(parent, target, "delete")
       shoppingBag.removeWord(word)
@@ -88,8 +94,9 @@ const AddButton = (props: { word: string, index: number }) => {
       onDelete={handleDelete}
       onClick={handleClick}
       deleteIcon={isInBag ? <DeleteIcon id="delete" /> : <AddIcon id="add" />}
+      icon={<SearchIcon id="search" />}
     />
   );
-}
+})
 
 export default AddButton;

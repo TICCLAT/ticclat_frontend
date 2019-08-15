@@ -6,7 +6,7 @@ import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
 import NGramTimeline from '../components/NGramTimeline';
 import HorizonChartContainer from '../components/HorizonChartContainer';
-
+// import { RouteComponentProps } from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(3),
@@ -60,7 +60,6 @@ const overview = ({ history }) => {
                 </Grid>
                 <Grid item={true} xs={12} md={8} lg={8}>
                     <Paper className={classes.paper}>
-                        {/* <Timeline wordform={searchValue} /> */}
                         <NGramTimeline wordform={searchValue} />
                     </Paper>
                 </Grid>
