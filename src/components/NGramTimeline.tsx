@@ -2,7 +2,7 @@ import React from 'react';
 import { NGramChart } from './Charts/NGram';
 import { backendURL } from '../settings';
 import { Typography, CircularProgress } from '@material-ui/core';
-import { IData } from 'types';
+import { IData } from '../../types';
 
 interface IProps {
     wordform: string
@@ -11,7 +11,7 @@ interface IProps {
 interface IState {
     info: IData | null,
     isLoading: boolean,
-    chart: NGramChart
+    chart: NGramChart | null
 }
 
 export default class NGramTimeline extends React.Component<IProps, IState> {
@@ -55,7 +55,6 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
     }
 
     render() {
-        debugger;
         const { wordform } = this.props;
         const { info, isLoading } = this.state;
         let content = null;

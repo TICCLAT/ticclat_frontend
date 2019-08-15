@@ -6,7 +6,6 @@ interface IProps {
 }
 
 const Line = (props: IProps) => {
-    debugger;
     return (
         <g><path d={props.path} stroke={props.color} /></g>
     )
