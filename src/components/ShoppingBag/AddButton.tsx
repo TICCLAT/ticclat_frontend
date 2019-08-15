@@ -4,6 +4,7 @@ import { Add as AddIcon, Delete as DeleteIcon, Search as SearchIcon } from '@mat
 import ReactDOM from 'react-dom';
 import { ShoppingBagContext } from '../../context/ShoppingBag';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+
 const AddButton = withRouter((props: { word: string, index: number } & RouteComponentProps) => {
   const shoppingBag = React.useContext(ShoppingBagContext);
   const { word } = props;

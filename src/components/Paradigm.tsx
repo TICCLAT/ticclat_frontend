@@ -1,8 +1,7 @@
-import { Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
-import TableHead from '@material-ui/core/TableHead';
+import { Typography } from '@material-ui/core';
 import React from 'react';
 import { backendURL } from '../settings';
-import AddButton from './ShoppingBag/AddButton';
+import ParadigmTable from './ParadigmTable/ParadigmTable';
 
 export interface IProps {
   id: number;
@@ -27,45 +26,20 @@ const Paradigm = ({ id }: IProps) => {
       .then(setVariants);
   }, [id]);
 
-  const Rows = variants.map((variant, index) => (
-    <TableRow key={variant.wordform}>
-      <TableCell><AddButton word={variant.wordform} index={index} /></TableCell>
-      <TableCell>{variant.V}</TableCell>
-      <TableCell>{variant.word_type_code}</TableCell>
-      <TableCell>{variant.min_year || '?'}</TableCell>
-      <TableCell>{variant.max_year || '?'}</TableCell>
-      <TableCell>{variant.num_corpora}</TableCell>
-      <TableCell>{variant.num_lexica}</TableCell>
-      <TableCell>{variant.num_paradigms}</TableCell>
-    </TableRow>
-  ));
+
   const lemma = variants.filter(v => v.word_type_code === 'HCL')[0]
   const title = lemma ? lemma.wordform : id;
 
+  const content = variants.length > 0 ? <ParadigmTable variants={variants} /> : <p>No paradigm</p>
   return (
     <>
       <Typography variant="h6" id="tableTitle" align='center'>
         {title}
       </Typography>
-      <Table >
-        <TableHead>
-          <TableRow>
-            <TableCell>Wordform</TableCell>
-            <TableCell>V</TableCell>
-            <TableCell>Code</TableCell>
-            <TableCell>Min year</TableCell>
-            <TableCell>Max year</TableCell>
-            <TableCell># Corpora</TableCell>
-            <TableCell># Lexica</TableCell>
-            <TableCell># Paradigms</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Rows}
-        </TableBody>
-      </Table>
+      {content}
     </>
-  );
+  )
+
 }
 
 export default Paradigm;
