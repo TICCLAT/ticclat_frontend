@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 
 const overview = ({ history }) => {
     const setValue = (value: string) => {
-        setSearchValue(value.toLowerCase())
+        setSearchValue(value)
     }
     const [searchValue, setSearchValue] = useState();
     const classes = useStyles();

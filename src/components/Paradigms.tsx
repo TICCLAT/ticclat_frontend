@@ -27,8 +27,8 @@ const Paradigms = ({ wordform }: IProps) => {
   }, [wordform]);
 
   const Cards = lemmas.length > 0 ? lemmas.map(lemma => (
-    <Grid item={true} xs={6} md={6} lg={6} key={lemma.paradigm_id}>
-      <Card style={{ height: 400, overflowY: 'scroll' }}>
+    <Grid item={true} xs={6} md={6} lg={8} key={lemma.paradigm_id}>
+      <Card style={{ height: 400, overflowY: 'scroll', overflowX: 'scroll' }}>
         <Paradigm id={lemma.paradigm_id} />
       </Card>
     </Grid>

@@ -27,9 +27,9 @@ const Paradigm = ({ id }: IProps) => {
       .then(setVariants);
   }, [id]);
 
-  const Rows = variants.map(variant => (
+  const Rows = variants.map((variant, index) => (
     <TableRow key={variant.wordform}>
-      <TableCell><AddButton word={variant.wordform} /></TableCell>
+      <TableCell><AddButton word={variant.wordform} index={index} /></TableCell>
       <TableCell>{variant.V}</TableCell>
       <TableCell>{variant.word_type_code}</TableCell>
       <TableCell>{variant.min_year || '?'}</TableCell>

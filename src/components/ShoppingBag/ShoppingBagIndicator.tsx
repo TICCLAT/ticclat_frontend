@@ -25,7 +25,7 @@ const ShoppingBagIndicator = () => {
           </CardContent>
         </Card>
       </Popover>
-      <IconButton title="Bag Of Words" color="inherit" onClick={() => setShoppingBagVisible(!shoppingBagVisible)}>
+      <IconButton title="Bag Of Words" color="inherit" onClick={() => setShoppingBagVisible(!shoppingBagVisible)} id="cart">
         <Badge
           badgeContent={shoppingBag.words.length}
           color="primary"
