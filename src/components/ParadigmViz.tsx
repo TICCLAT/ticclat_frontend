@@ -1,147 +1,196 @@
-import * as React from 'react';
-import { backendURL } from '../settings';
 import { CircularProgress, makeStyles } from '@material-ui/core';
-
+import * as ReactDOM from 'react-dom';
 import * as d3 from 'd3';
-import pdata from './pdata';
+import * as React from 'react';
+import { ShoppingBagContext } from '../context/ShoppingBag';
+import { backendURL } from '../settings';
+
+interface INode extends d3.SimulationNodeDatum {
+  id: string;
+  frequency: number;
+  tc_x: number;
+  type: string;
+  wordform: string;
+}
+
+interface IDBLink {
+  id: string;
+  source: string;
+  target: string;
+  type: 'XW' | 'XX' | string;
+}
+
+interface ILink extends d3.SimulationLinkDatum<INode> {
+  id: string;
+  source: INode;
+  target: INode;
+  type: 'XW' | 'XX' | string;
+}
 
 interface IData {
-  self: {
-    X: number;
-    Y: number;
-    Z: number;
-  };
-  X_list: Array<{
-    X: number;
-    W_list: Array<{
-      W: number;
-      frequency: number;
-      wordform: string;
-      wordform_id: number;
-    }>
-  }>;
+  nodes: INode[];
+  links: IDBLink[];
 }
 
 const useStyles = makeStyles({
   root: {
     '& svg circle:hover': {
-      fill: 'green',
+      fill: 'green'
+    },
+    '& #word-popup': {
+      backgroundColor: 'white',
+      border: '1px solid black',
+      padding: '10px',
+      color: 'black'
     }
   },
 });
+
+
+interface IVariantsProps {
+  w: number;
+  x: number;
+  y: number;
+  z: number;
+}
+
+const VariantsList = (props: IVariantsProps) => {
+  const { w, x, y, z } = props;
+  return (
+    <div>{w}{x}{y}{z}</div>
+  )
+}
+
+
 
 const ParadigmViz = React.memo((props: { wordform: string }) => {
   const selfRef = React.createRef<HTMLDivElement>();
   const classes = useStyles();
 
+  const shoppingBag = React.useContext(ShoppingBagContext);
+
   React.useEffect(() => {
-    // fetch(`${backendURL}/network/${props.wordform}`).then(r=>r.json()).then((data: IData) => {
-    //   const container = selfRef.current;
-    //   while (container && container.firstChild) {
-    //     container.removeChild(container.firstChild);
-    //     d3Force(props.wordform, data, container);
-    //   }
-    // });
-    const container = selfRef.current;
-    if (container) {
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
-      d3Force(props.wordform, pdata, container);
+    if (shoppingBag.words.length === 0) {
+      return;
     }
-  }, [props.wordform]);
+    const q = (wordform: string) => fetch(`${backendURL}/network/${wordform}`).then(r => r.json());
+    Promise.all(
+      shoppingBag.words.slice(0,5).map(word => q(word))
+    ).then((queryResults: IData[]) => {
+      const allNodes: INode[] = [].concat(...queryResults.map(data => data.nodes) as any);
+      const allLinks: IDBLink[] = [].concat(...queryResults.map(data => data.links) as any);
+      const uniqueNodes = allNodes.filter(node => allNodes.find(n => n.id === node.id) === node);
+      const uniqueLinks = allLinks.filter(link => allLinks.find(n => n.id === link.id) === link);
+
+      const container = selfRef.current;
+      if (container) {
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+        d3Force(props.wordform, {
+          nodes: uniqueNodes,
+          links: uniqueLinks,
+        }, container);
+      }
+    });
+  }, [shoppingBag]);
 
   return (
     <div className={classes.root} ref={selfRef}>
-      <CircularProgress />
+      { shoppingBag.words.length === 0
+      ? <div>Shopping bag empty...</div>
+      : <CircularProgress/>
+      }
     </div>
   );
 });
 
 const d3Force = (wordform: string, data: IData, ref: HTMLDivElement) => {
   const svg = d3.select(ref).append('svg');
+  const rootG = svg.append('g');
 
-  svg.attr('width', 1000)
-  svg.attr('height', 1000)
+  svg.call(
+    (d3.zoom() as any)
+    .extent([[0, 0], [1000, 1000]])
+    .scaleExtent([-1, 8])
+    .on("zoom", zoomed)
+  );
 
-  const width = +svg.attr("width");
-  const height = +svg.attr("height");
-
-  interface INode {
-    id: string;
-    x: number;
-    w: number;
-    wordform: string;
-    frequency: number;
-    mainNode: boolean;
+  function zoomed() {
+    rootG.attr("transform", d3.event.transform);
   }
 
-  const nestedNodes: INode[][] = data.X_list.map(x => x.W_list.map((w, i) => ({
-    id: `X${x.X}W${w.W}`,
-    x: x.X,
-    w: w.W,
-    wordform: w.wordform,
-    frequency: w.frequency,
-    mainNode: i===0,
-  })));
+  svg.attr('width', 1000);
+  svg.attr('height', 1000);
 
-  const nodes: INode[] = [].concat(...nestedNodes as any);
+  const width = +rootG.attr('width');
+  const height = +rootG.attr('height');
 
-  const selfNode = nodes.find(node => node.x === data.self.X) as INode;
+  const nodes = data.nodes;
+  const links: ILink[] = data.links.map(dbLink => ({
+    ...dbLink,
+    source: nodes.find(node => node.id === dbLink.source)!,
+    target: nodes.find(node => node.id === dbLink.target)!,
+  }));
 
-  const nestedLinks = data.X_list.map(x => {
-    const xLinks: any[] = [];
-    const mainNode = nodes.find(node => node.x === x.X && node.w === x.W_list[0].W);
-    xLinks.push({
-      source: selfNode,
-      target: mainNode,
-      type: 'X-X',
-      strength: 1
-    });
-    x.W_list.forEach(w => {
-      const targetNode = nodes.find(node => node.x === x.X && node.w === w.W)
-      xLinks.push({
-        source: mainNode,
-        target: targetNode,
-        type: 'X-W'
-      });
-    })
-    return xLinks;
-  });
+  // const links: any[] = [].concat(...nestedLinks as any);
 
-  const links: any[] = [].concat(...nestedLinks as any);
-
-  const simulation = d3.forceSimulation()
-    .force("link", d3.forceLink()
+  const simulation = d3.forceSimulation<INode, ILink>(nodes)
+    .force('link', d3.forceLink<INode, ILink>(links)
       .id(d => d.id)
-      .strength((d: any) => d.type === 'X-W' ? 0.2 : 0.1)
+      .distance(d => {
+        if (d.type === 'XW') {
+          return 60;
+        }
+        else {
+          return 5 * Math.abs(d.source.tc_x - d.target.tc_x)
+        }
+      })
+      .strength(3)
     )
-    .force("charge", d3.forceManyBody().strength(-5))
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    // .force('charge', d3.forceManyBody<INode>().strength(-10))
+    .force('charge', d3.forceManyBody().strength(-400))
+    // .force('charge', d3.forceRadial<INode>(100, width / 2, height/2).strength(0.01))
+    .force('x', d3.forceX(width / 2).strength(0.2))
+    .force('y', d3.forceY(height / 2).strength(0.2))
 
-
-  const link = svg.append("g")
-    .attr("class", "links")
-    .selectAll("line")
+  const linkGs = rootG.append('g')
+    .attr('class', 'links')
+    .selectAll('line')
     .data(links)
-    .enter().append("line")
-    .attr("stroke-width", 1)
-    .attr("stroke", 'black');
+    .enter().append('line')
+    .attr('stroke-width', 1)
+    .attr('stroke', 'black');
 
-  const d3nodes = svg.append("g")
-    .attr("class", "nodes")
-    .selectAll("g")
+  const d3nodes = rootG.append('g')
+    .attr('class', 'nodes')
+    .selectAll('g')
     .data(nodes)
-    .enter().append("g")
+    .enter().append('g')
     .attr('data-wordform', d => d.wordform)
+    .call(
+      (d3.drag() as any)
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended)
+    )
+    .on('mouseover', function(d) {
+      const rect = this.getBoundingClientRect();
+      const div = document.getElementById('word-popup') || document.createElement('div');
+      ReactDOM.render((<VariantsList w={1} x={1} y={1} z={1}/>), div);
+      div.id = 'word-popup';
+      // div.innerHTML = d.wordform;
+      div.style.position = 'fixed';
+      div.style.left = `${rect.left + 10}px`;
+      div.style.top = `${rect.top + 10}px`;
+      ref.appendChild(div);
+    });
 
-  const circles = d3nodes.append("circle")
-    .attr("r", 5)
-    .attr("fill", d => d.mainNode ? 'red' : 'black')
-    // .call(d3.drag()
-    //   .on("start", dragstarted as any)
-    //   .on("drag", dragged)
-    //   .on("end", dragended));
+  const circles = d3nodes.append('circle')
+    .attr('r', 5)
+    .attr('fill', d => d.type === 'x' ? 'red' : 'black')
+
+
 
   // const lables = d3nodes.append("text")
   //   .text(d => d.wordform)
@@ -152,41 +201,37 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement) => {
   //   .text(d=>d.wordform);
 
   simulation
-    .nodes(nodes)
-    .on("tick", ticked);
-
-  simulation.force("link")!
-    .links(links);
+    .on('tick', ticked);
 
   function ticked() {
-    link
-      .attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
+    linkGs
+      .attr('x1', d => d.source.x!)
+      .attr('y1', d => d.source.y!)
+      .attr('x2', d => d.target.x!)
+      .attr('y2', d => d.target.y!)
 
     d3nodes
-      .attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")";
-      })
+      .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
   }
-  //
-  // function dragstarted(d) {
-  //   if (!d3.event.active) { simulation.alphaTarget(0.3).restart(); }
-  //   d.fx = d.x;
-  //   d.fy = d.y;
-  // }
-  //
-  // function dragged(d) {
-  //   d.fx = d3.event.x;
-  //   d.fy = d3.event.y;
-  // }
-  //
-  // function dragended(d) {
-  //   if (!d3.event.active) { simulation.alphaTarget(0); }
-  //   d.fx = null;
-  //   d.fy = null;
-  // }
-}
+
+
+  function dragstarted(d) {
+    d3.select(this).raise();
+    if (!d3.event.active) { simulation.alphaTarget(0.3).restart(); }
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d) {
+    if (!d3.event.active) { simulation.alphaTarget(0); }
+    d.fx = null;
+    d.fy = null;
+  }
+};
 
 export default ParadigmViz;
