@@ -39,6 +39,10 @@ const useStyles = makeStyles(theme => ({
 
 const overview = ({ history }) => {
     const setValue = (value: string) => {
+        history.push({
+            pathname: '/overview',
+            search: '?searching=' + value,
+        })
         setSearchValue(value)
     }
     const [searchValue, setSearchValue] = useState();
