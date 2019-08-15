@@ -8,7 +8,10 @@ import { backendURL } from '../settings';
 interface INode extends d3.SimulationNodeDatum {
   id: string;
   frequency: number;
+  tc_w: number;
   tc_x: number;
+  tc_y: number;
+  tc_z: number;
   type: string;
   wordform: string;
 }
@@ -54,10 +57,29 @@ interface IVariantsProps {
   z: number;
 }
 
-const VariantsList = (props: IVariantsProps) => {
-  const { w, x, y, z } = props;
+interface IVariant {
+  frequency: number;
+  wordform: string;
+};
+
+const VariantsList = ({ w, x, y, z }: IVariantsProps) => {
+
+  const [ state, setState ] = React.useState<IVariant[]>([]);
+  React.useEffect(() => {
+    fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
+      .then(r => r.json())
+      .then(result => setState(result));
+  }, []);
   return (
-    <div>{w}{x}{y}{z}</div>
+    <div>
+      <div>W: {w}</div>
+      <div>X: {x}</div>
+      <div>Y: {y}</div>
+      <div>Z: {z}</div>
+      {state.map(r => (
+        <div key={r.wordform}>{r.wordform}: {r.frequency}</div>
+      ))}
+    </div>
   )
 }
 
@@ -162,58 +184,6 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement) => {
     .attr('stroke-width', 1)
     .attr('stroke', 'black');
 
-  const d3nodes = rootG.append('g')
-    .attr('class', 'nodes')
-    .selectAll('g')
-    .data(nodes)
-    .enter().append('g')
-    .attr('data-wordform', d => d.wordform)
-    .call(
-      (d3.drag() as any)
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended)
-    )
-    .on('mouseover', function(d) {
-      const rect = this.getBoundingClientRect();
-      const div = document.getElementById('word-popup') || document.createElement('div');
-      ReactDOM.render((<VariantsList w={1} x={1} y={1} z={1}/>), div);
-      div.id = 'word-popup';
-      // div.innerHTML = d.wordform;
-      div.style.position = 'fixed';
-      div.style.left = `${rect.left + 10}px`;
-      div.style.top = `${rect.top + 10}px`;
-      ref.appendChild(div);
-    });
-
-  const circles = d3nodes.append('circle')
-    .attr('r', 5)
-    .attr('fill', d => d.type === 'x' ? 'red' : 'black')
-
-
-
-  // const lables = d3nodes.append("text")
-  //   .text(d => d.wordform)
-  //   .attr('x', 6)
-  //   .attr('y', 3);
-
-  // d3nodes.append("title")
-  //   .text(d=>d.wordform);
-
-  simulation
-    .on('tick', ticked);
-
-  function ticked() {
-    linkGs
-      .attr('x1', d => d.source.x!)
-      .attr('y1', d => d.source.y!)
-      .attr('x2', d => d.target.x!)
-      .attr('y2', d => d.target.y!)
-
-    d3nodes
-      .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
-  }
-
 
   function dragstarted(d) {
     d3.select(this).raise();
@@ -232,6 +202,53 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement) => {
     d.fx = null;
     d.fy = null;
   }
+
+  const d3nodes = rootG.append('g')
+    .attr('class', 'nodes')
+    .selectAll('g')
+    .data(nodes)
+    .enter().append('g')
+    .attr('data-wordform', d => d.wordform)
+    .call(
+      (d3.drag() as any)
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended)
+    )
+    .on('mouseover', function(d) {
+      const rect = this.getBoundingClientRect();
+      const div = document.getElementById('word-popup') || document.createElement('div');
+      ReactDOM.render((<VariantsList w={d.tc_w} x={d.tc_x} y={d.tc_y} z={d.tc_z}/>), div);
+      div.id = 'word-popup';
+      // div.innerHTML = d.wordform;
+      div.style.position = 'fixed';
+      div.style.left = `${rect.left + 10}px`;
+      div.style.top = `${rect.top + 10}px`;
+      ref.appendChild(div);
+    });
+
+  const frequencyToRadius = d3.scaleLog().domain([1, 1e8]).range([0.1, 10]);
+
+  const circles = d3nodes.append('circle')
+    .attr('r', d => frequencyToRadius(d.frequency))
+    .attr('fill', d => d.type === 'x' ? 'red' : 'black')
+
+  simulation
+    .on('tick', ticked);
+
+  function ticked() {
+    linkGs
+      .attr('x1', d => d.source.x!)
+      .attr('y1', d => d.source.y!)
+      .attr('x2', d => d.target.x!)
+      .attr('y2', d => d.target.y!)
+
+    d3nodes
+      .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
+  }
+
+
+
 };
 
 export default ParadigmViz;
