@@ -60,30 +60,51 @@ interface IVariantsProps {
 interface IVariant {
   frequency: number;
   wordform: string;
-};
-
-const VariantsList = ({ w, x, y, z }: IVariantsProps) => {
-
-  const [ state, setState ] = React.useState<IVariant[]>([]);
-  React.useEffect(() => {
-    fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
-      .then(r => r.json())
-      .then(result => setState(result));
-  }, []);
-  return (
-    <div>
-      <div>W: {w}</div>
-      <div>X: {x}</div>
-      <div>Y: {y}</div>
-      <div>Z: {z}</div>
-      {state.map(r => (
-        <div key={r.wordform}>{r.wordform}: {r.frequency}</div>
-      ))}
-    </div>
-  )
 }
 
+interface WXYZ {
+  w: number;
+  x: number;
+  y: number;
+  z: number;
+}
 
+class VariantsList extends React.Component<{}, {
+  variants: IVariant[],
+  wxyz: WXYZ
+}> {
+  state = {
+    wxyz: { w: 0, x: 0, y: 0, z: 0},
+    variants: [] as IVariant[]
+  }
+
+  loadWXYZ(wxyz: WXYZ) {
+    const {w, x, y, z} = wxyz;
+    fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
+       .then(r => r.json())
+       .then(result => this.setState({
+         wxyz, variants: result
+       }));
+  }
+
+  render () {
+    const {w, x, y, z} = this.state.wxyz;
+    const variants = this.state.variants;
+    return (
+      <div>
+        <div>W: {w}</div>
+        <div>X: {x}</div>
+        <div>Y: {y}</div>
+        <div>Z: {z}</div>
+        {variants.map(r => (
+          <div key={r.wordform}>{r.wordform}: {r.frequency}</div>
+        ))}
+      </div>
+    )
+  }
+}
+
+const portalContainer = document.createElement('div');
 
 const ParadigmViz = React.memo((props: { wordform: string }) => {
   const selfRef = React.createRef<HTMLDivElement>();
@@ -117,18 +138,27 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
     });
   }, [shoppingBag]);
 
+  const variantsListRef = React.createRef<VariantsList>();
+
+  console.log(variantsListRef);
+
   return (
     <div className={classes.root} ref={selfRef}>
       { shoppingBag.words.length === 0
       ? <div>Shopping bag empty...</div>
       : <CircularProgress/>
       }
+      { ReactDOM.createPortal(
+        <VariantsList ref={variantsListRef} />,
+        portalContainer
+      ) }
     </div>
   );
 });
 
 const d3Force = (wordform: string, data: IData, ref: HTMLDivElement) => {
   const svg = d3.select(ref).append('svg');
+  svg.node()!.appendChild(portalContainer);
   const rootG = svg.append('g');
 
   svg.call(
