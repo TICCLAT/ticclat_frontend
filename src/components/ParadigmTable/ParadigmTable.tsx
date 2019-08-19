@@ -5,6 +5,7 @@ import {
     TableCell,
     TableRow,
 } from '@material-ui/core';
+import { ShoppingBagContext } from '../../context/ShoppingBag';
 import ParadigmHeader from './ParadigmHeader';
 import AddButton from '../ShoppingBag/AddButton';
 export function desc<T>(a: T, b: T, orderBy: keyof T) {
@@ -45,6 +46,29 @@ interface IState {
     order: Order;
     orderBy: string;
 }
+
+const Row = ({ variant }: {variant: any}) => {
+    const shoppingBag = React.useContext(ShoppingBagContext);
+    return (
+      <TableRow>
+          <TableCell>
+              <AddButton
+                index={variant.wordform}
+                shoppingBag={shoppingBag}
+                word={variant.wordform as string}
+              />
+          </TableCell>
+          <TableCell>{variant.V}</TableCell>
+          <TableCell>{variant.word_type_code}</TableCell>
+          <TableCell>{variant.min_year || '?'}</TableCell>
+          <TableCell>{variant.max_year || '?'}</TableCell>
+          <TableCell>{variant.num_corpora}</TableCell>
+          <TableCell>{variant.num_lexica}</TableCell>
+          <TableCell>{variant.num_paradigms}</TableCell>
+      </TableRow>
+    )
+}
+
 class ParadigmTable extends React.Component<IProps, IState> {
     state = {
         order: 'asc' as Order,
@@ -75,19 +99,7 @@ class ParadigmTable extends React.Component<IProps, IState> {
                     rowCount={variants.length}
                 />
                 <TableBody>
-                    {sortedData.map((variant, index) => (
-                        <TableRow key={variant.wordform}>
-                            <TableCell><AddButton word={variant.wordform as string} index={index} /></TableCell>
-                            <TableCell>{variant.V}</TableCell>
-                            <TableCell>{variant.word_type_code}</TableCell>
-                            <TableCell>{variant.min_year || '?'}</TableCell>
-                            <TableCell>{variant.max_year || '?'}</TableCell>
-                            <TableCell>{variant.num_corpora}</TableCell>
-                            <TableCell>{variant.num_lexica}</TableCell>
-                            <TableCell>{variant.num_paradigms}</TableCell>
-                        </TableRow>
-                    ))
-                    }
+                    {sortedData.map((variant, index) => (<Row key={index} variant={variant} />))}
                 </TableBody>
             </Table>
         );

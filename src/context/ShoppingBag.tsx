@@ -8,9 +8,9 @@ export interface IContextProps {
 
 export const defaultValue = {
   // tslint:disable-next-line:no-empty
-  addWord: (word: string) => {},
+  addWord: (word: string) => { },
   // tslint:disable-next-line:no-empty
-  removeWord: (word: string) => {},
+  removeWord: (word: string) => { },
   words: [],
 }
 
@@ -18,7 +18,7 @@ export const ShoppingBagContext = React.createContext<IContextProps>(defaultValu
 export const ShoppingBagContextConsumer = ShoppingBagContext.Consumer;
 
 export const ShoppingBagProvider = (props: { children: JSX.Element[] | JSX.Element }) => {
-  const [ words, setWords ] = React.useState<string[]>([]);
+  const [words, setWords] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     const storedWords = localStorage.getItem('shoppingBag');
@@ -42,7 +42,7 @@ export const ShoppingBagProvider = (props: { children: JSX.Element[] | JSX.Eleme
   }
 
   return (
-    <ShoppingBagContext.Provider value={{words, addWord, removeWord }} >
+    <ShoppingBagContext.Provider value={{ words, addWord, removeWord }} >
       {props.children}
     </ShoppingBagContext.Provider>
   )

@@ -3,6 +3,7 @@ import ChartIcon from '@material-ui/icons/BarChart';
 import InfoIcon from '@material-ui/icons/Info';
 import GlossaryIcon from '@material-ui/icons/LibraryBooks';
 import TutorialIcon from '@material-ui/icons/Assignment';
+import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 
 const Menu = [
     {
@@ -20,6 +21,10 @@ const Menu = [
     {
         name: 'Tutorial',
         icon: <TutorialIcon />
+    },
+    {
+        name: 'ParadigmNetwork',
+        icon: <DeviceHubIcon />
     }
 ]
 

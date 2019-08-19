@@ -2,12 +2,10 @@ import * as React from 'react';
 import { Chip } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon, Search as SearchIcon } from '@material-ui/icons';
 import ReactDOM from 'react-dom';
-import { ShoppingBagContext } from '../../context/ShoppingBag';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-const AddButton = withRouter((props: { word: string, index: number } & RouteComponentProps) => {
-  const shoppingBag = React.useContext(ShoppingBagContext);
-  const { word } = props;
+const AddButton = withRouter((props: { word: string, index: number, shoppingBag: any  } & RouteComponentProps) => {
+  const { word, shoppingBag } = props;
   const isInBag = shoppingBag.words.includes(word);
   const animate = (parent: Element, target: any, type: string) => {
     // Get the cart and cart's position
