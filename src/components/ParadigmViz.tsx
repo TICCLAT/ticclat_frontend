@@ -124,7 +124,7 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
     if (shoppingBag.words.length === 0) {
       return;
     }
-    const q = (wordform: string) => fetch(`${backendURL}/network/regering`).then(r => r.json());
+    const q = (wordform: string) => fetch(`${backendURL}/network/${wordform}`).then(r => r.json());
     Promise.all(
       shoppingBag.words.slice(0, 5).map(word => q(word))
     ).then((queryResults: IData[]) => {
