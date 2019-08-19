@@ -166,7 +166,7 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
   const svg = d3.select(ref).append('svg');
   ref.appendChild(portalContainer);
   const rootG = svg.append('g');
-
+  portalContainer.style.display = 'none'
   svg.call(
     (d3.zoom() as any)
       .extent([[0, 0], [1000, 1000]])
