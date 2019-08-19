@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Chip } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon, Search as SearchIcon } from '@material-ui/icons';
 import ReactDOM from 'react-dom';
-import { ShoppingBagContext } from '../../context/ShoppingBag';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { ShoppingBagContext } from '../../context/ShoppingBag';
 
 const AddButton = withRouter((props: { word: string, index: number } & RouteComponentProps) => {
   const shoppingBag = React.useContext(ShoppingBagContext);
