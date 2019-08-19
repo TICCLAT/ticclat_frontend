@@ -4,7 +4,8 @@ import * as d3 from 'd3';
 import * as React from 'react';
 import { ShoppingBagContext } from '../context/ShoppingBag';
 import { backendURL } from '../settings';
-
+import AddButton from '../components/ShoppingBag/AddButton';
+// import BokehPlot from '../components/BokehPlot';
 interface INode extends d3.SimulationNodeDatum {
   id: string;
   frequency: number;
@@ -55,6 +56,7 @@ interface IVariantsProps {
   x: number;
   y: number;
   z: number;
+  shoppingBag: any;
 }
 
 interface IVariant {
@@ -62,9 +64,9 @@ interface IVariant {
   wordform: string;
 };
 
-const VariantsList = ({ w, x, y, z }: IVariantsProps) => {
+const VariantsList = ({ w, x, y, z, shoppingBag }: IVariantsProps) => {
 
-  const [ state, setState ] = React.useState<IVariant[]>([]);
+  const [state, setState] = React.useState<IVariant[]>([]);
   React.useEffect(() => {
     fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
       .then(r => r.json())
@@ -76,9 +78,13 @@ const VariantsList = ({ w, x, y, z }: IVariantsProps) => {
       <div>X: {x}</div>
       <div>Y: {y}</div>
       <div>Z: {z}</div>
-      {state.map(r => (
-        <div key={r.wordform}>{r.wordform}: {r.frequency}</div>
+      {state.map((r, index) => (
+        <>
+          <div key={r.wordform}>{r.wordform}: {r.frequency}</div>
+          <AddButton word={r.wordform} index={index} shoppingBag={shoppingBag} />
+        </>
       ))}
+
     </div>
   )
 }
@@ -95,9 +101,9 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
     if (shoppingBag.words.length === 0) {
       return;
     }
-    const q = (wordform: string) => fetch(`${backendURL}/network/${wordform}`).then(r => r.json());
+    const q = (wordform: string) => fetch(`${backendURL}/network/regering`).then(r => r.json());
     Promise.all(
-      shoppingBag.words.slice(0,5).map(word => q(word))
+      shoppingBag.words.slice(0, 5).map(word => q(word))
     ).then((queryResults: IData[]) => {
       const allNodes: INode[] = [].concat(...queryResults.map(data => data.nodes) as any);
       const allLinks: IDBLink[] = [].concat(...queryResults.map(data => data.links) as any);
@@ -112,30 +118,30 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
         d3Force(props.wordform, {
           nodes: uniqueNodes,
           links: uniqueLinks,
-        }, container);
+        }, container, shoppingBag);
       }
     });
   }, [shoppingBag]);
 
   return (
     <div className={classes.root} ref={selfRef}>
-      { shoppingBag.words.length === 0
-      ? <div>Shopping bag empty...</div>
-      : <CircularProgress/>
+      {shoppingBag.words.length === 0
+        ? <div>Shopping bag empty...</div>
+        : <CircularProgress />
       }
     </div>
   );
 });
 
-const d3Force = (wordform: string, data: IData, ref: HTMLDivElement) => {
+const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, shoppingBag: any) => {
   const svg = d3.select(ref).append('svg');
   const rootG = svg.append('g');
 
   svg.call(
     (d3.zoom() as any)
-    .extent([[0, 0], [1000, 1000]])
-    .scaleExtent([-1, 8])
-    .on("zoom", zoomed)
+      .extent([[0, 0], [1000, 1000]])
+      .scaleExtent([-1, 8])
+      .on("zoom", zoomed)
   );
 
   function zoomed() {
@@ -215,10 +221,12 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement) => {
         .on("drag", dragged)
         .on("end", dragended)
     )
-    .on('mouseover', function(d) {
+    .on('mouseover', function (d, i) {
+      debugger;
       const rect = this.getBoundingClientRect();
+
       const div = document.getElementById('word-popup') || document.createElement('div');
-      ReactDOM.render((<VariantsList w={d.tc_w} x={d.tc_x} y={d.tc_y} z={d.tc_z}/>), div);
+      ReactDOM.render((<VariantsList w={d.tc_w} x={d.tc_x} y={d.tc_y} z={d.tc_z} shoppingBag={shoppingBag} />), div);
       div.id = 'word-popup';
       // div.innerHTML = d.wordform;
       div.style.position = 'fixed';

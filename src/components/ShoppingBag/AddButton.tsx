@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Chip, Fab } from '@material-ui/core';
+import { Chip } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
 import ReactDOM from 'react-dom';
-import { ShoppingBagContext } from '../../context/ShoppingBag';
+// import { ShoppingBagContext } from '../../context/ShoppingBag';
 
-const AddButton = (props: { word: string, index: number }) => {
-  const shoppingBag = React.useContext(ShoppingBagContext);
-  const { word } = props;
+const AddButton = (props: { word: string, index: number, shoppingBag: any }) => {
+  // const shoppingBag = React.useContext(ShoppingBagContext);
+  const { word, shoppingBag } = props;
   const isInBag = shoppingBag.words.includes(word);
   const animate = (parent: Element, target: any, type: string) => {
     // Get the cart and cart's position
@@ -38,13 +38,11 @@ const AddButton = (props: { word: string, index: number }) => {
       if (type === "add") {
         itemClone.style.left = cartleft + 'px';
         itemClone.style.top = carttop + 'px';
-        //itemClone.style.width = '40px';
         itemClone.style.opacity = '0';
       }
       else {
         itemClone.style.left = left + 'px';
         itemClone.style.top = top + 'px';
-        //itemClone.style.width = '80px';
         itemClone.style.opacity = '0';
       }
 

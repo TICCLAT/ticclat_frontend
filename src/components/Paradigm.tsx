@@ -3,7 +3,7 @@ import TableHead from '@material-ui/core/TableHead';
 import React from 'react';
 import { backendURL } from '../settings';
 import AddButton from './ShoppingBag/AddButton';
-
+import { ShoppingBagContext } from '../context/ShoppingBag';
 export interface IProps {
   id: number;
 }
@@ -26,10 +26,10 @@ const Paradigm = ({ id }: IProps) => {
       .then(result => result.json())
       .then(setVariants);
   }, [id]);
-
+  const shoppingBag = React.useContext(ShoppingBagContext);
   const Rows = variants.map((variant, index) => (
     <TableRow key={variant.wordform}>
-      <TableCell><AddButton word={variant.wordform} index={index} /></TableCell>
+      <TableCell><AddButton word={variant.wordform} index={index} shoppingBag={shoppingBag} /></TableCell>
       <TableCell>{variant.V}</TableCell>
       <TableCell>{variant.word_type_code}</TableCell>
       <TableCell>{variant.min_year || '?'}</TableCell>
