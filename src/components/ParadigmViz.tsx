@@ -4,7 +4,9 @@ import * as d3 from 'd3';
 import * as React from 'react';
 import { ShoppingBagContext } from '../context/ShoppingBag';
 import { backendURL } from '../settings';
+
 import AddButton from '../components/ShoppingBag/AddButton';
+
 // import BokehPlot from '../components/BokehPlot';
 interface INode extends d3.SimulationNodeDatum {
   id: string;
@@ -45,7 +47,8 @@ const useStyles = makeStyles({
       backgroundColor: 'white',
       border: '1px solid black',
       padding: '10px',
-      color: 'black'
+      color: 'black',
+      position: 'fixed'
     }
   },
 });
@@ -62,40 +65,60 @@ interface IVariantsProps {
 interface IVariant {
   frequency: number;
   wordform: string;
-};
-
-const VariantsList = ({ w, x, y, z, shoppingBag }: IVariantsProps) => {
-  const [state, setState] = React.useState<IVariant[]>([]);
-  React.useEffect(() => {
-    fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
-      .then(r => r.json())
-      .then(result => setState(result));
-  }, []);
-
-  console.log('variants list rendering');
-  return (
-    <div>
-      <div>W: {w}</div>
-      <div>X: {x}</div>
-      <div>Y: {y}</div>
-      <div>Z: {z}</div>
-      {state.map((r, index) => (
-        <div key={r.wordform}>
-          <div>{r.wordform}: {r.frequency}</div>
-          <AddButton word={r.wordform} index={index} shoppingBag={shoppingBag} />
-        </div>
-      ))}
-    </div>
-  )
 }
 
+interface WXYZ {
+  w: number;
+  x: number;
+  y: number;
+  z: number;
+}
 
+class VariantsList extends React.Component<{}, {
+  variants: IVariant[],
+  wxyz: WXYZ
+}> {
+  state = {
+    wxyz: { w: 0, x: 0, y: 0, z: 0},
+    variants: [] as IVariant[]
+  }
+
+  loadWXYZ(wxyz: WXYZ) {
+    const {w, x, y, z} = wxyz;
+    fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
+       .then(r => r.json())
+       .then(result => this.setState({
+         wxyz, variants: result
+       }));
+  }
+
+  render () {
+    const {w, x, y, z} = this.state.wxyz;
+    const variants = this.state.variants;
+    return (
+      <div>
+        <div>W: {w}</div>
+        <div>X: {x}</div>
+        <div>Y: {y}</div>
+        <div>Z: {z}</div>
+        {variants.map(r => (
+          <div key={r.wordform}><AddButton word={r.wordform} index={r.wordform as any} />: {r.frequency}</div>
+        ))}
+      </div>
+    )
+  }
+}
+
+const portalContainer = document.createElement('div');
+portalContainer.id = 'word-popup';
 
 const ParadigmViz = React.memo((props: { wordform: string }) => {
   const selfRef = React.createRef<HTMLDivElement>();
   const classes = useStyles();
 
   const shoppingBag = React.useContext(ShoppingBagContext);
+
+  const variantsListRef = React.createRef<VariantsList>();
 
   React.useEffect(() => {
     if (shoppingBag.words.length === 0) {
@@ -118,10 +141,12 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
         d3Force(props.wordform, {
           nodes: uniqueNodes,
           links: uniqueLinks,
-        }, container, shoppingBag);
+
+        }, container, variantsListRef);
       }
     });
   }, [shoppingBag]);
+
 
   return (
     <div className={classes.root} ref={selfRef}>
@@ -129,12 +154,17 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
         ? <div>Shopping bag empty...</div>
         : <CircularProgress />
       }
+      { ReactDOM.createPortal(
+        <VariantsList ref={variantsListRef} />,
+        portalContainer
+      ) }
     </div>
   );
 });
 
-const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, shoppingBag: any) => {
+const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsListRef: React.RefObject<VariantsList>) => {
   const svg = d3.select(ref).append('svg');
+  ref.appendChild(portalContainer);
   const rootG = svg.append('g');
 
   svg.call(
@@ -224,14 +254,15 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, shoppingBag
     .on('mouseover', function (d, i) {
       const rect = this.getBoundingClientRect();
 
-      const div = document.getElementById('word-popup') || document.createElement('div');
-      ReactDOM.render((<VariantsList w={d.tc_w} x={d.tc_x} y={d.tc_y} z={d.tc_z} shoppingBag={shoppingBag} />), div);
-      div.id = 'word-popup';
-      // div.innerHTML = d.wordform;
-      div.style.position = 'fixed';
-      div.style.left = `${rect.left + 10}px`;
-      div.style.top = `${rect.top + 10}px`;
-      ref.appendChild(div);
+      variantsListRef.current!.loadWXYZ({
+        w: d.tc_w,
+        x: d.tc_x,
+        y: d.tc_y,
+        z: d.tc_z
+      });
+
+      portalContainer.style.left = `${rect.left + 10}px`;
+      portalContainer.style.top = `${rect.top + 10}px`;
     });
 
   const frequencyToRadius = d3.scaleLog().domain([1, 1e8]).range([0.1, 10]);

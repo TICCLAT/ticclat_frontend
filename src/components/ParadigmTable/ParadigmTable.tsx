@@ -54,7 +54,6 @@ const Row = ({ variant }: {variant: any}) => {
           <TableCell>
               <AddButton
                 index={variant.wordform}
-                shoppingBag={shoppingBag}
                 word={variant.wordform as string}
               />
           </TableCell>
