@@ -6,6 +6,8 @@ import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
 import NGramTimeline from '../components/NGramTimeline';
 import HorizonChartContainer from '../components/HorizonChartContainer';
+import OCRPostcorrectionChartContainer from '../components/OCRPostcorrectionChartContainer';
+
 // import { RouteComponentProps } from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
     container: {
@@ -81,6 +83,11 @@ const overview = ({ history }) => {
                 <Grid item={true} xs={12} md={8} lg={8}>
                     <Paper >
                         <HorizonChartContainer wordform={searchValue} />
+                    </Paper>
+                </Grid>
+                <Grid item={true} xs={12} md={8} lg={8}>
+                    <Paper >
+                        <OCRPostcorrectionChartContainer wordform={searchValue} />
                     </Paper>
                 </Grid>
             </Grid>

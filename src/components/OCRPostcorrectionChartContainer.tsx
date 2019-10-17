@@ -1,12 +1,12 @@
 import React from 'react';
-import { drawChart } from './Charts/HorizonChart';
+import { drawChart } from './Charts/OCRPostCorrection/OCRPostCorrectionChart';
 import { backendURL } from '../settings';
 import { Typography } from '@material-ui/core';
 
 interface IProps {
     wordform: string
 }
-export default class HorizonChartContainer extends React.Component<IProps> {
+export default class OCRPostCorrectionChartContainer extends React.Component<IProps> {
     public componentDidUpdate(prevProps: IProps) {
         if (prevProps.wordform !== this.props.wordform) {
             this.fetchData();
@@ -24,7 +24,7 @@ export default class HorizonChartContainer extends React.Component<IProps> {
                 })
                 .then(data => {
                     this.setState({ info: data }, () => {
-                        document.getElementById('horizonchart')!.innerHTML = '';
+                        document.getElementById('OCRPostCorrectionChart')!.innerHTML = '';
                         drawChart(data);
                     })
                 })
@@ -37,7 +37,7 @@ export default class HorizonChartContainer extends React.Component<IProps> {
         return (
             <>
                 <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
-                <div id="horizonchart" />
+                <div id="OCRPostCorrectionChart" />
             </>
         );
     }

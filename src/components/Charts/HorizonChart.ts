@@ -35,7 +35,7 @@ function pathuid() {
     return { id, href: window.location + "#" + id, s: "url(" + window.location + "#" + id + ")" }
 }
 
-export const drawChart = (variantsData: IVariantsQueryData, chart: HTMLDivElement) => {
+export const drawChart = (variantsData: IVariantsQueryData) => {
     const horizonchartMargin = ({ top: 30, right: 10, bottom: 0, left: 10 });
     const horizonchartWidth = 800;
 
@@ -44,7 +44,7 @@ export const drawChart = (variantsData: IVariantsQueryData, chart: HTMLDivElemen
     const horizonchartStep = 50;
     const horizonchartOverlap = 7;
 
-    const horizonchartScheme = "schemeReds";
+    const horizonchartScheme = "schemePuOr";
     const horizonchartColor = (i: any) => d3[horizonchartScheme][Math.max(3, horizonchartOverlap)][i + Math.max(0, 3 - horizonchartOverlap)];
 
     const getParadigms = (wordformData: IVariantsQueryData): IHorizonchartData[] => {
