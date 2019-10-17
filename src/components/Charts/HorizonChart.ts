@@ -36,8 +36,11 @@ function pathuid() {
 }
 
 export const drawChart = (variantsData: IVariantsQueryData, chart: HTMLDivElement) => {
+    // console.log('drawChart', chart);
     const horizonchartMargin = ({ top: 30, right: 10, bottom: 0, left: 10 });
-    const horizonchartWidth = 800;
+
+    const chartContainer = document.getElementById('horizonchart');
+    const horizonchartWidth = chartContainer ? chartContainer.offsetWidth : 800;
 
     const parseDate = d3.timeParse("%Y");
 
