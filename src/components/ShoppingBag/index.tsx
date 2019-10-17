@@ -38,23 +38,6 @@ const ShoppingBag = withRouter((props) => {
     reader.readAsText(file)
   }
 
-  let csvContent = "data:text/csv;charset=utf-8,"
-  const exportToCSV = () => {
-    const data = shoppingBag.words.join('\n');
-    csvContent += data;
-    const url = encodeURI(csvContent);
-    const link = document.createElement('a');
-    if (link.download !== undefined) {
-      // If browser supports HTML5 download attribute
-      link.setAttribute('href', url);
-      link.setAttribute('download', 'BagOfWords');
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  }
-
   const words = shoppingBag.words.map((word, index) => (
     <Chip
       key={index}
@@ -78,7 +61,7 @@ const ShoppingBag = withRouter((props) => {
     </>
   )
 
-  const content = shoppingBag.words.length > 0 ? <> {words}<button onClick={exportToCSV}>Export To CSV</button></> : emptyBagMessage;
+  const content = shoppingBag.words.length > 0 ? words : emptyBagMessage;
 
   return (
     <div className={classes.bagContainer}>
