@@ -1,25 +1,29 @@
 import React from 'react';
-import { Tabs, Tab, Typography, Grid, Paper } from '@material-ui/core/';
+import { Tabs, Tab, Typography, Grid, Paper, IconButton, CircularProgress } from '@material-ui/core/';
 import NGramTimeline from '../components/NGramTimeline';
 import Lexica from '../components/Lexica';
 import Paradigms from '../components/Paradigms';
 import HorizonChartContainer from '../components/HorizonChartContainer';
 import SearchBar from '../components/SearchBar';
-import { makeStyles } from '@material-ui/core/styles';
-const useStyles = makeStyles(theme => ({
-    container: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
+import { Info } from '@material-ui/icons';
 
-}));
 interface TabPanelProps {
     children?: React.ReactNode;
     index: any;
     value: any;
 }
-
+// Header Component for Tab Panel
+const Header = ({ title, section }: { title: string, section: string }) => {
+    return (
+        <div style={{ display: 'flex' }}>
+            <Typography variant="h6" id="tableTitle" align='center' style={{ flex: 8 }}>
+                {title}
+            </Typography>
+            <IconButton color="primary" href={"/glossary#" + section}><Info /></IconButton>
+        </div>
+    )
+}
+// TabPanel Component to display tab specific data
 function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
@@ -45,17 +49,19 @@ interface IProps {
     onSearch: (searchValue: string) => void
 }
 const OverviewTabs = (props: IProps) => {
-
-    const [value, setValue] = React.useState(0);
+    // declare state to store selected tab value
+    const [selectedTab, setSelectedTab] = React.useState(0);
+    // props destructuring
     const { searchValue, onSearch } = props;
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue);
+    // Function to set newly selcted tab
+    const handleChange = (event: React.ChangeEvent<{}>, newTab: number) => {
+        setSelectedTab(newTab);
     };
 
     return (
         <>
             <Tabs
-                value={value}
+                value={selectedTab}
                 onChange={handleChange}
                 indicatorColor="primary"
                 textColor="primary"
@@ -67,17 +73,20 @@ const OverviewTabs = (props: IProps) => {
             </Tabs>
 
             {
-                value === 0 && (
-                    <TabPanel value={value} index="one">
+                selectedTab === 0 && (
+                    <TabPanel value={selectedTab} index="one">
                         <Grid item={true} xs={12} md={8} lg={8}>
                             <Paper >
-                                <SearchBar onSearch={onSearch} wordform={searchValue} />
+                                <div style={{ display: 'flex' }}>
+                                    <SearchBar onSearch={onSearch} wordform={searchValue} />
+                                    <IconButton color='primary' href="/glossary#ngram"><Info /></IconButton>
+                                </div>
                                 <NGramTimeline wordform={searchValue} />
                             </Paper>
                         </Grid>
                         <Grid item={true} xs={12} md={4} lg={4}>
                             <Paper>
-                                {searchValue !== '' ? <Lexica wordform={searchValue} /> : null}
+                                {searchValue !== '' ? <Lexica wordform={searchValue} /> : <CircularProgress />}
                             </Paper>
                         </Grid>
                     </TabPanel>
@@ -85,18 +94,25 @@ const OverviewTabs = (props: IProps) => {
                 )
             }
             {
-                value === 1 && (
-                    <TabPanel value={value} index="two">
-                        {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
+                selectedTab === 1 && (
+                    <TabPanel value={selectedTab} index="two">
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <Paper>
+                                <Header title={searchValue} section="paradigm" />
+                                {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
+                            </Paper>
+                        </Grid>
+
                     </TabPanel>
 
                 )
             }
             {
-                value === 2 && (
-                    <TabPanel value={value} index="three">
-                        <Grid item={true} xs={12} md={8} lg={8}>
+                selectedTab === 2 && (
+                    <TabPanel value={selectedTab} index="three">
+                        <Grid item={true} xs={12} md={12} lg={12}>
                             <Paper >
+                                <Header title={searchValue} section="horizon" />
                                 <HorizonChartContainer wordform={searchValue} />
                             </Paper>
                         </Grid>
