@@ -1,7 +1,7 @@
 import React from 'react';
 import { NGramChart } from './Charts/NGram';
-import { backendURL } from '../settings';
 import { Typography, CircularProgress } from '@material-ui/core';
+import { backendURL } from '../settings';
 import { IData } from '../../types';
 
 interface IProps {
@@ -13,6 +13,19 @@ interface IState {
     info: IData | null,
     isLoading: boolean,
     chart: NGramChart | null,
+}
+const tooltip: React.CSSProperties = {
+    alignItems: 'start',
+    flexDirection: 'column',
+    position: 'absolute',
+    textAlign: 'center',
+    width: 'auto',
+    height: 'auto',
+    padding: '5px',
+    backgroundColor: '#fff',
+    border: '1px solid',
+    borderRadius: '5px',
+    pointerEvents: 'none'
 }
 
 export default class NGramTimeline extends React.Component<IProps, IState> {
@@ -58,6 +71,7 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
     render() {
         const { wordform } = this.props;
         const { info, isLoading } = this.state;
+
         let content = null;
         if (isLoading) {
             content = <CircularProgress />
@@ -68,6 +82,7 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
                     <>
                         <Typography variant="h5" align='center' style={{ padding: 10 }}> {wordform}</Typography>
                         <div id="chart" />
+                        <div style={tooltip} className="tooltip" />
                     </>
                 ) : <Typography variant="h5" align='center' style={{ padding: 10 }}>Word does not exist in any corpora</Typography>
         }

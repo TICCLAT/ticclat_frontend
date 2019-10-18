@@ -1,5 +1,14 @@
 import * as d3 from 'd3';
 import { IData, ICorpus } from '../../../types';
+import { style } from '@material-ui/system';
+
+interface IFreqWithCorpora {
+    freq: number,
+    term_frequency: number,
+    total: number,
+    year: number,
+    corpora: string
+}
 
 export class NGramChart {
     domainXMin = 0;
@@ -44,6 +53,8 @@ export class NGramChart {
     svg = d3.select("#chart").append("svg");
     nGram = this.svg.append("g");
     brushChart = this.svg.append("g");
+    tooltip = d3.select(".tooltip")
+
 
     init(info: IData) {
         // Save the initial state of the domain fro the n-gram chart so we can reset
@@ -76,6 +87,7 @@ export class NGramChart {
     draw() {
         if (this.initialized) {
             this.clear();
+            this.setUpFrequenciesData()
             this.setupNGram();
             this.setupBrushChart();
             this.ngramUpdate();
@@ -85,7 +97,6 @@ export class NGramChart {
 
     setupChart() {
         this.svg = d3.select("#chart").append("svg");
-
         this.svg
             .attr("width", this.currentWidth)
             .attr("height", this.nGramHeight + this.nGramMargin.top + this.nGramMargin.bottom)
@@ -190,6 +201,19 @@ export class NGramChart {
         })
         .y((d: any) => this.nGramYScale(d.freq));
 
+    setUpFrequenciesData() {
+        const frequencyWithCorpora: IFreqWithCorpora[] = []
+        this.chartData.corpora.map(corpora => {
+            corpora.frequencies.map(freq => {
+                const newFreq: IFreqWithCorpora = {
+                    ...freq,
+                    "corpora": corpora.name
+                }
+                frequencyWithCorpora.push(newFreq)
+            })
+        })
+        return frequencyWithCorpora;
+    }
     ngramUpdate() {
         const existingLineGroups = this.nGram.selectAll('g.ngramCorpus')
         existingLineGroups.remove()
@@ -214,15 +238,20 @@ export class NGramChart {
 
         const pointGroup = nGramLineGroups.append("g")
             .attr('class', 'pointGroup')
+
+        // Get Preprocessed Frequency data
+        const frequencyData = this.setUpFrequenciesData();
         pointGroup
             .append("g")
-            .style("stroke", (d: any) => this.color(d.name))
-            .style("fill", (d: any) => this.color(d.name))
             .selectAll("circle")
-            .data((d: any) => d.frequencies)
+            .data((d: any) => frequencyData)
             .enter()
             .filter(d => (this.nGramXScale(d.year) >= 0 && this.nGramXScale(d.year) <= this.nGramWidth))
             .append("circle")
+            .style("stroke", (d: any) => {
+                return this.color(d.corpora)
+            })
+            .style("fill", (d: any) => this.color(d.corpora))
             .attr("class", "circle")
             .attr("cx", (d: any) => {
                 return this.nGramXScale(d.year)
@@ -230,16 +259,24 @@ export class NGramChart {
             .attr("cy", (d: any) => this.nGramYScale(d.freq))
             .attr("r", 3)
             .on("mouseover", (d: any, i: number) => {
-                nGramLineGroups.append("text")
-                    .attr("class", "frequency-text")
-                    .attr("pointer-events", "none")
-                    .text(d.freq.toPrecision(3))
-                    .attr("text-anchor", "middle")
-                    .attr("x", this.nGramXScale(d.year))
-                    .attr("y", (this.nGramYScale(d.freq) - 10));
+                const color = this.color(d.corpora)
+
+                this.tooltip.style('display', 'flex')
+                    .style("opacity", .9)
+
+                this.tooltip.html(
+                    "<span><strong>Relative Frequency: </strong>" + d.freq.toPrecision(3) + "</span>" +
+                    "<span><strong>Absolute Frequency: </strong>" + d.term_frequency + "</span>" +
+                    "<span><strong>Total Words in Corpus:</strong> " + d.total + "</span>" +
+                    "<span><strong>Year: </strong>" + new Date(d.year).getFullYear() + "</span>" +
+                    `<div style='display: flex; alignItems:center;'><strong>Color:</strong> <div style='width: 20px; height: 20px; background-color: ${color}'/></div>`
+                )
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px")
+
             })
             .on("mouseout", (d: any) => {
-                nGramLineGroups.select(".frequency-text").remove();
+                this.tooltip.style('display', 'none')
             });
 
 
