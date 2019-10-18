@@ -4,10 +4,11 @@ import {
     TableBody,
     TableCell,
     TableRow,
+    Checkbox
 } from '@material-ui/core';
-import { ShoppingBagContext } from '../../context/ShoppingBag';
 import ParadigmHeader from './ParadigmHeader';
 import AddButton from '../ShoppingBag/AddButton';
+import { ShoppingBagContext } from '../../context/ShoppingBag';
 export function desc<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -45,33 +46,43 @@ interface IProps {
 interface IState {
     order: Order;
     orderBy: string;
+    selected: string[];
 }
 
-const Row = ({ variant }: {variant: any}) => {
-    const shoppingBag = React.useContext(ShoppingBagContext);
+const Row = ({ variant, isItemSelected, onClick }: { variant: any, isItemSelected: boolean, onClick: (event: React.ChangeEvent<unknown>, checked: boolean, wordform: string) => void }) => {
+
     return (
-      <TableRow>
-          <TableCell>
-              <AddButton
-                index={variant.wordform}
-                word={variant.wordform as string}
-              />
-          </TableCell>
-          <TableCell>{variant.V}</TableCell>
-          <TableCell>{variant.word_type_code}</TableCell>
-          <TableCell>{variant.min_year || '?'}</TableCell>
-          <TableCell>{variant.max_year || '?'}</TableCell>
-          <TableCell>{variant.num_corpora}</TableCell>
-          <TableCell>{variant.num_lexica}</TableCell>
-          <TableCell>{variant.num_paradigms}</TableCell>
-      </TableRow>
+        <TableRow>
+            <TableCell padding="checkbox">
+                <Checkbox
+                    color="primary"
+                    checked={isItemSelected}
+                    onChange={(event, checked) => onClick(event, checked, variant.wordform.toString())}
+                />
+            </TableCell>
+            <TableCell>
+                <AddButton
+                    index={variant.wordform}
+                    word={variant.wordform as string}
+                />
+            </TableCell>
+            <TableCell>{variant.V}</TableCell>
+            <TableCell>{variant.word_type_code}</TableCell>
+            <TableCell>{variant.min_year || '?'}</TableCell>
+            <TableCell>{variant.max_year || '?'}</TableCell>
+            <TableCell>{variant.num_corpora}</TableCell>
+            <TableCell>{variant.num_lexica}</TableCell>
+            <TableCell>{variant.num_paradigms}</TableCell>
+        </TableRow>
     )
 }
 
 class ParadigmTable extends React.Component<IProps, IState> {
+    static contextType = ShoppingBagContext;
     state = {
         order: 'asc' as Order,
         orderBy: 'num_corpora',
+        selected: [],
     };
 
     handleRequestSort = (event: any, property: any) => {
@@ -85,10 +96,42 @@ class ParadigmTable extends React.Component<IProps, IState> {
         this.setState({ order: order as Order, orderBy });
     }
     render() {
-        const { order, orderBy } = this.state;
+        const { order, orderBy, selected } = this.state;
         const { variants } = this.props;
 
+
+        const isSelected = (wordform: any) => selected.indexOf(wordform.toString()) !== -1;
         const sortedData = stableSort(variants, getSorting(order, orderBy));
+
+        const handleClick = (event: React.ChangeEvent<unknown>, checked: boolean, wordform: string) => {
+            const selectedIndex = selected.indexOf(wordform);
+            let newSelected: string[] = [];
+
+            if (selectedIndex === -1) {
+                newSelected = newSelected.concat(selected, wordform);
+            } else if (selectedIndex === 0) {
+                newSelected = newSelected.concat(selected.slice(1));
+            } else if (selectedIndex === selected.length - 1) {
+                newSelected = newSelected.concat(selected.slice(0, -1));
+            } else if (selectedIndex > 0) {
+                newSelected = newSelected.concat(
+                    selected.slice(0, selectedIndex),
+                    selected.slice(selectedIndex + 1),
+                );
+            }
+            this.setState({
+                selected: newSelected,
+            }, () => this.context.addImportedWords(newSelected));
+        };
+        const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+            if (event.target.checked) {
+                const newSelecteds = sortedData.map((n) => n.wordform.toString());
+                this.setState({ selected: newSelecteds }, () => this.context.addImportedWords(newSelecteds));
+                return;
+            }
+            this.setState({ selected: [] });
+        };
+
         return (
             <Table aria-labelledby="tableTitle">
                 <ParadigmHeader
@@ -96,9 +139,14 @@ class ParadigmTable extends React.Component<IProps, IState> {
                     orderBy={orderBy}
                     onRequestSort={this.handleRequestSort}
                     rowCount={variants.length}
+                    onSelectAllClick={handleSelectAllClick}
+                    numSelected={selected.length}
                 />
                 <TableBody>
-                    {sortedData.map((variant, index) => (<Row key={index} variant={variant} />))}
+                    {sortedData.map((variant, index) => {
+                        const isItemSelected = isSelected(variant.wordform);
+                        return <Row key={index} variant={variant} isItemSelected={isItemSelected} onClick={handleClick} />
+                    })}
                 </TableBody>
             </Table>
         );

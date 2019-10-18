@@ -4,6 +4,7 @@ import {
     TableRow,
     TableSortLabel,
     Tooltip,
+    Checkbox
 } from '@material-ui/core';
 import * as React from 'react';
 interface IProps {
@@ -11,6 +12,8 @@ interface IProps {
     order: any;
     orderBy: string;
     rowCount: number;
+    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+    numSelected: number;
 }
 
 class ParadigmHeader extends React.Component<IProps, {}> {
@@ -29,11 +32,19 @@ class ParadigmHeader extends React.Component<IProps, {}> {
             { id: 'num_paradigms', label: '#Paradigms' }
         ];
 
-        const { order, orderBy } = this.props;
+        const { order, orderBy, onSelectAllClick, numSelected, rowCount } = this.props;
 
         return (
             <TableHead>
                 <TableRow>
+                    <TableCell padding="checkbox">
+                        <Checkbox
+                            indeterminate={numSelected > 0 && numSelected < rowCount}
+                            checked={numSelected === rowCount}
+                            onChange={onSelectAllClick}
+                            inputProps={{ 'aria-label': 'select all desserts' }}
+                        />
+                    </TableCell>
                     {rows.map((row) => {
                         return (
                             <TableCell

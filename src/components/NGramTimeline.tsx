@@ -5,20 +5,21 @@ import { Typography, CircularProgress } from '@material-ui/core';
 import { IData } from '../../types';
 
 interface IProps {
-    wordform: string
+    wordform: string;
+
 }
 
 interface IState {
     info: IData | null,
     isLoading: boolean,
-    chart: NGramChart | null
+    chart: NGramChart | null,
 }
 
 export default class NGramTimeline extends React.Component<IProps, IState> {
     state = {
         info: null,
         isLoading: true,
-        chart: null
+        chart: null,
     }
 
     public componentDidUpdate(prevProps: IProps) {
@@ -65,10 +66,10 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
             content = info.corpora.length > 0 ?
                 (
                     <>
-                        <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
+                        <Typography variant="h5" align='center' style={{ padding: 10 }}> {wordform}</Typography>
                         <div id="chart" />
                     </>
-                ) : <Typography variant="h5" align='center' style={{ margin: 10 }}>Word does not exist in any corpora</Typography>
+                ) : <Typography variant="h5" align='center' style={{ padding: 10 }}>Word does not exist in any corpora</Typography>
         }
         return (
             <div>
