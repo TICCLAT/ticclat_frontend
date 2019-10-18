@@ -11,6 +11,17 @@ const theme = createMuiTheme({
         common: {
             black: '#000',
         }
+    },
+    typography: {
+        fontFamily: 'Roboto',
+        fontSize: 16,
+    },
+    overrides: {
+        MuiTypography: {
+            root: {
+                padding: 10
+            }
+        }
     }
 })
 
