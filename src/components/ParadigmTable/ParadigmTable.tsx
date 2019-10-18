@@ -129,7 +129,8 @@ class ParadigmTable extends React.Component<IProps, IState> {
                 this.setState({ selected: newSelecteds }, () => this.context.addImportedWords(newSelecteds));
                 return;
             }
-            this.setState({ selected: [] });
+
+            this.setState({ selected: [] }, () => this.context.removeAllWords());
         };
 
         return (
