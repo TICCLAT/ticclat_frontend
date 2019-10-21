@@ -42,7 +42,8 @@ class ParadigmHeader extends React.Component<IProps, {}> {
                             indeterminate={numSelected > 0 && numSelected < rowCount}
                             checked={numSelected === rowCount}
                             onChange={onSelectAllClick}
-                            inputProps={{ 'aria-label': 'select all desserts' }}
+                            inputProps={{ 'aria-label': 'select all wordforms' }}
+                            color="primary"
                         />
                     </TableCell>
                     {rows.map((row) => {

@@ -1,4 +1,4 @@
-import { CircularProgress, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import * as ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import * as React from 'react';
@@ -121,7 +121,11 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
   const variantsListRef = React.createRef<VariantsList>();
 
   React.useEffect(() => {
+    const container = selfRef.current;
     if (shoppingBag.words.length === 0) {
+      if (container) {
+        container.innerHTML = '<strong>Shopping bag empty...Please add some words</strong>';
+      }
       return;
     }
     const q = (wordform: string) => fetch(`${backendURL}/network/${wordform}`).then(r => r.json());
@@ -133,7 +137,7 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
       const uniqueNodes = allNodes.filter(node => allNodes.find(n => n.id === node.id) === node);
       const uniqueLinks = allLinks.filter(link => allLinks.find(n => n.id === link.id) === link);
 
-      const container = selfRef.current;
+
       if (container) {
         while (container.firstChild) {
           container.removeChild(container.firstChild);
@@ -151,8 +155,8 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
   return (
     <div className={classes.root} ref={selfRef}>
       {shoppingBag.words.length === 0
-        ? <div>Shopping bag empty...</div>
-        : <CircularProgress />
+        ? <strong>Shopping bag empty...Please add some words</strong>
+        : <div>Loading...</div>
       }
       {ReactDOM.createPortal(
         <VariantsList ref={variantsListRef} />,
@@ -264,7 +268,7 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
       portalContainer.style.left = `${rect.left + 10}px`;
       portalContainer.style.top = `${rect.top + 10}px`;
     })
-    .on('click', () => {
+    .on('mouseout', () => {
       portalContainer.style.display = 'none'
     });
 
