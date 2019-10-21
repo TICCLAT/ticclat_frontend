@@ -13,27 +13,24 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
+/** Component to get an Overview of Ngram Timeline, Paradigms and Horizon Chart */
 const overview = ({ history }: RouteComponentProps) => {
-    // Declare state to store search value
+    /** State declaration to store search value  */
     const [searchValue, setSearchValue] = useState();
     const classes = useStyles();
 
-
     useEffect(() => {
-        if (location.search) {
-            const param = new URLSearchParams(location.search)
-            const value = param.get('searching')
-            return setSearchValue(value!)
+        const searchWordform = localStorage.getItem('searchValue')
+        if (searchWordform) {
+            return setSearchValue(searchWordform)
         }
+        /** Set Default serach value  */
         setSearchValue('regering')
-    }, [history.location])
+    }, [localStorage])
 
     // set Search Value on pressing search button or Enter in search bar 
     const setValue = (value: string) => {
-        history.push({
-            pathname: '/overview',
-            search: '?searching=' + value,
-        })
+        localStorage.setItem('searchValue', value)
         setSearchValue(value)
     }
 
