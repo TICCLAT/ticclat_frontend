@@ -1,8 +1,9 @@
 import React from 'react';
-import { NGramChart } from './Charts/NGram';
-import { Typography, CircularProgress } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { backendURL } from '../settings';
 import { IData } from '../../types';
+import LoadingIndicator from '../components/LoadingIndiacator';
+import { NGramChart } from './Charts/NGram';
 
 interface IProps {
     wordform: string;
@@ -15,6 +16,7 @@ interface IState {
     chart: NGramChart | null,
 }
 const tooltip: React.CSSProperties = {
+    display: 'none',
     alignItems: 'start',
     flexDirection: 'column',
     position: 'absolute',
@@ -74,23 +76,18 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
 
         let content = null;
         if (isLoading) {
-            content = <CircularProgress />
+            content = <LoadingIndicator />
         }
         else if (info !== null) {
             content = info.corpora.length > 0 ?
                 (
                     <>
-                        <Typography variant="h5" align='center' style={{ padding: 10 }}> {wordform}</Typography>
+                        <Typography variant="subtitle2" align='center' style={{ padding: 10 }}> {wordform}</Typography>
                         <div id="chart" />
                         <div style={tooltip} className="tooltip" />
                     </>
-                ) : <Typography variant="h5" align='center' style={{ padding: 10 }}>Word does not exist in any corpora</Typography>
+                ) : <Typography variant="subtitle2" align='center' style={{ padding: 10 }}><em><strong>{wordform} </strong></em>does not exist in any corpora</Typography>
         }
-        return (
-            <div>
-
-                {content}
-            </div>
-        );
+        return content
     }
 }

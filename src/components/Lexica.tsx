@@ -1,12 +1,12 @@
-import { Table, TableBody, TableCell, TableRow } from '@material-ui/core';
-import { Check, Close } from '@material-ui/icons';
-
-import TableHead from '@material-ui/core/TableHead';
 import React from 'react';
+import { Table, TableBody, TableHead, TableCell, TableRow } from '@material-ui/core';
+import { Check, Close } from '@material-ui/icons';
 import { backendURL } from '../settings';
+// Declare Prop Type
 export interface IProps {
     wordform: string;
 }
+// Declare custom Lexica Type
 export interface ILexica {
     correct: boolean;
     lexicon_name: string;
@@ -25,7 +25,7 @@ const Lexica = ({ wordform }: IProps) => {
 
         <TableRow key={lexicon.lexicon_name}>
             <TableCell style={{ width: 400 }}>{lexicon.lexicon_name.split('.').join(' ')}</TableCell>
-            <TableCell>{lexicon.correct ? <Check color='secondary' /> : <Close style={{ color: 'FC100D' }} />}</TableCell>
+            <TableCell>{lexicon.correct ? <Check style={{ color: '4BB543' }} /> : <Close style={{ color: 'FC100D' }} />}</TableCell>
         </TableRow>
     ));
 

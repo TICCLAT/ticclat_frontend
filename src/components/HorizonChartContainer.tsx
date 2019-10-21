@@ -1,12 +1,16 @@
 import React from 'react';
 import { drawChart } from './Charts/HorizonChart';
 import { backendURL } from '../settings';
-import { Typography } from '@material-ui/core';
+import LoadingIndicator from './LoadingIndiacator';
 
 interface IProps {
     wordform: string
 }
 export default class HorizonChartContainer extends React.Component<IProps> {
+    state = {
+        info: null,
+        isLoading: true,
+    }
     public componentDidUpdate(prevProps: IProps) {
         if (prevProps.wordform !== this.props.wordform) {
             this.fetchData();
@@ -23,7 +27,7 @@ export default class HorizonChartContainer extends React.Component<IProps> {
                     return results.json();
                 })
                 .then(data => {
-                    this.setState({ info: data }, () => {
+                    this.setState({ info: data, isLoading: false }, () => {
                         document.getElementById('horizonchart')!.innerHTML = '';
                         drawChart(data);
                     })
@@ -33,13 +37,9 @@ export default class HorizonChartContainer extends React.Component<IProps> {
     }
 
     render() {
-        const wordform = this.props.wordform || 'wordform';
-        return (
-            <>
-                <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
-                <div id="horizonchart"></div>
-
-            </>
-        );
+        const { isLoading } = this.state;
+        let content = null;
+        content = isLoading ? <LoadingIndicator /> : <div id="horizonchart" />
+        return content
     }
 }
