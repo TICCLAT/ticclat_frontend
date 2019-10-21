@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableHead, TableCell, TableRow } from '@material-ui/core';
+import { Table, TableBody, TableHead, TableCell, TableRow, CircularProgress } from '@material-ui/core';
 import { Check, Close } from '@material-ui/icons';
 import { backendURL } from '../settings';
 // Declare Prop Type
@@ -14,12 +14,16 @@ export interface ILexica {
 
 const Lexica = ({ wordform }: IProps) => {
     const [lexica, setLexica] = React.useState<ILexica[]>([]);
-
+    const [isLoading, setIsLoading] = React.useState(true);
     // Fetch Lexica from an API
     React.useEffect(() => {
         fetch(`${backendURL}/lexica/${wordform}`)
             .then(result => result.json())
-            .then(setLexica);
+            .then((res) => {
+                setLexica(res)
+                setIsLoading(false)
+            }
+            );
     }, [wordform]);
 
     // Iterate through all lexica and create cell for each lexica
@@ -30,7 +34,8 @@ const Lexica = ({ wordform }: IProps) => {
         </TableRow>
     ));
 
-    const content = lexica.length > 0 ? (
+    let content = null;
+    const lexiconContent = lexica.length > 0 ? (
         <Table >
             <TableHead>
                 <TableRow>
@@ -43,6 +48,8 @@ const Lexica = ({ wordform }: IProps) => {
             </TableBody>
         </Table>
     ) : <p>No Lexica found for the word <strong>{wordform}</strong></p>
+
+    content = isLoading ? <CircularProgress /> : lexiconContent
     return content
 }
 
