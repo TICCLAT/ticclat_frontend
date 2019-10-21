@@ -20,16 +20,20 @@ const overview = ({ history }: RouteComponentProps) => {
     const classes = useStyles();
 
     useEffect(() => {
-        const searchWordform = localStorage.getItem('searchValue')
-        if (searchWordform) {
-            return setSearchValue(searchWordform)
+        if (location.search) {
+            const param = new URLSearchParams(location.search)
+            const value = param.get('searching')
+            return setSearchValue(value!)
         }
         /** Set Default serach value  */
-        setSearchValue('regering')
-    }, [localStorage])
+        const searchWordform = localStorage.getItem('searchValue')
+        searchWordform ? setSearchValue(searchWordform) : setSearchValue('regering');
+
+    }, [history.location])
 
     // set Search Value on pressing search button or Enter in search bar 
     const setValue = (value: string) => {
+
         localStorage.setItem('searchValue', value)
         setSearchValue(value)
     }
