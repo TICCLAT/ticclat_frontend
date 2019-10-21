@@ -6,19 +6,13 @@ import {
     TableRow,
     Checkbox
 } from '@material-ui/core';
+
 import ParadigmHeader from './ParadigmHeader';
 import AddButton from '../ShoppingBag/AddButton';
 import { ShoppingBagContext } from '../../context/ShoppingBag';
-export function desc<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
 
+// Sorting Data in Table
+export type Order = 'asc' | 'desc';
 export function stableSort<T>(array: T[], cmp: (a: T, b: T) => number) {
     const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
     stabilizedThis.sort((a, b) => {
@@ -30,27 +24,39 @@ export function stableSort<T>(array: T[], cmp: (a: T, b: T) => number) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
-
-export type Order = 'asc' | 'desc';
-
 export function getSorting<K extends keyof any>(
     order: Order,
     orderBy: K,
 ): (a: { [key in K]: number | string }, b: { [key in K]: number | string }) => number {
     return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
+export function desc<T>(a: T, b: T, orderBy: keyof T) {
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
+// ----------Sorting Data in Table End Here------------
+
+
+
 
 interface IProps {
     variants: any
 }
 interface IState {
-    order: Order;
-    orderBy: string;
-    selected: string[];
+    order: Order;  // state to save order to sort by (e.g 'asc' or 'dsc')
+    orderBy: string; // state to save orderBy (e.g. frequency, year, corpora, etc)
+    selected: string[]; // state to save selected word forms to add into bag of words
 }
-
-const Row = ({ variant, isItemSelected, onClick }: { variant: any, isItemSelected: boolean, onClick: (event: React.ChangeEvent<unknown>, checked: boolean, wordform: string) => void }) => {
-
+// Table Row Component
+const Row = (
+    { variant, isItemSelected, onClick }:
+        { variant: any, isItemSelected: boolean, onClick: (event: React.ChangeEvent<unknown>, checked: boolean, wordform: string) => void }
+) => {
     return (
         <TableRow>
             <TableCell padding="checkbox">
@@ -76,7 +82,7 @@ const Row = ({ variant, isItemSelected, onClick }: { variant: any, isItemSelecte
         </TableRow>
     )
 }
-
+// Paradigm Table Component
 class ParadigmTable extends React.Component<IProps, IState> {
     static contextType = ShoppingBagContext;
     state = {

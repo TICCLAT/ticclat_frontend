@@ -3,10 +3,10 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#468DCB'
+            main: '#468DCB' // Primary blue color from Clariah
         },
         secondary: {
-            main: '#4BB543'
+            main: '#757575'  // Default color for Side drawer text
         },
         common: {
             black: '#000',

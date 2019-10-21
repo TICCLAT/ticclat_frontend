@@ -14,15 +14,16 @@ export interface ILexica {
 
 const Lexica = ({ wordform }: IProps) => {
     const [lexica, setLexica] = React.useState<ILexica[]>([]);
+
+    // Fetch Lexica from an API
     React.useEffect(() => {
         fetch(`${backendURL}/lexica/${wordform}`)
             .then(result => result.json())
             .then(setLexica);
     }, [wordform]);
 
-
+    // Iterate through all lexica and create cell for each lexica
     const Rows = lexica.map(lexicon => (
-
         <TableRow key={lexicon.lexicon_name}>
             <TableCell style={{ width: 400 }}>{lexicon.lexicon_name.split('.').join(' ')}</TableCell>
             <TableCell>{lexicon.correct ? <Check style={{ color: '4BB543' }} /> : <Close style={{ color: 'FC100D' }} />}</TableCell>

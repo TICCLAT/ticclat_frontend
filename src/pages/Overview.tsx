@@ -33,7 +33,6 @@ const overview = ({ history }: RouteComponentProps) => {
 
     // set Search Value on pressing search button or Enter in search bar 
     const setValue = (value: string) => {
-
         localStorage.setItem('searchValue', value)
         setSearchValue(value)
     }

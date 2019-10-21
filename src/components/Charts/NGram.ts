@@ -61,6 +61,7 @@ export class NGramChart {
         this.domainXMin = info.metadata.min_year;
         this.domainXMax = info.metadata.max_year;
 
+        // Data Preprocessing
         info.corpora.forEach((d: ICorpus) => {
             d.frequencies.forEach((item: any) => {
                 const newDate = this.parseDate(item.year!.toString());
@@ -74,6 +75,7 @@ export class NGramChart {
         this.initialized = true;
     }
 
+    // set brush extent 
     brush = d3.brushX()
         .extent([[0, 0], [this.nGramWidth, this.brushHeight]])
         .on("end", this.brushed.bind(this))
@@ -202,6 +204,7 @@ export class NGramChart {
         .y((d: any) => this.nGramYScale(d.freq));
 
     setUpFrequenciesData() {
+        // Preprocess chart data to get frequencies with corpora
         const frequencyWithCorpora: IFreqWithCorpora[] = []
         this.chartData.corpora.map(corpora => {
             corpora.frequencies.map(freq => {
@@ -214,6 +217,7 @@ export class NGramChart {
         })
         return frequencyWithCorpora;
     }
+
     ngramUpdate() {
         const existingLineGroups = this.nGram.selectAll('g.ngramCorpus')
         existingLineGroups.remove()

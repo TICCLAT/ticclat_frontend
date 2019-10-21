@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     },
     navLink: {
         textDecoration: 'none',
-        color: '#757575'
+        color: theme.palette.secondary.main
     },
     selectedItem: {
         color: theme.palette.primary.main
