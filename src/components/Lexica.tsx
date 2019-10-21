@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table, TableBody, TableHead, TableCell, TableRow, CircularProgress } from '@material-ui/core';
+import { Table, TableBody, TableHead, TableCell, TableRow } from '@material-ui/core';
 import { Check, Close } from '@material-ui/icons';
 import { backendURL } from '../settings';
+import LoadingIndicator from './LoadingIndiacator';
 // Declare Prop Type
 export interface IProps {
     wordform: string;
@@ -49,7 +50,7 @@ const Lexica = ({ wordform }: IProps) => {
         </Table>
     ) : <p>No Lexica found for the word <strong>{wordform}</strong></p>
 
-    content = isLoading ? <CircularProgress /> : lexiconContent
+    content = isLoading ? <LoadingIndicator /> : lexiconContent
     return content
 }
 
