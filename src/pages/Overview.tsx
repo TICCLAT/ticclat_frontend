@@ -6,6 +6,7 @@ import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
 import NGramTimeline from '../components/NGramTimeline';
 import HorizonChartContainer from '../components/HorizonChartContainer';
+
 import OverViewTabs from '../components/OverviewTabs';
 // import { RouteComponentProps } from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
@@ -54,7 +55,7 @@ const overview = ({ history }) => {
             const value = param.get('searching')
             return setSearchValue(value!)
         }
-        setSearchValue('regering')
+        setSearchValue('binnenlandsche')
     }, [history.location])
 
     return (

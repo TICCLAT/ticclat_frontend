@@ -42,10 +42,10 @@ export interface ILemma {
 }
 
 export interface ICorrections {
-    wordtype: string, 
+    wordform: string, 
     frequency: number, 
     // xyzw: number, 
-    levenshtein: number, 
+    levenshtein_distance: number, 
     // anahash: number, 
     // wordlengthdiff: number, 
     // children: Array<ISlt>
@@ -67,7 +67,9 @@ export interface IVariantsQueryData {
 }
 
 export interface ICorrectionsQueryData {
-    wordtype: string,
+    metadata: IVariantsMetadata,
+    paradigms: ILemma[],
+    wordform: string,
     corrections: ICorrections[]
 }
 

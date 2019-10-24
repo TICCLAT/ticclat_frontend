@@ -4,8 +4,10 @@ import NGramTimeline from '../components/NGramTimeline';
 import Lexica from '../components/Lexica';
 import Paradigms from '../components/Paradigms';
 import HorizonChartContainer from '../components/HorizonChartContainer';
+import OCRPostcorrectionChartContainer from '../components/OCRPostcorrectionChartContainer';
 import SearchBar from '../components/SearchBar';
 import { makeStyles } from '@material-ui/core/styles';
+
 const useStyles = makeStyles(theme => ({
     container: {
         display: 'flex',
@@ -61,17 +63,20 @@ const OverviewTabs = (props: IProps) => {
                 textColor="primary"
                 centered
             >
-                <Tab label="NGram" />
+                <Tab label="Word usage over time" />
                 <Tab label="Paradigms" />
-                <Tab label="Horizon" />
+                <Tab label="Paradigms over time" />
+                <Tab label="OCR Postcorrection view" />
             </Tabs>
 
             {
                 value === 0 && (
                     <TabPanel value={value} index="one">
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />                
+                        </Grid>
                         <Grid item={true} xs={12} md={8} lg={8}>
-                            <Paper >
-                                <SearchBar onSearch={onSearch} wordform={searchValue} />
+                            <Paper >                                
                                 <NGramTimeline wordform={searchValue} />
                             </Paper>
                         </Grid>
@@ -87,7 +92,12 @@ const OverviewTabs = (props: IProps) => {
             {
                 value === 1 && (
                     <TabPanel value={value} index="two">
-                        {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />                
+                        </Grid>
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
+                        </Grid>
                     </TabPanel>
 
                 )
@@ -95,9 +105,27 @@ const OverviewTabs = (props: IProps) => {
             {
                 value === 2 && (
                     <TabPanel value={value} index="three">
-                        <Grid item={true} xs={12} md={8} lg={8}>
-                            <Paper >
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />
+                        </Grid>
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <Paper >                                
                                 <HorizonChartContainer wordform={searchValue} />
+                            </Paper>
+                        </Grid>
+                    </TabPanel>
+
+                )
+            }
+            {
+                value === 3 && (
+                    <TabPanel value={value} index="four">
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />
+                        </Grid>
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <Paper >
+                                <OCRPostcorrectionChartContainer wordform={searchValue} />
                             </Paper>
                         </Grid>
                     </TabPanel>

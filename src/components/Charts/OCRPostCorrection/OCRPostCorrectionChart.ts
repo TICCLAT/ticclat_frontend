@@ -2,41 +2,32 @@ import * as d3 from 'd3';
 import * as d3Legend from 'd3-svg-legend';
 // import { Guid } from "guid-typescript";
 
-import { ILemma, ICorrections, IVariantsQueryData, ICorrectionsQueryData } from '../../../../types';
+import { ILemma, ICorrections, ICorrectionsQueryData } from '../../../../types';
 
 interface IIntegratedData extends ILemma {
-    wordtype: string,
+    wordform: string,
     corrections: ICorrectionsExt[]
 }
 
 interface ICorrectionsExt extends ICorrections {
-    wordtype: string,
+    wordform: string,
     children?: ICorrectionsExt[],
     wordlengthdiff?: number,
     found?: boolean
 }
 
-// interface ICorrectionsExt extends ICorrections {
-//     wordlengthdiff: number,
-//     children: ICorrectionsExtChild[]
-// }
-
-// interface ICorrectionsExtChild extends ICorrections {
-//     found: boolean
-// }
-
-function integrateData(variantsData: IVariantsQueryData, correctionsData: ICorrectionsQueryData): IIntegratedData {
-    const paradigm = variantsData.paradigms[1];
+function integrateData(correctionsData: ICorrectionsQueryData): IIntegratedData {
+    const paradigm = correctionsData.paradigms[0];
     const result: IIntegratedData = {
         lemma: paradigm.lemma,
         paradigm_code: paradigm.paradigm_code,
         variants: paradigm.variants,
-        wordtype: correctionsData.wordtype,
+        wordform: correctionsData.wordform,
         corrections: correctionsData.corrections
     };
 
     result.corrections.map((d: ICorrectionsExt) => {
-        d.wordlengthdiff = d.wordtype.length - result.wordtype.length;
+        d.wordlengthdiff = d.wordform.length - result.wordform.length;
         return d;
     });
 
@@ -101,7 +92,7 @@ function getTierMembers(tier: number, data: ICorrectionsExt[]) {
     const result: any[] = [];
 
     data.forEach((d: ICorrectionsExt) => {
-        if (d.levenshtein === tier) {
+        if (d.levenshtein_distance === tier) {
             result.push(d);
         }
     })
@@ -115,7 +106,7 @@ function makeTree(data: ICorrectionsExt[], tier: number, sourceArray: ICorrectio
     targetArray.forEach((da: ICorrectionsExt) => {
         const children: ICorrectionsExt[] = [];
         sourceArray.forEach((db: ICorrectionsExt) => {
-            if (levenshteinDistance(da.wordtype, db.wordtype) === 1) {
+            if (levenshteinDistance(da.wordform, db.wordform) === 1) {
                 children.push(db);
                 db.found = true;
             }
@@ -134,24 +125,28 @@ function makeTree(data: ICorrectionsExt[], tier: number, sourceArray: ICorrectio
     return result;
 }
 
-function transformChildren(data: any[]) {
-    data.forEach((d: any) => {
-        d.depth = d.data.levenshtein;
-        d.y = d.depth * 150;
-        if (d.children) {
-            transformChildren(d.children);
-        }
-    })
+function transformChildren(data: Array<d3.HierarchyPointNode<ICorrectionsExt>>) {
+    // const result = Object.assign({}, ...data);
+    // if (result) {
+        data.forEach((d: any) => {
+            d.depth = d.data.levenshtein_distance;
+            d.y = d.depth * 150;
+            if (d.children) {
+                transformChildren(d.children);
+            }
+        })
+    // }
+    // return result;
 }
 
-function tree(data: ICorrectionsExt[], radius: number): d3.HierarchyPointNode<ICorrectionsExt> {
+function tree(data: any, radius: number): d3.HierarchyPointNode<ICorrectionsExt> {
     return d3.tree<ICorrectionsExt>()
         .size([2 * Math.PI, radius])
         .separation((a, b) => (a.parent === b.parent ? 1 : 3) / a.depth)
         (d3.hierarchy<any>(data));
 }
 
-export const drawChart = (variantsData: IVariantsQueryData, correctionsData: ICorrectionsQueryData) => {
+export const drawChart = (correctionsData: ICorrectionsQueryData) => {
     const chartMargins = ({ top: 30, right: 200, bottom: 10, left: 10 });
     const chartWidth = 900;
     const chartHeight = 700;
@@ -167,22 +162,25 @@ export const drawChart = (variantsData: IVariantsQueryData, correctionsData: ICo
     const stepDisplayNumber = 10;
     let displayNumber = 150;
 
-    const colorScale = d3.scaleSequential(d3.interpolateViridis).domain([0, displayNumber]);
+    const colorScale = d3.scaleSequential(d3.interpolateReds).domain([0, displayNumber]);
 
     // Data transformations
-    const integratedData = integrateData(variantsData, correctionsData);
+    const integratedData = integrateData(correctionsData);
     const filteredData = filterData(integratedData, freqFilter);
 
     const treeData = (filteredData.length > displayNumber) ? getRandomSubarray(filteredData, displayNumber) : filteredData;
-    const protoRoot = makeTree(treeData, 1,
-        makeTree(treeData, 2,
-            makeTree(treeData, 3,
-                makeTree(treeData, 4,
-                    makeTree(treeData, 5,
-                        makeTree(treeData, 6,
-                            makeTree(treeData, 7,
-                                makeTree(treeData, 8,
-                                    []))))))));
+    const protoRoot = {
+        wordform: correctionsData.wordform,
+        children: makeTree(treeData, 1,
+                    makeTree(treeData, 2,
+                        makeTree(treeData, 3,
+                            makeTree(treeData, 4,
+                                makeTree(treeData, 5,
+                                    makeTree(treeData, 6,
+                                        makeTree(treeData, 7,
+                                            makeTree(treeData, 8,
+                                                []))))))))
+    }
 
     const root = tree(protoRoot, chartRadius);
     if (root.children) {
@@ -221,8 +219,8 @@ export const drawChart = (variantsData: IVariantsQueryData, correctionsData: ICo
             .text("Word frequency")
             .attr("fill", "black");
 
-        // svg.select(".legend")
-        //     .call(legend);
+        svg.select(".legend")
+            .call(legend as any);
 
         const linkgroup = g.append("g")
             .attr("fill", "none")
@@ -234,21 +232,22 @@ export const drawChart = (variantsData: IVariantsQueryData, correctionsData: ICo
             .attr("stroke-linejoin", "round")
             .attr("stroke-width", 3);
 
+        const radialFunc = d3.linkRadial()
+            .radius((d:any) => d.y)
+            .angle((d: any) => d.x);
+
         function newdata(animate = true) {
             const linksData = root.links();
             const links = linkgroup
                 .selectAll("path")
-                .data(linksData, (d:any) => d.source.data.wordtype+"_"+ d.target.data.wordtype);
+                .data(linksData, (d:any) => d.source.data.wordform+"_"+ d.target.data.wordform);
 
             links.exit().remove();
             
             const newlinks = links
                 .enter()
                 .append("path")
-                .attr("d", d3.linkRadial()
-                    .radius((d:any) => 0.1)
-                    .angle((d: any) => d.x)
-                    .toString());
+                .attr("d", d => radialFunc(d as any));
 
             let alllinks = linkgroup.selectAll("path");
             alllinks
@@ -262,19 +261,16 @@ export const drawChart = (variantsData: IVariantsQueryData, correctionsData: ICo
                         svg.transition().duration(1000).attr("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
                     }
                 })
-                .attr("d", d3.linkRadial()
-                    .radius((d:any) => 0.1)
-                    .angle((d: any) => d.x)
-                    .toString());
+                .attr("d", d => radialFunc(d as any));
 
             const nodesData = root.descendants().reverse();
             const nodes = nodegroup
                 .selectAll("g")
                 .data(nodesData, (d: any) => {
                     if (d.parent) {
-                        return d.parent.data.wordtype + d.data.wordtype;
+                        return d.parent.data.wordform + d.data.wordform;
                     }
-                    return d.data.name
+                    return d.data.wordform
                 });
 
             nodes.exit().remove();
@@ -318,7 +314,7 @@ export const drawChart = (variantsData: IVariantsQueryData, correctionsData: ICo
 
             newnodes.append("text")
                 .attr("dy", "0.31em")
-                .text(d => d.data.wordtype)
+                .text(d => d.data.wordform)
                 .attr("fill", d => colorScale(d.data.frequency))
                 .clone(true).lower()
                 .attr("stroke", "white");
@@ -332,13 +328,13 @@ export const drawChart = (variantsData: IVariantsQueryData, correctionsData: ICo
 
         newdata(false);
 
-        const node = g.node();
-        if (node) {
-            const box = node.getBBox();
-            svg.remove()
-                .attr("width", box.width)
-                .attr("height", box.height)
-                .attr("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
-        }
+        // const node = g.node();
+        // if (node) {
+        //     const box = node.getBBox();
+        //     svg.remove()
+        //         .attr("width", box.width)
+        //         .attr("height", box.height)
+        //         .attr("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
+        // }
     }
 }

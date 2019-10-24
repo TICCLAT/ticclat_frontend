@@ -18,7 +18,7 @@ export default class OCRPostCorrectionChartContainer extends React.Component<IPr
     public fetchData() {
         const { wordform } = this.props;
         if (wordform) {
-            fetch(`${backendURL}/variants/${wordform}`)
+            fetch(`${backendURL}/corrections/${wordform}`)
                 .then(results => {
                     return results.json();
                 })

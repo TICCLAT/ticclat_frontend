@@ -35,16 +35,17 @@ function pathuid() {
     return { id, href: window.location + "#" + id, s: "url(" + window.location + "#" + id + ")" }
 }
 
-export const drawChart = (variantsData: IVariantsQueryData) => {
+export const drawChart = (variantsData: IVariantsQueryData, chart: HTMLDivElement) => {
     const horizonchartMargin = ({ top: 30, right: 10, bottom: 0, left: 10 });
-    const horizonchartWidth = 800;
+    const chartContainer = document.getElementById('horizonchart');
+    const horizonchartWidth = chartContainer ? chartContainer.offsetWidth : 800;
 
     const parseDate = d3.timeParse("%Y");
 
     const horizonchartStep = 50;
     const horizonchartOverlap = 7;
 
-    const horizonchartScheme = "schemePuOr";
+    const horizonchartScheme = "schemeReds";
     const horizonchartColor = (i: any) => d3[horizonchartScheme][Math.max(3, horizonchartOverlap)][i + Math.max(0, 3 - horizonchartOverlap)];
 
     const getParadigms = (wordformData: IVariantsQueryData): IHorizonchartData[] => {

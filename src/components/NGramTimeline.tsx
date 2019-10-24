@@ -72,7 +72,6 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
         }
         return (
             <div>
-
                 {content}
             </div>
         );
