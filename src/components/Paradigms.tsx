@@ -1,8 +1,7 @@
 import React from 'react';
 import { backendURL } from '../settings';
-
-import { Card, Grid } from '@material-ui/core';
 import Paradigm from './Paradigm';
+import LoadingIndicator from './LoadingIndiacator';
 
 export interface IProps {
   wordform: string;
@@ -19,26 +18,26 @@ export interface ILemma {
 
 const Paradigms = ({ wordform }: IProps) => {
   const [lemmas, setLemmas] = React.useState<ILemma[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  let content = null;
 
   React.useEffect(() => {
     fetch(`${backendURL}/lemmas_for_wordform/${wordform}`)
       .then(result => result.json())
-      .then(setLemmas);
+      .then((res) => {
+        setLemmas(res)
+        setIsLoading(false);
+      });
   }, [wordform]);
 
   const Cards = lemmas.length > 0 ? lemmas.map(lemma => (
-    <Grid item={true} xs={12} md={12} lg={12} key={lemma.paradigm_id}>
-      <Card style={{ height: 600, overflowY: 'scroll' }}>
-        <Paradigm id={lemma.paradigm_id} />
-      </Card>
-    </Grid>
-  )) : <p>No Paradigms found for the word <strong>{wordform}</strong> </p>;
+    <Paradigm id={lemma.paradigm_id} key={lemma.paradigm_id} />
+  ))
+    : <p>No Paradigms found for the word <strong>{wordform}</strong> </p>;
 
-  return (
-    <>
-      {Cards}
-    </>
-  );
+  content = isLoading ? <LoadingIndicator /> : Cards
+
+  return content
 }
 
 export default Paradigms;

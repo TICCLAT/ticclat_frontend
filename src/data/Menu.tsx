@@ -19,13 +19,16 @@ const Menu = [
         icon: <GlossaryIcon />
     },
     {
-        name: 'Tutorial',
-        icon: <TutorialIcon />
-    },
-    {
         name: 'ParadigmNetwork',
         icon: <DeviceHubIcon />
     }
+    /** Uncomment  to enable Tutorial Menu 
+    {
+        name: 'Tutorial',
+        icon: <TutorialIcon />
+    }
+    */
+
 ]
 
 

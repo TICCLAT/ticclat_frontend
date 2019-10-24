@@ -1,11 +1,14 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, Divider } from '@material-ui/core';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import Menu from '../data/Menu';
-import clsx from 'clsx';
 import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import clsx from 'clsx';
+import Menu from '../data/Menu';
+// Declare drawer width
 const drawerWidth = 240;
+
+// Materail Ui styles for Side drawer
 const useStyles = makeStyles(theme => ({
     hide: {
         display: 'none',
@@ -37,17 +40,21 @@ const useStyles = makeStyles(theme => ({
     },
     navLink: {
         textDecoration: 'none',
-        color: '#757575'
+        color: theme.palette.secondary.main
     },
     selectedItem: {
         color: theme.palette.primary.main
     }
 
 }));
+
+// Props for SideNav
 export interface IProps extends RouteComponentProps {
     open: boolean,
     drawerToggle: () => void
 }
+
+// Wrap sidenav in withRouter to access location.
 const SideNav = withRouter((props: IProps) => {
 
     const classes = useStyles();
@@ -76,22 +83,24 @@ const SideNav = withRouter((props: IProps) => {
             </div>
             <Divider />
             <List>
-                {Menu.map((item, index) => (
-                    <NavLink
-                        to={item.name.toLowerCase()}
-                        key={index}
-                        className={classes.navLink}
-                    >
-                        <ListItem
+
+                { // Menu enlists a sideNav Menu e.g. Overview, Glossary
+                    Menu.map((item, index) => (
+                        <NavLink
+                            to={item.name.toLowerCase()}
                             key={index}
-                            title={item.name}
-                            classes={{ gutters: classes.gutter }}
+                            className={classes.navLink}
                         >
-                            <ListItemIcon className={isActive(item.name.toLowerCase())}>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.name} className={isActive(item.name.toLowerCase())} />
-                        </ListItem>
-                    </NavLink>
-                ))}
+                            <ListItem
+                                key={index}
+                                title={item.name}
+                                classes={{ gutters: classes.gutter }}
+                            >
+                                <ListItemIcon className={isActive(item.name.toLowerCase())}>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.name} className={isActive(item.name.toLowerCase())} />
+                            </ListItem>
+                        </NavLink>
+                    ))}
 
             </List>
 

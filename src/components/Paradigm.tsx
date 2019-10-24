@@ -2,6 +2,7 @@ import { Typography } from '@material-ui/core';
 import React from 'react';
 import { backendURL } from '../settings';
 import ParadigmTable from './ParadigmTable/ParadigmTable';
+import LoadingIndicator from './LoadingIndiacator';
 
 export interface IProps {
   id: number;
@@ -20,25 +21,21 @@ export interface IVariant {
 
 const Paradigm = ({ id }: IProps) => {
   const [variants, setVariants] = React.useState<IVariant[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  let content = null;
   React.useEffect(() => {
     fetch(`${backendURL}/morphological_variants_for_lemma/${id}`)
       .then(result => result.json())
-      .then(setVariants);
+      .then((res) => {
+        setVariants(res)
+        setIsLoading(false);
+      });
   }, [id]);
 
+  const variant = variants.length > 0 ? <ParadigmTable variants={variants} /> : <p>No Variants</p>
+  content = isLoading ? <LoadingIndicator /> : variant
 
-  const lemma = variants.filter(v => v.word_type_code === 'HCL')[0]
-  const title = lemma ? lemma.wordform : id;
-
-  const content = variants.length > 0 ? <ParadigmTable variants={variants} /> : <p>No paradigm</p>
-  return (
-    <>
-      <Typography variant="h6" id="tableTitle" align='center'>
-        {title}
-      </Typography>
-      {content}
-    </>
-  )
+  return content
 
 }
 

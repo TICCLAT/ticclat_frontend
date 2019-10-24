@@ -1,6 +1,4 @@
 import * as d3 from 'd3';
-// import { Guid } from "guid-typescript";
-
 import { IVariantsQueryData, ILemma, IVariant, ICorpus, ICorpusFrequencyEntry } from '../../../types/'
 
 interface IHorizonchartFrequencyEntry {
@@ -35,10 +33,9 @@ function pathuid() {
     return { id, href: window.location + "#" + id, s: "url(" + window.location + "#" + id + ")" }
 }
 
-export const drawChart = (variantsData: IVariantsQueryData, chart: HTMLDivElement) => {
+export const drawChart = (variantsData: IVariantsQueryData) => {
     const horizonchartMargin = ({ top: 30, right: 10, bottom: 0, left: 10 });
-    const chartContainer = document.getElementById('horizonchart');
-    const horizonchartWidth = chartContainer ? chartContainer.offsetWidth : 800;
+    const horizonchartWidth = parseInt(d3.select('#horizonchart').style('width'), 10);;
 
     const parseDate = d3.timeParse("%Y");
 

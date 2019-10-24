@@ -1,24 +1,40 @@
 import React from 'react';
-import { NGramChart } from './Charts/NGram';
+import { Typography } from '@material-ui/core';
 import { backendURL } from '../settings';
-import { Typography, CircularProgress } from '@material-ui/core';
 import { IData } from '../../types';
+import LoadingIndicator from '../components/LoadingIndiacator';
+import { NGramChart } from './Charts/NGram';
 
 interface IProps {
-    wordform: string
+    wordform: string;
+
 }
 
 interface IState {
     info: IData | null,
     isLoading: boolean,
-    chart: NGramChart | null
+    chart: NGramChart | null,
+}
+const tooltip: React.CSSProperties = {
+    display: 'none',
+    alignItems: 'start',
+    flexDirection: 'column',
+    position: 'absolute',
+    textAlign: 'center',
+    width: 'auto',
+    height: 'auto',
+    padding: '5px',
+    backgroundColor: '#fff',
+    border: '1px solid',
+    borderRadius: '5px',
+    pointerEvents: 'none'
 }
 
 export default class NGramTimeline extends React.Component<IProps, IState> {
     state = {
         info: null,
         isLoading: true,
-        chart: null
+        chart: null,
     }
 
     public componentDidUpdate(prevProps: IProps) {
@@ -57,23 +73,21 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
     render() {
         const { wordform } = this.props;
         const { info, isLoading } = this.state;
+
         let content = null;
         if (isLoading) {
-            content = <CircularProgress />
+            content = <LoadingIndicator />
         }
         else if (info !== null) {
             content = info.corpora.length > 0 ?
                 (
                     <>
-                        <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
+                        <Typography variant="subtitle2" align='center' style={{ padding: 10 }}> {wordform}</Typography>
                         <div id="chart" />
+                        <div style={tooltip} className="tooltip" />
                     </>
-                ) : <Typography variant="h5" align='center' style={{ margin: 10 }}>Word does not exist in any corpora</Typography>
+                ) : <Typography variant="subtitle2" align='center' style={{ padding: 10 }}><em><strong>{wordform} </strong></em>does not exist in any corpora</Typography>
         }
-        return (
-            <div>
-                {content}
-            </div>
-        );
+        return content
     }
 }

@@ -1,16 +1,21 @@
+import * as React from 'react';
 import {
     TableCell,
     TableHead,
     TableRow,
     TableSortLabel,
     Tooltip,
+    Checkbox
 } from '@material-ui/core';
-import * as React from 'react';
+
+// Props for ParadigmHeader
 interface IProps {
-    onRequestSort: (event: any, property: any) => void;
-    order: any;
-    orderBy: string;
+    order: any;  // 'asc'  or 'dsc'
+    orderBy: string; // e.g. Year , Corpora, etc
     rowCount: number;
+    numSelected: number; // selected wordforms for adding into cart
+    onRequestSort: (event: any, property: any) => void; // Function to call onSort 
+    onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void; // Function to call on SelectAll checkbox checked
 }
 
 class ParadigmHeader extends React.Component<IProps, {}> {
@@ -18,6 +23,7 @@ class ParadigmHeader extends React.Component<IProps, {}> {
         this.props.onRequestSort(event, property);
     }
     render() {
+        // Declare title for each column 
         const rows = [
             { id: 'wordform', label: 'Wordform' },
             { id: 'V', label: 'V' },
@@ -29,33 +35,45 @@ class ParadigmHeader extends React.Component<IProps, {}> {
             { id: 'num_paradigms', label: '#Paradigms' }
         ];
 
-        const { order, orderBy } = this.props;
+        // Destructuring Props
+        const { order, orderBy, onSelectAllClick, numSelected, rowCount } = this.props;
 
         return (
             <TableHead>
                 <TableRow>
-                    {rows.map((row) => {
-                        return (
-                            <TableCell
-                                key={row.id}
-                                align={'left'}
-                                sortDirection={orderBy === row.id ? order : false}
-                            >
-                                <Tooltip
-                                    title="Sort"
-                                    enterDelay={300}
+                    <TableCell padding="checkbox">
+                        <Checkbox
+                            indeterminate={numSelected > 0 && numSelected < rowCount}
+                            checked={numSelected === rowCount}
+                            onChange={onSelectAllClick}
+                            inputProps={{ 'aria-label': 'select all wordforms' }}
+                            color="primary"
+                        />
+                    </TableCell>
+                    {
+                        // Iterate through each column name
+                        rows.map((row) => {
+                            return (
+                                <TableCell
+                                    key={row.id}
+                                    align={'left'}
+                                    sortDirection={orderBy === row.id ? order : false}
                                 >
-                                    <TableSortLabel
-                                        active={orderBy === row.id}
-                                        direction={order}
-                                        onClick={this.createSortHandler(row.id)}
+                                    <Tooltip
+                                        title="Sort"
+                                        enterDelay={300}
                                     >
-                                        {row.label}
-                                    </TableSortLabel>
-                                </Tooltip>
-                            </TableCell>
-                        );
-                    }, this)}
+                                        <TableSortLabel
+                                            active={orderBy === row.id}
+                                            direction={order}
+                                            onClick={this.createSortHandler(row.id)}
+                                        >
+                                            {row.label}
+                                        </TableSortLabel>
+                                    </Tooltip>
+                                </TableCell>
+                            );
+                        }, this)}
                 </TableRow>
             </TableHead>
         );

@@ -46,10 +46,14 @@ const ShoppingBag = withRouter((props) => {
       onDelete={() => shoppingBag.removeWord(word)}
       deleteIcon={<DeleteIcon />}
       className={classes.item}
-      onClick={() => props.history.push({
-        pathname: '/overview',
-        search: '?searching=' + word,
-      })}
+      onClick={() => {
+        props.history.push({
+          pathname: '/overview',
+          search: '?searching=' + word,
+        })
+        localStorage.setItem('searchValue', word)
+      }
+      }
     />
   ))
   const emptyBagMessage = (

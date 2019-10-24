@@ -3,11 +3,12 @@ import { InputBase, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
+// Material UI styles for Search Bar 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
         display: 'inline-flex',
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
+        flex: 8,
+        margin: `0 ${theme.spacing(2)}px`,
         [theme.breakpoints.up('sm')]: {
             width: 'auto',
         },
@@ -33,19 +34,24 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
 }));
 
+// Declare Prop Type
 interface IProps {
     onSearch: (searchValue: string) => void
     wordform: string
 }
 const SearchBar = (props: IProps) => {
-    const classes = useStyles({});
+    const classes = useStyles();
+    // Destructuring props
     const { onSearch, wordform } = props;
+    // Decalre State to store value in search bar
     const [searchValue, setSearchValue] = useState('');
+
     useEffect(() => {
         if (wordform) {
             return setSearchValue(wordform)
         }
     }, [wordform])
+
     return (
         <div className={classes.search}>
             <InputBase
@@ -60,10 +66,11 @@ const SearchBar = (props: IProps) => {
                 }
             />
             <div className={classes.searchIcon}>
-                <IconButton onClick={() => onSearch(searchValue)} color="primary">
+                <IconButton onClick={() => onSearch(searchValue)} color="primary" >
                     <SearchIcon />
                 </IconButton>
             </div>
+
         </div>
     )
 }

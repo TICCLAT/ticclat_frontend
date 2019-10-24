@@ -61,6 +61,7 @@ const AddButton = withRouter((props: { word: string, index: number } & RouteComp
         pathname: '/overview',
         search: '?searching=' + word
       })
+      localStorage.setItem('searchValue', word)
       const chart = document.getElementById('chart')
       if (chart !== null) { chart.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
       return
