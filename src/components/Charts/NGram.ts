@@ -129,30 +129,37 @@ export class NGramChart {
             .attr("y", -50)
             .attr("transform", "rotate(-90)")
             .attr("fill", "#000")
-            .text("Frequency");
+            .text("Relative Frequency");
 
         // Legends for NGram
-        this.nGram.append('g')
-            .attr("class", "legendtext")
-            .selectAll("text")
+        const legends = this.nGram.selectAll(".legends")
             .data(this.chartData.corpora)
-            .enter().append('text')
-            .attr("x", (d, i) => 0 + (i * 290))
-            .attr("y", (d, i) => -10)
-            .attr("class", "legend")
-            .style("fill", (d: any) => this.color(d.name))
-            .text((d: any) => d.name);
+            .enter().append("g")
+            .attr("transform", (d, i) => "translate(" + (this.nGramMargin.left + this.nGramMargin.right + 60) + "," + (this.nGramMargin.top - 40) + ")")
 
-        this.nGram.append('g')
-            .attr("class", "legendrect")
-            .selectAll("rect")
-            .data(this.chartData.corpora)
-            .enter().append("rect")
-            .attr("width", 10)
-            .attr("height", 10)
-            .attr("x", (d, i) => 0 + (i * 290) - 20)
-            .attr("y", (d, i) => -20)
+        legends.append('rect')
+            .attr('fill', (d, i) => this.color(d.name))     //   const color = d3.scaleOrdinal(d3.schemeCategory10);
+            .attr('height', 15)
+            .attr('width', 15);
+
+        legends.append('text')
+            .attr('x', 18)
+            .attr('y', 10)
+            .attr('dy', '.15em')
+            .text((d, i) => d.name)
+            .style('text-anchor', 'start')
+            .style('font-size', 14)
             .style("fill", (d: any) => this.color(d.name));
+
+        // Calculate dynamic x position for legends
+        const padding = 10;
+        const data = this.chartData.corpora
+        legends.attr('transform', (d, i) => {
+            return 'translate(' + (d3.sum(data, (e, j) => {
+                if (j < i) { return legends.nodes()[j].getBBox().width; } else { return 0; }
+            }) + padding * i) + ',-20)';
+        });
+
     }
 
     setupBrushChart() {
@@ -196,6 +203,7 @@ export class NGramChart {
         nGramLineGroups.append("path")
             .style('fill', 'none')
             .style('stroke-width', 2)
+            .style("stroke-dasharray", ("3, 3"))
             .attr("class", "line")
             .attr("d", (d: any) => this.nGramLine(d.frequencies))
             .attr("data-legend", (d) => d.name)

@@ -4,6 +4,8 @@ export interface IContextProps {
   words: string[];
   addWord: (word: string) => void;
   removeWord: (word: string) => void;
+  removeAllWords: () => void;
+  addImportedWords: (words: string[]) => void;
 }
 
 export const defaultValue = {
@@ -11,6 +13,10 @@ export const defaultValue = {
   addWord: (word: string) => { },
   // tslint:disable-next-line:no-empty
   removeWord: (word: string) => { },
+  // tslint:disable-next-line:no-empty
+  removeAllWords: () => { },
+  // tslint:disable-next-line:no-empty
+  addImportedWords: (words: string[]) => { },
   words: [],
 }
 
@@ -36,13 +42,19 @@ export const ShoppingBagProvider = (props: { children: JSX.Element[] | JSX.Eleme
       setWords([...words, word]);
     }
   }
+  const addImportedWords = (importedWords: string[]) => {
+    setWords(importedWords);
+  }
 
   const removeWord = (word: string) => {
     setWords(words.filter(w => w !== word));
   }
+  const removeAllWords = () => {
+    setWords([])
+  }
 
   return (
-    <ShoppingBagContext.Provider value={{ words, addWord, removeWord }} >
+    <ShoppingBagContext.Provider value={{ words, addWord, removeWord, addImportedWords, removeAllWords }} >
       {props.children}
     </ShoppingBagContext.Provider>
   )

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
-import SearchBar from '../components/SearchBar';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Paradigms from '../components/Paradigms';
 import Lexica from '../components/Lexica';
 import NGramTimeline from '../components/NGramTimeline';
 import HorizonChartContainer from '../components/HorizonChartContainer';
-import OCRPostcorrectionChartContainer from '../components/OCRPostcorrectionChartContainer';
-
+import OverViewTabs from '../components/OverviewTabs';
 // import { RouteComponentProps } from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
     container: {
@@ -60,8 +59,10 @@ const overview = ({ history }) => {
 
     return (
         <Container maxWidth="xl" className={classes.container}>
-            <Grid container={true} spacing={3}>
-                <Grid item={true} xs={12} md={12} lg={12}>
+
+            <OverViewTabs searchValue={searchValue} onSearch={(searchValue: string) => setSearchValue(searchValue)} />
+
+            {/* <Grid item={true} xs={12} md={12} lg={12}>
                     <SearchBar onSearch={setValue} wordform={searchValue} />
                 </Grid>
                 <Grid item={true} xs={12} md={8} lg={8}>
@@ -91,6 +92,7 @@ const overview = ({ history }) => {
                     </Paper>
                 </Grid>
             </Grid>
+            </Grid> */}
         </Container>
     )
 }
