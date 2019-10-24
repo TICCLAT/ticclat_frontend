@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 import { IData, ICorpus } from '../../../types';
-import { style } from '@material-ui/system';
 
 interface IFreqWithCorpora {
     freq: number,
     term_frequency: number,
     total: number,
     year: number,
-    corpora: string
+    corpora: string,
+    total_number_of_words: number,
 }
 
 export class NGramChart {
@@ -47,14 +47,27 @@ export class NGramChart {
     parseDate = d3.timeParse("%Y");
 
     // Object to hold data
-    chartData: IData = { corpora: [], metadata: { max_freq: 0, max_year: 0, min_freq: 0, min_year: 0 }, wordform: "" };
+    chartData: IData = {
+        corpora: [],
+        metadata: {
+            max_freq: 0,
+            max_year: 0,
+            min_freq: 0,
+            min_year: 0,
+            min_term_freq: 0,
+            max_term_freq: 0,
+            min_corpus_rel_freq: 0,
+            max_corpus_rel_freq: 0
+        },
+        wordform: ""
+    };
 
     // chart bases
     svg = d3.select("#chart").append("svg");
     nGram = this.svg.append("g");
     brushChart = this.svg.append("g");
     tooltip = d3.select(".tooltip")
-
+    yDomainType = 'freq'
 
     init(info: IData) {
         // Save the initial state of the domain fro the n-gram chart so we can reset
@@ -67,12 +80,18 @@ export class NGramChart {
                 const newDate = this.parseDate(item.year!.toString());
                 item.year = newDate !== null ? newDate : new Date();
                 item.freq = +item.freq;
+                item.term_frequency = +item.term_frequency
             });
         });
 
         this.chartData = info;
 
         this.initialized = true;
+        const selection = d3.selectAll('.frequency')
+        selection.on('change', (e) => {
+            this.yDomainType = d3.select('input[name="frequency"]:checked').property('value')
+            this.draw();
+        })
     }
 
     // set brush extent 
@@ -121,8 +140,14 @@ export class NGramChart {
         if (minDate && maxDate) {
             this.nGramXScale.domain([minDate, maxDate]);
         }
-
-        this.nGramYScale.domain([this.chartData.metadata.min_freq, this.chartData.metadata.max_freq]);
+        if (this.yDomainType === "term_freq") {
+            this.nGramYScale.domain([0, this.chartData.metadata.max_term_freq]);
+        } else if (this.yDomainType === "corpus_freq") {
+            this.nGramYScale.domain([0, this.chartData.metadata.max_corpus_rel_freq]);
+        }
+        else {
+            this.nGramYScale.domain([0, this.chartData.metadata.max_freq]);
+        }
 
         this.nGram.append("g")
             .attr("class", "x axis")
@@ -139,10 +164,17 @@ export class NGramChart {
             .call(this.nGramYAxis)
             .append('text')
             .attr("x", -(this.nGramHeight / 2))
-            .attr("y", -50)
+            .attr("y", -60)
             .attr("transform", "rotate(-90)")
             .attr("fill", "#000")
-            .text("Relative Frequency");
+            .text(() => {
+                if (this.yDomainType === 'term_freq') {
+                    return "Absolute Year Frequency"
+                } else if (this.yDomainType === 'corpus_freq') {
+                    return "Relative Corpus Frequency"
+                }
+                return "Relative Year Frequency"
+            });
 
         // Legends for NGram
         const legends = this.nGram.selectAll(".legends")
@@ -201,7 +233,14 @@ export class NGramChart {
         .x((d: any) => {
             return this.nGramXScale(d.year)
         })
-        .y((d: any) => this.nGramYScale(d.freq));
+        .y((d: any) => {
+            if (this.yDomainType === 'term_freq') {
+                return this.nGramYScale(d.term_frequency)
+            } else if (this.yDomainType === 'corpus_freq') {
+                return this.nGramYScale(d.rel_corpus_frequency)
+            }
+            return this.nGramYScale(d.freq)
+        });
 
     setUpFrequenciesData() {
         // Preprocess chart data to get frequencies with corpora
@@ -210,7 +249,8 @@ export class NGramChart {
             corpora.frequencies.map(freq => {
                 const newFreq: IFreqWithCorpora = {
                     ...freq,
-                    "corpora": corpora.name
+                    "corpora": corpora.name,
+                    "total_number_of_words": corpora.total_number_of_words,
                 }
                 frequencyWithCorpora.push(newFreq)
             })
@@ -260,7 +300,15 @@ export class NGramChart {
             .attr("cx", (d: any) => {
                 return this.nGramXScale(d.year)
             })
-            .attr("cy", (d: any) => this.nGramYScale(d.freq))
+            .attr("cy", (d: any) => {
+                if (this.yDomainType === "term_freq") {
+                    return this.nGramYScale(d.term_frequency)
+                } else if (this.yDomainType === "corpus_freq") {
+                    return this.nGramYScale(d.rel_corpus_frequency)
+                }
+                return this.nGramYScale(d.freq)
+            }
+            )
             .attr("r", 3)
             .on("mouseover", (d: any, i: number) => {
                 const color = this.color(d.corpora)
@@ -295,7 +343,15 @@ export class NGramChart {
 
         const brushLine = d3.line()
             .x((d: any) => this.brushXScale(d.year))
-            .y((d: any) => this.brushYScale(d.freq));
+            .y((d: any) => {
+                if (this.yDomainType === 'term_freq') {
+                    return this.brushYScale(d.term_frequency)
+                } else if (this.yDomainType === 'corpus_freq') {
+                    return this.brushYScale(d.rel_corpus_frequency)
+                }
+                return this.brushYScale(d.freq)
+            }
+            );
 
         brushLineGroups.append("path")
             .style('fill', 'none')

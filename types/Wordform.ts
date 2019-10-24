@@ -1,8 +1,13 @@
 export interface ICorpora {
     frequencies: ICorpusFrequencyEntry[],
-    name: ''
+    name: '',
+    total_number_of_words: number,
 }
 export interface IMetadata {
+    max_term_freq: number,
+    min_term_freq: number,
+    min_corpus_rel_freq: number,
+    max_corpus_rel_freq: number,
     max_freq: number,
     max_year: number,
     min_freq: number,
@@ -17,6 +22,8 @@ export interface IData {
 export interface ICorpusFrequencyEntry {
     freq: number,
     year: ''
+    term_frequency: number,
+    rel_corpus_frequency: number,
 }
 
 export interface ICorpus {
