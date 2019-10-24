@@ -268,9 +268,9 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
       portalContainer.style.left = `${rect.left + 10}px`;
       portalContainer.style.top = `${rect.top + 10}px`;
     })
-    .on('mouseout', () => {
-      portalContainer.style.display = 'none'
-    });
+    // .on('mouseout', () => {
+    //   portalContainer.style.display = 'none'
+    // });
 
   const frequencyToRadius = d3.scaleLog().domain([1, 1e8]).range([0.1, 10]);
 
