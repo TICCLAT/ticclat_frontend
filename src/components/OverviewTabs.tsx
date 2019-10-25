@@ -64,6 +64,7 @@ const OverviewTabs = (props: IProps) => {
 
     return (
         <>
+            <SearchBar onSearch={onSearch} wordform={searchValue} />
             <Tabs
                 value={selectedTab}
                 onChange={handleChange}
@@ -76,35 +77,31 @@ const OverviewTabs = (props: IProps) => {
                 <Tab label="Paradigms over time" />
                 <Tab label="OCR Postcorrection view" />
             </Tabs>
-            {
-                selectedTab === 0 && (
-                    <TabPanel value={selectedTab} index="one">
-                        <Grid item={true} xs={12} md={12} lg={12}>
-                            <SearchBar onSearch={onSearch} wordform={searchValue} />                
-                        </Grid>
-                        <Grid item={true} xs={12} md={8} lg={8}>
-                            <Paper >
-                                <div style={{ display: 'flex' }}>
-                                    <IconButton color='primary' href="/glossary#ngram"><Info /></IconButton>
-                                </div>
-                                <NGramTimeline wordform={searchValue} />
-                            </Paper>
-                        </Grid>
-                        <Grid item={true} xs={12} md={4} lg={4}>
-                            <Paper>
-                                {searchValue !== '' ? <Lexica wordform={searchValue} /> : <CircularProgress />}
-                            </Paper>
-                        </Grid>
-                    </TabPanel>
 
-                )
+            {selectedTab === 0 && (
+                <TabPanel value={selectedTab} index="one">
+
+                    <Grid item={true} xs={12} md={8} lg={8}>
+                        <Paper >
+                            <div style={{ display: 'flex' }}>
+                                <IconButton color='primary' href="/glossary#ngram"><Info /></IconButton>
+                            </div>
+                            <NGramTimeline wordform={searchValue} />
+                        </Paper>
+                    </Grid>
+                    <Grid item={true} xs={12} md={4} lg={4}>
+                        <Paper>
+                            {searchValue !== '' ? <Lexica wordform={searchValue} /> : <CircularProgress />}
+                        </Paper>
+                    </Grid>
+                </TabPanel>
+
+            )
             }
             {
                 selectedTab === 1 && (
                     <TabPanel value={selectedTab} index="two">
-                        <Grid item={true} xs={12} md={12} lg={12}>
-                            <SearchBar onSearch={onSearch} wordform={searchValue} />                
-                        </Grid>
+
                         <Grid item={true} xs={12} md={12} lg={12}>
                             <Paper>
                                 <Header title={searchValue} section="paradigm" />
@@ -118,9 +115,7 @@ const OverviewTabs = (props: IProps) => {
             {
                 selectedTab === 2 && (
                     <TabPanel value={selectedTab} index="three">
-                        <Grid item={true} xs={12} md={12} lg={12}>
-                            <SearchBar onSearch={onSearch} wordform={searchValue} />
-                        </Grid>
+
                         <Grid item={true} xs={12} md={12} lg={12}>
                             <Paper >
                                 <Header title={searchValue} section="Paradigms over time" />
@@ -134,9 +129,7 @@ const OverviewTabs = (props: IProps) => {
             {
                 selectedTab === 3 && (
                     <TabPanel value={selectedTab} index="four">
-                        <Grid item={true} xs={12} md={12} lg={12}>
-                            <SearchBar onSearch={onSearch} wordform={searchValue} />
-                        </Grid>
+
                         <Grid item={true} xs={12} md={12} lg={12}>
                             <Paper >
                                 <Header title={searchValue} section="OCR Postcorrection view" />
