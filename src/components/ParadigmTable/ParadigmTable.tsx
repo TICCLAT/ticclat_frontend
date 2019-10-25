@@ -148,10 +148,12 @@ class ParadigmTable extends React.Component<IProps, IState> {
                     rowCount={variants.length}
                     onSelectAllClick={handleSelectAllClick}
                     numSelected={selected.length}
+                    isBagEmpty={this.context.words.length <= 0}
                 />
                 <TableBody>
                     {sortedData.map((variant, index) => {
-                        const isItemSelected = isSelected(variant.wordform);
+                        const isItemSelected = this.context.words.includes(variant.wordform);
+                        // const isItemSelected = isSelected(variant.wordform);
                         return <Row key={index} variant={variant} isItemSelected={isItemSelected} onClick={handleClick} />
                     })}
                 </TableBody>

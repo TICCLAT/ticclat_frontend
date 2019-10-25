@@ -16,6 +16,7 @@ interface IProps {
     numSelected: number; // selected wordforms for adding into cart
     onRequestSort: (event: any, property: any) => void; // Function to call onSort 
     onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void; // Function to call on SelectAll checkbox checked
+    isBagEmpty: boolean;
 }
 
 class ParadigmHeader extends React.Component<IProps, {}> {
@@ -36,7 +37,7 @@ class ParadigmHeader extends React.Component<IProps, {}> {
         ];
 
         // Destructuring Props
-        const { order, orderBy, onSelectAllClick, numSelected, rowCount } = this.props;
+        const { order, orderBy, onSelectAllClick, numSelected, rowCount, isBagEmpty } = this.props;
 
         return (
             <TableHead>
@@ -44,7 +45,7 @@ class ParadigmHeader extends React.Component<IProps, {}> {
                     <TableCell padding="checkbox">
                         <Checkbox
                             indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={numSelected === rowCount}
+                            checked={(numSelected === rowCount) && (!isBagEmpty)}
                             onChange={onSelectAllClick}
                             inputProps={{ 'aria-label': 'select all wordforms' }}
                             color="primary"
