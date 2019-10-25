@@ -1,10 +1,15 @@
+import Paper from '@material-ui/core/Paper';
 import React from 'react';
 import { drawChart } from './Charts/OCRPostCorrection/OCRPostCorrectionChart';
 import { backendURL } from '../settings';
 import { Typography } from '@material-ui/core';
+import Slider from '@material-ui/core/Slider';
 
 interface IProps {
     wordform: string
+}
+interface IState {
+    
 }
 export default class OCRPostCorrectionChartContainer extends React.Component<IProps> {
     public componentDidUpdate(prevProps: IProps) {
@@ -36,7 +41,36 @@ export default class OCRPostCorrectionChartContainer extends React.Component<IPr
         const wordform = this.props.wordform || 'wordform';
         return (
             <>
-                <Typography variant="h5" align='center' style={{ margin: 10 }}> {wordform}</Typography>
+                <div style={{display: 'flex', flexDirection: 'horizontal'}}>
+                    <Paper style={{maxWidth: '200px', padding: '1em', marginRight: '1em'}}>
+                        <Typography id="label-frequency-filter" gutterBottom>
+                            Filter all words below this frequency
+                        </Typography>
+                        <Slider
+                          defaultValue={10}
+                          aria-labelledby="label-frequency-filter"
+                          valueLabelDisplay="auto"
+                          step={1}
+                          marks
+                          min={0}
+                          max={100}
+                        />
+                    </Paper>
+                    <Paper style={{maxWidth: '200px', padding: '1em'}}>
+                        <Typography id="label-words-filter" gutterBottom>
+                            Maximum # of words to display
+                        </Typography>
+                        <Slider
+                          defaultValue={150}
+                          aria-labelledby="label-words-filter"
+                          valueLabelDisplay="auto"
+                          step={10}
+                          marks
+                          min={100}
+                          max={1500}
+                        />
+                    </Paper>
+                </div>
                 <div id="OCRPostCorrectionChart" />
             </>
         );
