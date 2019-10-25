@@ -16,17 +16,20 @@ export interface IData {
 
 export interface ICorpusFrequencyEntry {
     freq: number,
-    year: ''
+    term_frequency: number,
+    total: number,
+    year: string
 }
 
 export interface ICorpus {
     frequencies: ICorpusFrequencyEntry[],
-    name: ''
+    name: string
 }
 
 export interface IVariant {
     V: 1,
     corpora: ICorpus[],
+    frequency: number,
     word_type_code: string,
     word_type_number: number,
     wordform: string
@@ -36,6 +39,16 @@ export interface ILemma {
     lemma: string,
     paradigm_code: string,
     variants: IVariant[]
+}
+
+export interface ICorrections {
+    wordform: string, 
+    frequency: number, 
+    // xyzw: number, 
+    levenshtein_distance: number, 
+    // anahash: number, 
+    // wordlengthdiff: number, 
+    // children: Array<ISlt>
 }
 
 export interface IVariantsMetadata {
@@ -50,7 +63,14 @@ export interface IVariantsMetadata {
 export interface IVariantsQueryData {
     metadata: IVariantsMetadata,
     paradigms: ILemma[],
-    wordform: string
+    wordtype: string
+}
+
+export interface ICorrectionsQueryData {
+    metadata: IVariantsMetadata,
+    paradigms: ILemma[],
+    wordform: string,
+    corrections: ICorrections[]
 }
 
 export interface IFrequency {
