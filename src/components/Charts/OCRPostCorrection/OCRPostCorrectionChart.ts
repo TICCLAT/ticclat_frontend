@@ -162,7 +162,13 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
     const stepDisplayNumber = 10;
     let displayNumber = 150;
 
-    const colorScale = d3.scaleSequential(d3.interpolateReds).domain([0, displayNumber]);
+    const colorScale = d3.scaleSequential((t) => {
+        const color = d3.rgb();
+        color.r = 255 * Math.min(1, t);
+        color.g = 0;
+        color.b = 255 - 255 * Math.min(1, t);
+        return '' + color;
+    }).domain([0, displayNumber]);
 
     // Data transformations
     const integratedData = integrateData(correctionsData);

@@ -76,6 +76,7 @@ const OverviewTabs = (props: IProps) => {
                 <Tab label="Paradigms over time" />
                 <Tab label="OCR Postcorrection view" />
             </Tabs>
+            {
                 selectedTab === 0 && (
                     <TabPanel value={selectedTab} index="one">
                         <Grid item={true} xs={12} md={12} lg={12}>
