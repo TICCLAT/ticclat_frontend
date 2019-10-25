@@ -6,9 +6,11 @@ import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 // Material UI styles for Search Bar 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
-        display: 'inline-flex',
-        flex: 8,
-        margin: `0 ${theme.spacing(2)}px`,
+        display: 'flex',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: `${theme.spacing(2)}px`,
         [theme.breakpoints.up('sm')]: {
             width: 'auto',
         },
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('md')]: {
-            width: 200,
+            width: 500,
         },
     },
 }));
