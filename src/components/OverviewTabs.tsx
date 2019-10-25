@@ -4,6 +4,8 @@ import NGramTimeline from '../components/NGramTimeline';
 import Lexica from '../components/Lexica';
 import Paradigms from '../components/Paradigms';
 import HorizonChartContainer from '../components/HorizonChartContainer';
+import OCRPostcorrectionChartContainer from '../components/OCRPostcorrectionChartContainer';
+
 import SearchBar from '../components/SearchBar';
 import { Info } from '@material-ui/icons';
 
@@ -12,6 +14,7 @@ interface TabPanelProps {
     index: any;
     value: any;
 }
+
 // Header Component for Tab Panel
 const Header = ({ title, section }: { title: string, section: string }) => {
     return (
@@ -23,6 +26,7 @@ const Header = ({ title, section }: { title: string, section: string }) => {
         </div>
     )
 }
+
 // TabPanel Component to display tab specific data
 function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -67,18 +71,20 @@ const OverviewTabs = (props: IProps) => {
                 textColor="primary"
                 centered
             >
-                <Tab label="NGram" />
-                <Tab label="Paradigms" />
-                <Tab label="Horizon" />
+                <Tab label="Word usage over time" />
+                <Tab label="Paradigms Table" />
+                <Tab label="Paradigms over time" />
+                <Tab label="OCR Postcorrection view" />
             </Tabs>
-
             {
                 selectedTab === 0 && (
                     <TabPanel value={selectedTab} index="one">
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />                
+                        </Grid>
                         <Grid item={true} xs={12} md={8} lg={8}>
                             <Paper >
                                 <div style={{ display: 'flex' }}>
-                                    <SearchBar onSearch={onSearch} wordform={searchValue} />
                                     <IconButton color='primary' href="/glossary#ngram"><Info /></IconButton>
                                 </div>
                                 <NGramTimeline wordform={searchValue} />
@@ -97,12 +103,14 @@ const OverviewTabs = (props: IProps) => {
                 selectedTab === 1 && (
                     <TabPanel value={selectedTab} index="two">
                         <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />                
+                        </Grid>
+                        <Grid item={true} xs={12} md={12} lg={12}>
                             <Paper>
                                 <Header title={searchValue} section="paradigm" />
                                 {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
                             </Paper>
                         </Grid>
-
                     </TabPanel>
 
                 )
@@ -111,13 +119,31 @@ const OverviewTabs = (props: IProps) => {
                 selectedTab === 2 && (
                     <TabPanel value={selectedTab} index="three">
                         <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />
+                        </Grid>
+                        <Grid item={true} xs={12} md={12} lg={12}>
                             <Paper >
-                                <Header title={searchValue} section="horizon" />
+                                <Header title={searchValue} section="Paradigms over time" />
                                 <HorizonChartContainer wordform={searchValue} />
                             </Paper>
                         </Grid>
                     </TabPanel>
 
+                )
+            }
+            {
+                selectedTab === 3 && (
+                    <TabPanel value={selectedTab} index="four">
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <SearchBar onSearch={onSearch} wordform={searchValue} />
+                        </Grid>
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <Paper >
+                                <Header title={searchValue} section="OCR Postcorrection view" />
+                                <OCRPostcorrectionChartContainer wordform={searchValue} />
+                            </Paper>
+                        </Grid>
+                    </TabPanel>
                 )
             }
 
