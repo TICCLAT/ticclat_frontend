@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import * as d3Legend from 'd3-svg-legend';
-// import { Guid } from "guid-typescript";
 
 import { ILemma, ICorrections, ICorrectionsQueryData } from '../../../../types';
 
@@ -128,13 +127,13 @@ function makeTree(data: ICorrectionsExt[], tier: number, sourceArray: ICorrectio
 function transformChildren(data: Array<d3.HierarchyPointNode<ICorrectionsExt>>) {
     // const result = Object.assign({}, ...data);
     // if (result) {
-        data.forEach((d: any) => {
-            d.depth = d.data.levenshtein_distance;
-            d.y = d.depth * 150;
-            if (d.children) {
-                transformChildren(d.children);
-            }
-        })
+    data.forEach((d: any) => {
+        d.depth = d.data.levenshtein_distance;
+        d.y = d.depth * 150;
+        if (d.children) {
+            transformChildren(d.children);
+        }
+    })
     // }
     // return result;
 }
@@ -147,8 +146,9 @@ function tree(data: any, radius: number): d3.HierarchyPointNode<ICorrectionsExt>
 }
 
 export const drawChart = (correctionsData: ICorrectionsQueryData) => {
+    const currentWidth = parseInt(d3.select('#OCRPostCorrectionChart').style('width'), 10);
     const chartMargins = ({ top: 30, right: 200, bottom: 10, left: 10 });
-    const chartWidth = 900;
+    const chartWidth = currentWidth - chartMargins.left - chartMargins.right;
     const chartHeight = 700;
     const chartRadius = 466;
 
@@ -172,14 +172,14 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
     const protoRoot = {
         wordform: correctionsData.wordform,
         children: makeTree(treeData, 1,
-                    makeTree(treeData, 2,
-                        makeTree(treeData, 3,
-                            makeTree(treeData, 4,
-                                makeTree(treeData, 5,
-                                    makeTree(treeData, 6,
-                                        makeTree(treeData, 7,
-                                            makeTree(treeData, 8,
-                                                []))))))))
+            makeTree(treeData, 2,
+                makeTree(treeData, 3,
+                    makeTree(treeData, 4,
+                        makeTree(treeData, 5,
+                            makeTree(treeData, 6,
+                                makeTree(treeData, 7,
+                                    makeTree(treeData, 8,
+                                        []))))))))
     }
 
     const root = tree(protoRoot, chartRadius);
@@ -211,6 +211,7 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
         const g = svg.append("g");
 
         const legendGroup = g.append("g")
+            .style("font-size", "20px")
             .attr("class", "legend legend--ordinal")
             .attr("transform", `translate(${chartWidth - 600},${-chartHeight + 200})`)
             .append("text")
@@ -233,17 +234,17 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
             .attr("stroke-width", 3);
 
         const radialFunc = d3.linkRadial()
-            .radius((d:any) => d.y)
+            .radius((d: any) => d.y)
             .angle((d: any) => d.x);
 
         function newdata(animate = true) {
             const linksData = root.links();
             const links = linkgroup
                 .selectAll("path")
-                .data(linksData, (d:any) => d.source.data.wordform+"_"+ d.target.data.wordform);
+                .data(linksData, (d: any) => d.source.data.wordform + "_" + d.target.data.wordform);
 
             links.exit().remove();
-            
+
             const newlinks = links
                 .enter()
                 .append("path")
@@ -279,8 +280,8 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
                 .enter().append("g");
 
             const allnodes = animate ? nodegroup.selectAll("g")
-            .transition()
-            .duration(animate ? 400 : 0)
+                .transition()
+                .duration(animate ? 400 : 0)
                 .ease(d3.easeLinear)
                 .on("end", () => {
                     const node = g.node();
@@ -291,14 +292,14 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
                 }) : nodegroup.selectAll("g");
 
             allnodes
-                .attr("transform", (d:any) => `
+                .attr("transform", (d: any) => `
                   rotate(${d.x * 180 / Math.PI - 90})
                   translate(${d.y},0)
                 `);
 
             newnodes.append("circle")
                 .attr("r", 4.5)
-                .on("click", (d:any) => {
+                .on("click", (d: any) => {
                     const altChildren = d.data.altChildren || [];
                     const children = d.data.children;
                     d.data.children = altChildren;
@@ -306,13 +307,14 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
                     newdata();
                 });
 
-            nodegroup.selectAll("g circle").attr("fill", (d:any) => {
+            nodegroup.selectAll("g circle").attr("fill", (d: any) => {
                 const altChildren = d.data.altChildren || [];
                 const children = d.data.children;
                 return d.children || (children && (children.length > 0 || altChildren.length > 0)) ? "#555" : "#999"
             });
 
             newnodes.append("text")
+                .style("font-size", "16px")
                 .attr("dy", "0.31em")
                 .text(d => d.data.wordform)
                 .attr("fill", d => colorScale(d.data.frequency))
@@ -320,9 +322,9 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
                 .attr("stroke", "white");
 
             nodegroup.selectAll("g text")
-                .attr("x", (d:any) => d.x < Math.PI === !d.children ? 6 : -6 )
-                .attr("text-anchor", (d:any) => d.x < Math.PI === !d.children ? "start" : "end")
-                .attr("transform", (d:any) => d.x >= Math.PI ? "rotate(180)" : null);
+                .attr("x", (d: any) => d.x < Math.PI === !d.children ? 6 : -6)
+                .attr("text-anchor", (d: any) => d.x < Math.PI === !d.children ? "start" : "end")
+                .attr("transform", (d: any) => d.x >= Math.PI ? "rotate(180)" : null);
 
         }
 
