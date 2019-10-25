@@ -1,4 +1,5 @@
-import { makeStyles } from '@material-ui/core';
+import { IconButton, makeStyles } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import * as ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import * as React from 'react';
@@ -41,7 +42,8 @@ interface IData {
 const useStyles = makeStyles({
   root: {
     '& svg circle:hover': {
-      fill: 'green'
+      fill: 'green',
+      cursor: 'pointer'
     },
     '& #word-popup': {
       backgroundColor: 'white',
@@ -76,34 +78,56 @@ interface WXYZ {
 
 class VariantsList extends React.Component<{}, {
   variants: IVariant[],
-  wxyz: WXYZ
+  wxyz: WXYZ,
+  loading: boolean,
 }> {
+
   state = {
     wxyz: { w: 0, x: 0, y: 0, z: 0 },
-    variants: [] as IVariant[]
+    variants: [] as IVariant[],
+    loading: false
   }
 
   loadWXYZ(wxyz: WXYZ) {
+    this.setState({loading: true});
     const { w, x, y, z } = wxyz;
     fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
       .then(r => r.json())
       .then(result => this.setState({
-        wxyz, variants: result
+        wxyz, variants: result, loading: false
       }));
   }
+
+  closeHandler() {
+    if (this.onClose) {
+      this.onClose();
+    }
+  }
+
+  onClose: null | (() => void) = null;
 
   render() {
     const { w, x, y, z } = this.state.wxyz;
     const variants = this.state.variants;
+    const loading = this.state.loading;
     return (
       <div>
-        <div>W: {w}</div>
-        <div>X: {x}</div>
-        <div>Y: {y}</div>
-        <div>Z: {z}</div>
-        {variants.map(r => (
-          <div key={r.wordform} style={{ margin: 5 }}><AddButton word={r.wordform} index={r.wordform as any} />: {r.frequency}</div>
-        ))}
+        <div style={{float: "right"}}>
+          <IconButton onClick={this.closeHandler} color="primary" >
+            <CloseIcon />
+          </IconButton>
+        </div>
+        { loading ? <div>loading</div> : (
+          <div>
+            <div>W: {w}</div>
+            <div>X: {x}</div>
+            <div>Y: {y}</div>
+            <div>Z: {z}</div>
+            {variants.map(r => (
+              <div key={r.wordform} style={{ margin: 5 }}><AddButton word={r.wordform} index={r.wordform as any} />: {r.frequency}</div>
+            ))}
+          </div>
+        )}
       </div>
     )
   }
@@ -119,26 +143,23 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
   const shoppingBag = React.useContext(ShoppingBagContext);
 
   const variantsListRef = React.createRef<VariantsList>();
-
   React.useEffect(() => {
     const container = selfRef.current;
-    if (shoppingBag.words.length === 0) {
-      if (container) {
+    if (container) {
+      if (shoppingBag.words.length === 0) {
         container.innerHTML = '<strong>Shopping bag empty...Please add some words</strong>';
+        return;
       }
-      return;
-    }
-    const q = (wordform: string) => fetch(`${backendURL}/network/${wordform}`).then(r => r.json());
-    Promise.all(
-      shoppingBag.words.slice(0, 5).map(word => q(word))
-    ).then((queryResults: IData[]) => {
-      const allNodes: INode[] = [].concat(...queryResults.map(data => data.nodes) as any);
-      const allLinks: IDBLink[] = [].concat(...queryResults.map(data => data.links) as any);
-      const uniqueNodes = allNodes.filter(node => allNodes.find(n => n.id === node.id) === node);
-      const uniqueLinks = allLinks.filter(link => allLinks.find(n => n.id === link.id) === link);
+      container.innerHTML = '<strong>Loading...</strong>';
+      const q = (wordform: string) => fetch(`${backendURL}/network/${wordform}`).then(r => r.json());
+      Promise.all(
+        shoppingBag.words.slice(0, 5).map(word => q(word))
+      ).then((queryResults: IData[]) => {
+        const allNodes: INode[] = [].concat(...queryResults.map(data => data.nodes) as any);
+        const allLinks: IDBLink[] = [].concat(...queryResults.map(data => data.links) as any);
+        const uniqueNodes = allNodes.filter(node => allNodes.find(n => n.id === node.id) === node);
+        const uniqueLinks = allLinks.filter(link => allLinks.find(n => n.id === link.id) === link);
 
-
-      if (container) {
         while (container.firstChild) {
           container.removeChild(container.firstChild);
         }
@@ -147,17 +168,13 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
           links: uniqueLinks,
 
         }, container, variantsListRef);
-      }
-    });
+      });
+    }
   }, [shoppingBag]);
 
 
   return (
     <div className={classes.root} ref={selfRef}>
-      {shoppingBag.words.length === 0
-        ? <strong>Shopping bag empty...Please add some words</strong>
-        : <div>Loading...</div>
-      }
       {ReactDOM.createPortal(
         <VariantsList ref={variantsListRef} />,
         portalContainer
@@ -180,6 +197,7 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
 
   function zoomed() {
     rootG.attr("transform", d3.event.transform);
+    updateVariantsListPopupPosition();
   }
 
   svg.attr('width', 1000);
@@ -195,7 +213,36 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
     target: nodes.find(node => node.id === dbLink.target)!,
   }));
 
-  // const links: any[] = [].concat(...nestedLinks as any);
+  let selectedDomNode: SVGGElement | null = null;
+  let selectedNode: INode | null = null;
+
+  function updateVariantsListPopupContent() {
+    if (selectedNode) {
+      portalContainer.style.display = 'block';
+      variantsListRef.current!.loadWXYZ({
+        w: selectedNode.tc_w,
+        x: selectedNode.tc_x,
+        y: selectedNode.tc_y,
+        z: selectedNode.tc_z
+      });
+    } else {
+      portalContainer.style.display = 'none';
+    }
+  }
+
+  function updateVariantsListPopupPosition() {
+    if (selectedDomNode) {
+      const rect = selectedDomNode.getBoundingClientRect();
+      portalContainer.style.left = `${rect.left + 10}px`;
+      portalContainer.style.top = `${rect.top + 10}px`;
+    }
+  }
+
+  variantsListRef.current!.onClose = () => {
+    selectedDomNode = null;
+    selectedNode = null;
+    updateVariantsListPopupContent();
+  }
 
   const simulation = d3.forceSimulation<INode, ILink>(nodes)
     .force('link', d3.forceLink<INode, ILink>(links)
@@ -226,6 +273,10 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
 
 
   function dragstarted(d) {
+    selectedDomNode = this;
+    selectedNode = d;
+    updateVariantsListPopupContent();
+    updateVariantsListPopupPosition();
     d3.select(this).raise();
     if (!d3.event.active) { simulation.alphaTarget(0.3).restart(); }
     d.fx = d.x;
@@ -255,18 +306,13 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
         .on("drag", dragged)
         .on("end", dragended)
     )
-    .on('mouseover', function (d, i) {
-      const rect = this.getBoundingClientRect();
-      portalContainer.style.display = 'block'
-      variantsListRef.current!.loadWXYZ({
-        w: d.tc_w,
-        x: d.tc_x,
-        y: d.tc_y,
-        z: d.tc_z
-      });
 
-      portalContainer.style.left = `${rect.left + 10}px`;
-      portalContainer.style.top = `${rect.top + 10}px`;
+  d3nodes
+    .on('mousedown', function (d, i) {
+      selectedDomNode = this;
+      selectedNode = d;
+      updateVariantsListPopupContent();
+      updateVariantsListPopupPosition();
     })
     // .on('mouseout', () => {
     //   portalContainer.style.display = 'none'
@@ -282,6 +328,7 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
     .on('tick', ticked);
 
   function ticked() {
+    updateVariantsListPopupPosition();
     linkGs
       .attr('x1', d => d.source.x!)
       .attr('y1', d => d.source.y!)
