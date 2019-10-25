@@ -145,7 +145,10 @@ function tree(data: any, radius: number): d3.HierarchyPointNode<ICorrectionsExt>
         (d3.hierarchy<any>(data));
 }
 
-export const drawChart = (correctionsData: ICorrectionsQueryData) => {
+export const drawChart = (correctionsData: ICorrectionsQueryData,
+                          frequencyFilter: number,
+                          nWordsFilter: number) => {
+
     const currentWidth = parseInt(d3.select('#OCRPostCorrectionChart').style('width'), 10);
     const chartMargins = ({ top: 30, right: 200, bottom: 10, left: 10 });
     const chartWidth = currentWidth - chartMargins.left - chartMargins.right;
@@ -155,12 +158,12 @@ export const drawChart = (correctionsData: ICorrectionsQueryData) => {
     // const minFreqFilter = 1;
     // const maxFreqFilter = 100;
     // const stepFreqFilter = 1;
-    const freqFilter = 10
+    const freqFilter = frequencyFilter
 
     // const minDisplayNumber = 100;
     // const maxDisplayNumber = 1500;
     // const stepDisplayNumber = 10;
-    const displayNumber = 150;
+    const displayNumber = nWordsFilter;
 
     const colorScale = d3.scaleSequential((t) => {
         const color = d3.rgb();
