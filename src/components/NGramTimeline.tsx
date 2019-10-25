@@ -88,7 +88,7 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
             content = info.corpora.length > 0 ?
                 (
                     <>
-                        <Typography variant="subtitle2" align='center' style={{ padding: 10 }}> {wordform}</Typography>
+
                         <div id="frequency" style={frequencyContainer}>
                             <input type="radio" value="term_freq" name="frequency" className="frequency" />
                             <label style={{ marginRight: 20, fontSize: 14 }}>Absolute Corpus Frequency</label>

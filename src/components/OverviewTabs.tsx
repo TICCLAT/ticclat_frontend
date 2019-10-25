@@ -83,9 +83,7 @@ const OverviewTabs = (props: IProps) => {
 
                     <Grid item={true} xs={12} md={8} lg={8}>
                         <Paper >
-                            <div style={{ display: 'flex' }}>
-                                <IconButton color='primary' href="/glossary#ngram"><Info /></IconButton>
-                            </div>
+                            <Header title={searchValue} section="ngram" />
                             <NGramTimeline wordform={searchValue} />
                         </Paper>
                     </Grid>
