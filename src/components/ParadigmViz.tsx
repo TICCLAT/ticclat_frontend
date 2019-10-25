@@ -113,7 +113,7 @@ class VariantsList extends React.Component<{}, {
     return (
       <div>
         <div style={{float: "right"}}>
-          <IconButton onClick={this.closeHandler} color="primary" >
+          <IconButton onClick={() => this.closeHandler()} color="primary" >
             <CloseIcon />
           </IconButton>
         </div>
