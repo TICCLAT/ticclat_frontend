@@ -1,32 +1,17 @@
+import { Container } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles(theme => ({
-    container: {
-        paddingTop: theme.spacing(4),
-        paddingBottom: theme.spacing(4),
-    },
-    paper: {
-        padding: theme.spacing(2),
-        display: 'flex',
-        overflow: 'auto',
-        flexDirection: 'column',
-    },
-    plotContainerSmall: {
-        minHeight: 300,
-    },
-    plotContainerBig: {
-        minHeight: 600,
-    },
-
-}));
 
 const about = () => {
-    const classes = useStyles();
     return (
-        <div>
-            By Netherlands eScience Center and Meertens Institute.
-        </div>
+      <Container maxWidth="lg" style={{ marginTop: '2em' }}>
+        <Paper>
+            <h1>Ticclat</h1>
+            <p>
+                By Netherlands eScience Center and Meertens Institute.
+            </p>
+        </Paper>
+        </Container>
     )
 }
 

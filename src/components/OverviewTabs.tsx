@@ -9,6 +9,7 @@ import DatabaseOverview from '../components/DatabaseOverview';
 
 import SearchBar from '../components/SearchBar';
 import { Info } from '@material-ui/icons';
+import ParadigmNetwork from '../pages/ParadigmNetwork';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -77,6 +78,8 @@ const OverviewTabs = (props: IProps) => {
                 <Tab label="Paradigms Table" />
                 <Tab label="Paradigms over time" />
                 <Tab label="OCR Postcorrection view" />
+                <Tab label="Paradigm network" />
+                <Tab label="Database Overview" />
             </Tabs>
 
             {selectedTab === 0 && (
@@ -138,9 +141,22 @@ const OverviewTabs = (props: IProps) => {
                     </TabPanel>
                 )
             }
+          {
+            selectedTab === 4 && (
+              <TabPanel value={selectedTab} index="five">
+
+                <Grid item={true} xs={12} md={12} lg={12}>
+                  <Paper >
+                    <Header title="" section="Paradigm network" />
+                    <ParadigmNetwork />
+                  </Paper>
+                </Grid>
+              </TabPanel>
+            )
+          }
             {
-                selectedTab === 4 && (
-                    <TabPanel value={selectedTab} index="five">
+                selectedTab === 5 && (
+                    <TabPanel value={selectedTab} index="six">
 
                         <Grid item={true} xs={12} md={12} lg={12}>
                             <Paper >
