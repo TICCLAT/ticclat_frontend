@@ -35,7 +35,7 @@ function pathuid() {
 
 export const drawChart = (variantsData: IVariantsQueryData) => {
     const horizonchartMargin = ({ top: 30, right: 10, bottom: 0, left: 10 });
-    const horizonchartWidth = parseInt(d3.select('#horizonchart').style('width'), 10);;
+    const horizonchartWidth = parseInt(d3.select('#horizonchart').style('width'), 10);
 
     const parseDate = d3.timeParse("%Y");
 
@@ -79,8 +79,11 @@ export const drawChart = (variantsData: IVariantsQueryData) => {
                 }
             });
         });
-        result.sort((a, b) => b.sum - a.sum);
-        return result;
+        const keys = result.map(r => r.key);
+        const deduplicatedResult = result.filter((value, index, self) => keys.indexOf(value.key) === index)
+
+        deduplicatedResult.sort((a, b) => b.sum - a.sum);
+        return deduplicatedResult;
     }
 
     if (variantsData) {
