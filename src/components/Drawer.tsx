@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton, Divider } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemText, ListItemIcon, Divider, Typography } from '@material-ui/core';
 import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import clsx from 'clsx';
 import Menu from '../data/Menu';
 // Declare drawer width
@@ -16,6 +15,13 @@ const useStyles = makeStyles(theme => ({
     gutter: {
         padding: 20
     },
+    toolbar: {
+        ...theme.mixins.toolbar,
+        backgroundColor: theme.palette.primary.main,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
@@ -26,6 +32,7 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
+        border: 0
     },
     drawerClose: {
         transition: theme.transitions.create('width', {
@@ -44,6 +51,10 @@ const useStyles = makeStyles(theme => ({
     },
     selectedItem: {
         color: theme.palette.primary.main
+    },
+    title: {
+        flexGrow: 1,
+        color: theme.palette.secondary.light
     }
 
 }));
@@ -74,13 +85,14 @@ const SideNav = withRouter((props: IProps) => {
                     [classes.drawerClose]: !props.open,
                 }),
             }}
-            open={props.open}
+            open
         >
-            <div>
-                <IconButton onClick={props.drawerToggle}>
-                    <ChevronLeftIcon />
-                </IconButton>
+            <div className={classes.toolbar} >
+                <Typography component="h1" variant="h6" noWrap={true} className={classes.title} >
+                    Ticclat Explorer
+          </Typography>
             </div>
+
             <Divider />
             <List>
 

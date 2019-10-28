@@ -10,7 +10,8 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
 
   toolbar: {
-    paddingRight: 24
+    paddingRight: 24,
+    justifyContent: 'flex-end'
   },
   toolbarIcon: {
     display: 'flex',
@@ -40,9 +41,7 @@ const useStyles = makeStyles(theme => ({
   menuButtonHidden: {
     display: 'none'
   },
-  title: {
-    flexGrow: 1
-  }
+
 
 }));
 
@@ -57,20 +56,18 @@ const Header = ({ open, drawerToggle }: IProps) => {
 
   return (
     <>
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <AppBar position="fixed" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
-          <IconButton
+          {/* <IconButton
             onClick={drawerToggle}
             edge="start"
             color="inherit"
             aria-label="Open drawer"
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
-            <MenuIcon/>
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap={true} className={classes.title}>
-            Ticclat Explorer
-          </Typography>
+            <MenuIcon />
+          </IconButton> */}
+
           <ShoppingBagIndicator />
         </Toolbar>
       </AppBar>
