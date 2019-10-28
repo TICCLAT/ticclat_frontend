@@ -289,6 +289,17 @@ const glossary = () => {
                                 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                             </Typography>
                         </GlossaryDescription>
+                        <GlossaryDescription title="Paradigm network" >
+                            <Typography component="p" variant="body2" id="Paradigm network">
+                                The paradigm network shows the network of paradigms around the items in the shopping bag. It does so by drawing
+                                the selected wordforms, and at most 50 values around it that differ only by the 'V'-code (black items), and at
+                                most 50 items that differ only by 'X'-code (red circles), and for each of those also items that differ
+                                only by the 'V'-code.
+
+                                Each item can be clicked to show the variants for that paradigm (items with a different 'V'-code). Everything can
+                                be zoomed using the scroll wheel, or panned by dragging the mouse.
+                            </Typography>
+                        </GlossaryDescription>
                     </Paper>
                 </Grid>
             </Grid>
