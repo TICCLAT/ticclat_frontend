@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import GlossaryDescription from '../components/GlossaryDescription';
-
+import TicclatDialog from '../components/TicclatDialog';
 const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(4),
@@ -13,28 +13,47 @@ const useStyles = makeStyles(theme => ({
 
 const glossary = () => {
     const classes = useStyles();
+    const [biText, setbiText] = useState('');
+
 
     return (
         <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={12} lg={12}>
                     <Paper>
+                        {biText &&
+                            <TicclatDialog
+                                title={'BibTex'}
+                                onClose={() => setbiText('')}
+                            >
+                                <pre
+                                    dangerouslySetInnerHTML={{
+                                        __html: biText
+                                    }}
+                                />
+                            </TicclatDialog>
+                        }
                         <GlossaryDescription title="Anagram hashing" >
                             <Typography variant="body2" id="Anagram hashing">
-                                A system of calculating with words developed by Martin Reynaert in the course of his PhD work (Reynaert, 2005).
-                            </Typography>
-                            <pre
-                                dangerouslySetInnerHTML={{
-                                    __html: `
-                                        @PhdThesis{Reynaert05,
+                                A system of calculating with words developed by Martin Reynaert in the course of his PhD work
+                                <a
+                                    href="#"
+                                    onClick={() => setbiText(
+                                        `
+                                            @PhdThesis{Reynaert05,
                                             author = {Reynaert, Martin},
                                             title = {{T}ext-{I}nduced {S}pelling {C}orrection},
                                             year = {2005},
                                             school = {Tilburg University},
                                             url = {http://ilk.uvt.nl/~mre/TISC.PhD.MartinReynaert.pdf.gz}
-                                        }`
-                                }}
-                            />
+                                            }`
+
+                                    )}
+                                >
+                                    (Reynaert, 2005)
+                                </a>.
+                            </Typography>
+
                         </GlossaryDescription>
                         <GlossaryDescription title="Corpus versus Document frequency" >
                             <Typography variant="body2" id="dispersion">
@@ -53,35 +72,50 @@ const glossary = () => {
 
                         <GlossaryDescription title="FoLiA XML" >
                             <Typography component="p" variant="body2" id="foliaXml">
-                                The 'Format for Linguistic Annotations' or FoLiA xml is described in (van Gompel and Reynaert, 2013). A paper about the larger FoLiA infrastructure and tools: (van Gompel et al., 2017).
-                                Just about all the tools required for handling and analysing FoLiA corpora are available to all: https://proycon.github.io/LaMachine/
+                                The 'Format for Linguistic Annotations' or FoLiA xml is described in
+                                <a
+                                    href="#"
+                                    onClick={() => setbiText(
+                                        `
+                                        @article{vanGompelReynaert2013,
+                                            title = {{F}o{L}i{A}: {A} practical {XML} {F}ormat for {L}inguistic {A}nnotation - a descriptive and comparative study},
+                                            journal = {Computational Linguistics in the Netherlands Journal},
+                                            volume = {3},
+                                            pages = {63--81},
+                                            author = {van Gompel, Maarten and Reynaert, Martin},
+                                            url = {http://www.clinjournal.org/sites/clinjournal.org/files/05-vanGompel-Reynaert-CLIN2013.pdf},
+                                            year = {2013}
+                                        }
+                                        
+                                        `
+
+                                    )}
+                                >
+                                    (van Gompel and Reynaert, 2013)
+                                </a>.
+                               . A paper about the larger FoLiA infrastructure and tools:
+                                <a
+                                    href="#"
+                                    onClick={() => setbiText(
+                                        `@incollection{CLARINLOW2017a,
+                                            booktitle = {{CLARIN-NL} in the Low Countries},
+                                            editor = {Odijk, J. and van Hessen, A.},
+                                            chapter = {6},
+                                            Pages = {71--81},
+                                            publisher = {Ubiquity (Open Access)},
+                                            author = {{van Gompel}, Maarten and {van der Sloot}, Ko and Reynaert, Martin and {van den Bosch}, Antal},
+                                            title = {{FoLiA} in practice: {T}he infrastructure of a linguistic annotation format},
+                                            year = {2017}
+                                          }
+                                        `
+
+                                    )}
+                                >
+                                    (van Gompel et al., 2017)
+                                </a>.
+                               Just about all the tools required for handling and analysing FoLiA corpora are available to all: https://proycon.github.io/LaMachine/
                             </Typography>
-                            <pre
-                                dangerouslySetInnerHTML={{
-                                    __html: `
-                                    @article{vanGompelReynaert2013,
-                                        title = {{F}o{L}i{A}: {A} practical {XML} {F}ormat for {L}inguistic {A}nnotation - a descriptive and comparative study},
-                                        journal = {Computational Linguistics in the Netherlands Journal},
-                                        volume = {3},
-                                        pages = {63--81},
-                                        author = {van Gompel, Maarten and Reynaert, Martin},
-                                        url = {http://www.clinjournal.org/sites/clinjournal.org/files/05-vanGompel-Reynaert-CLIN2013.pdf},
-                                        year = {2013}
-                                    }
-                                    
-                                    @incollection{CLARINLOW2017a,
-                                      booktitle = {{CLARIN-NL} in the Low Countries},
-                                      editor = {Odijk, J. and van Hessen, A.},
-                                      chapter = {6},
-                                      Pages = {71--81},
-                                      publisher = {Ubiquity (Open Access)},
-                                      author = {{van Gompel}, Maarten and {van der Sloot}, Ko and Reynaert, Martin and {van den Bosch}, Antal},
-                                      title = {{FoLiA} in practice: {T}he infrastructure of a linguistic annotation format},
-                                      year = {2017}
-                                    }
-                                    `
-                                }}
-                            />
+
                         </GlossaryDescription>
                         <GlossaryDescription title="Granularity" >
                             <Typography variant="body2" id="granularity">
@@ -101,14 +135,30 @@ const glossary = () => {
                         </GlossaryDescription>
                         <GlossaryDescription title="Hapax" >
                             <Typography variant="body2" id="hapax">
-                                <span>A word type that occurs only once in a given corpus.
-                                    Zipf's Law implies that in well-edited natural language corpora the number of hapaxes present will always be about 50% of the word types, at least for corpora of sufficient size, not  just for short texts.
-                                    This fact is all too often overlooked. Words in text do not display a normal or Gaussian distribution, they are subject to the statistics of 'Very Large Numbers of Small Events' (Khmaladze, 1987; Baayen, 2001).
-                                    </span>
-                                <pre
-                                    dangerouslySetInnerHTML={{
-                                        __html: `
-                                        @book{Baayen01,
+                                A word type that occurs only once in a given corpus.
+                                     Zipf's Law implies that in well-edited natural language corpora the number of hapaxes present will always be about 50% of the word types, at least for corpora of sufficient size, not  just for short texts.
+                                     This fact is all too often overlooked. Words in text do not display a normal or Gaussian distribution, they are subject to the statistics of 'Very Large Numbers of Small Events'
+                                     (
+                                <a
+                                    href="#"
+                                    onClick={() => setbiText(
+                                        `@TechReport{Khmaladze1987,
+                                            author = {Khmaladze, E.V.},
+                                            title = {The statistical analysis of large number of rare events},
+                                            year = {1987},
+                                            number = {MS-R8804},
+                                            institution = {Department of Mathematical Statistics, CWI},
+                                            address = {Amsterdam: Center for Mathematics and Computer Science}
+                                          }
+                                        `
+                                    )}
+                                >   Khmaladze, 198
+                                </a>
+                                ;
+                                <a
+                                    href="#"
+                                    onClick={() => setbiText(
+                                        `@book{Baayen01,
                                             Address = {Dordrecht},
                                             Author = {R. Harald Baayen},
                                             Date-Added = {2010-01-29 15:06:48 +0100},
@@ -117,18 +167,11 @@ const glossary = () => {
                                             Publisher = {Kluwer Academic Publishers},
                                             Title = {Word Frequency Distributions},
                                             Year = {2001}}
-                                          
-                                          @TechReport{Khmaladze1987,
-                                            author = {Khmaladze, E.V.},
-                                            title = {The statistical analysis of large number of rare events},
-                                            year = {1987},
-                                            number = {MS-R8804},
-                                            institution = {Department of Mathematical Statistics, CWI},
-                                            address = {Amsterdam: Center for Mathematics and Computer Science}
-                                          }
-                                    `
-                                    }}
-                                />
+                                        `
+                                    )}
+                                >Baayen, 2001
+                                </a>
+                                ).
                             </Typography>
                         </GlossaryDescription>
                         <GlossaryDescription title="Lemma" >
@@ -146,43 +189,45 @@ const glossary = () => {
                         </GlossaryDescription>
                         <GlossaryDescription title="Nederlab" >
                             <Typography component="p" variant="body2" id="nederlab">
-                                The Nederlab project has brought together the major collections of digitized texts relevant to the Dutch national heritage (c. A.D. 800 -- present) running to about 18.5 billion word tokens in a unified text format, i.e. FoLiA XML. Book chapter about the Nederlab project and portal, available in Open Access: (Brugman, 2016).
+                                The Nederlab project has brought together the major collections of digitized texts relevant to the Dutch national heritage (c. A.D. 800 -- present) running to about 18.5 billion word tokens in a unified text format, i.e. FoLiA XML. Book chapter about the Nederlab project and portal, available in Open Access:
+                                <a
+                                    href="#"
+                                    onClick={() => setbiText(
+                                        ` @InProceedings{Brugman2016,
+                                            author = {Brugman, Hennie and Reynaert, Martin and van der Sijs, Nicoline and {van Stipriaan}, Ren{\'e} and Tjong Kim Sang, Erik and van den Bosch, Antal},
+                                            title = {{Nederlab:   Towards  a  Single  Portal  and  Research Environment for Diachronic Dutch Text Corpora.}},
+                                            booktitle = {Proceedings of the Tenth International Conference on Language Resources and Evaluation ({LREC}-2016)},
+                                            year = {2016},
+                                            address = {Portoroz, Slovenia},
+                                            editor = {Nicoletta Calzolari et al.},   
+                                            publisher = {ELRA},
+                                            isbn = {978-2-9517408-9-1},
+                                            language = {english},
+                                            pages = {1277-1281},
+                                            url = {http://www.lrec-conf.org/proceedings/lrec2016/pdf/471_Paper.pdf}
+                                           }
+                                        `
+                                    )}
+                                >(Brugman, 2016)
+                                </a>.
                                 Nederlab has its own portal, freely accessible to anyone with an academic login: https://www.nederlab.nl/onderzoeksportaal/
                             </Typography>
-                            <pre
-                                dangerouslySetInnerHTML={{
-                                    __html: `
-                                    @InProceedings{Brugman2016,
-                                        author = {Brugman, Hennie and Reynaert, Martin and van der Sijs, Nicoline and {van Stipriaan}, Ren{\'e} and Tjong Kim Sang, Erik and van den Bosch, Antal},
-                                        title = {{Nederlab:   Towards  a  Single  Portal  and  Research Environment for Diachronic Dutch Text Corpora.}},
-                                        booktitle = {Proceedings of the Tenth International Conference on Language Resources and Evaluation ({LREC}-2016)},
-                                        year = {2016},
-                                        address = {Portoroz, Slovenia},
-                                        editor = {Nicoletta Calzolari et al.},   
-                                        publisher = {ELRA},
-                                        isbn = {978-2-9517408-9-1},
-                                        language = {english},
-                                        pages = {1277-1281},
-                                        url = {http://www.lrec-conf.org/proceedings/lrec2016/pdf/471_Paper.pdf}
-                                       }
-                                    `
-                                }}
-                            />
+
                         </GlossaryDescription>
                         <GlossaryDescription title="Nederlab corpus" >
-                            <Typography component="p" variant="body2" id="nederlabcorpus">
+                            <Typography variant="body2" id="nederlabcorpus">
                                 The collection of corpora that were gathered in the Nederlab project.
                                 These corpora span the full extent of the history of Dutch. There are a few texts, usually just phrases, recognized as 'Dutch' from the 9th. century.
                                 The oldest book length texts in the Nederlab corpus are from about A.D. 1250.
                             </Typography>
                         </GlossaryDescription>
                         <GlossaryDescription title="Text corpus" >
-                            <Typography component="p" variant="body2" id="textcorpus">
+                            <Typography variant="body2" id="textcorpus">
                                 A collection of texts regarded as a single entity. Plural: corpora. Texts are collected in corpora for a wide range of reasons and purposes.
                             </Typography>
                         </GlossaryDescription>
                         <GlossaryDescription title="Word cluster" >
-                            <Typography component="p" variant="body2" id="wordcluster">
+                            <Typography variant="body2" id="wordcluster">
                                 The group of words that are perceived to belong together. In this work we link all morphologically related word forms to their contemporary lemma. For a noun the morphologically related word forms for the lemma would be: the plural form and the singular as well as the plural diminutive forms.
                                 E.g. lemma: 'paard' (E. 'horse'), plural: 'paarden' (E. 'horses'), diminutive singular: 'paardje' (E. 'small horse'), diminutive plural: 'paardjes' (E. 'small horses').
                             </Typography>
@@ -207,7 +252,7 @@ const glossary = () => {
                                 When one calculates how often a particular word form occurs in running text, one in fact builds a list of the word types in the text. For each word type in the word frequency list, the absolute word frequency is then stated. See: word frequency list.
                             </Typography>
                         </GlossaryDescription>
-                        <GlossaryDescription title="Ngram" >
+                        <GlossaryDescription title="Word Usage Over Time" >
                             <Typography variant="body2" id="ngram">
                                 <strong>Absolute corpus frequency</strong><br />
                                 The number of occurrences of a particular word type in a given corpus. See also:
@@ -222,7 +267,7 @@ const glossary = () => {
 
                         </GlossaryDescription>
                         <GlossaryDescription title="Paradigm" >
-                            <Typography component="p" variant="body2" id="paradigm">
+                            <Typography component="div" variant="body2" id="paradigm">
                                 In TICCLAT, we link the many
                                 related variants of what might constitute a single ‘word’. Each word type is assigned a unique code
                                 which links and identifies through its prefix the overall cluster of its related words, by an infix specific

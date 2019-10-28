@@ -10,7 +10,7 @@ import Content from './MainContent'
 
 class App extends React.Component<{}, { showSideDrawer: boolean }> {
     state = {
-        showSideDrawer: false
+        showSideDrawer: true
     }
     sideDrawerToggleHandler = () => {
         this.setState(prevState => {
@@ -22,9 +22,9 @@ class App extends React.Component<{}, { showSideDrawer: boolean }> {
         return (
             <ShoppingBagProvider>
                 <MuiThemeProvider theme={theme}>
-                    <CssBaseline/>
-                    <Header open={showSideDrawer} drawerToggle={this.sideDrawerToggleHandler}/>
-                    <Content open={showSideDrawer}/>
+                    <CssBaseline />
+                    <Header open={showSideDrawer} drawerToggle={this.sideDrawerToggleHandler} />
+                    <Content open={showSideDrawer} />
                 </MuiThemeProvider>
             </ShoppingBagProvider>
         );
