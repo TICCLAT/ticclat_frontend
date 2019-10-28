@@ -11,7 +11,6 @@ import Slide from '@material-ui/core/Slide';
 
 interface IProps {
     title: string;
-    print: boolean;
     children: ReactNode;
     onClose: () => any | undefined;
 }

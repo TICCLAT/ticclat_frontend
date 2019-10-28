@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Container } from '@material-ui/core';
 import Routes from '../pages/Routes';
 import clsx from 'clsx'
 const drawerWidth = 240
@@ -7,8 +7,12 @@ const useStyles = makeStyles(theme => ({
     appBarSpacer: theme.mixins.toolbar,
     content: {
         flexGrow: 1,
-        height: '100vh',
-        overflow: 'auto',
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: -drawerWidth,
     },
     contentShift: {
         marginLeft: drawerWidth,
@@ -17,6 +21,11 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
+    },
+    container: {
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(3),
+        paddingLeft: theme.spacing(5),
     },
 }));
 export interface IProps {
@@ -28,7 +37,9 @@ const MainContent = (props: IProps) => {
     return (
         <main className={clsx(classes.content, open && classes.contentShift)}>
             <div className={classes.appBarSpacer} />
-            <Routes />
+            <Container maxWidth="xl" className={classes.container}>
+                <Routes />
+            </Container>
         </main>
     )
 }

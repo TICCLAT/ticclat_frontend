@@ -6,7 +6,8 @@ const theme = createMuiTheme({
             main: '#468DCB' // Primary blue color from Clariah
         },
         secondary: {
-            main: '#757575'  // Default color for Side drawer text
+            main: '#757575', // Default color for Side drawer text
+            light: "#fff"
         },
         common: {
             black: '#000',

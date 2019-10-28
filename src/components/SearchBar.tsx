@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        margin: `${theme.spacing(2)}px`,
+        margin: `0px ${theme.spacing(2)}px`,
         [theme.breakpoints.up('sm')]: {
             width: 'auto',
         },

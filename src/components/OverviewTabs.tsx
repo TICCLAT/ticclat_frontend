@@ -72,7 +72,7 @@ const OverviewTabs = (props: IProps) => {
         onChange={handleChange}
         indicatorColor="primary"
         textColor="primary"
-        centered
+        variant="fullWidth"
       >
         <Tab label="Word usage over time" />
         <Tab label="Paradigms Table" />
@@ -85,13 +85,13 @@ const OverviewTabs = (props: IProps) => {
       {selectedTab === 0 && (
         <TabPanel value={selectedTab} index="one">
 
-          <Grid item={true} xs={12} md={8} lg={8}>
+          <Grid item={true} xs={12} md={12} lg={8}>
             <Paper >
               <Header title={searchValue} section="ngram" />
               <NGramTimeline wordform={searchValue} />
             </Paper>
           </Grid>
-          <Grid item={true} xs={12} md={4} lg={4}>
+          <Grid item={true} xs={12} md={12} lg={4}>
             <Paper>
               {searchValue !== '' ? <Lexica wordform={searchValue} /> : <CircularProgress />}
             </Paper>

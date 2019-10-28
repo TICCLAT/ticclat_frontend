@@ -26,13 +26,11 @@ const useStyles = makeStyles(theme => ({
 const ParadigmNetwork = () => {
     const classes = useStyles();
     return (
-        <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} className={classes.plotContainerBig}>
-                    <ParadigmViz wordform="regering" />
-                </Grid>
+        <Grid container spacing={3}>
+            <Grid item xs={12} className={classes.plotContainerBig}>
+                <ParadigmViz wordform="regering" />
             </Grid>
-        </Container>
+        </Grid>
     )
 }
 
