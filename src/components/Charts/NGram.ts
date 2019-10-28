@@ -67,7 +67,7 @@ export class NGramChart {
     nGram = this.svg.append("g");
     brushChart = this.svg.append("g");
     tooltip = d3.select(".tooltip")
-    yDomainType = 'freq'
+    yDomainType = "term_freq"
 
     init(info: IData) {
         // Save the initial state of the domain fro the n-gram chart so we can reset
@@ -85,13 +85,8 @@ export class NGramChart {
         });
 
         this.chartData = info;
-
         this.initialized = true;
-        const selection = d3.selectAll('.frequency')
-        selection.on('change', (e) => {
-            this.yDomainType = d3.select('input[name="frequency"]:checked').property('value')
-            this.draw();
-        })
+        this.setUpradioButtons();
     }
 
     // set brush extent 
@@ -115,7 +110,44 @@ export class NGramChart {
             this.drawBrushChartContents();
         }
     }
+    setUpradioButtons() {
+        const labels = [
+            {
+                "name": "Absolute Corpus Frequency",
+                "value": "term_freq"
+            },
+            {
+                "name": "Relative Corpus Frequency",
+                "value": "corpus_freq"
+            },
+            {
+                "name": "Relative Year Frequency",
+                "value": "freq"
+            }
+        ]
+        const j = 0;  // Choose the Relative Year Frequency as default
 
+        // Create the frequency selectors
+        const form = d3.select("#chart").append("form").attr("class", "frequencyContainer");
+
+        const labelEnter = form.selectAll("span")
+            .data(labels)
+            .enter().append("span");
+
+        labelEnter.append("input")
+            .attr("type", "radio")
+            .attr("value", (d, i) => d.value)
+            .attr("name", "frequency")
+            .property("checked", (d, i) => {
+                return (i === j);
+            })
+            .on('change', (e) => {
+                this.yDomainType = d3.select('input[name="frequency"]:checked').property('value')
+                this.draw();
+            });
+
+        labelEnter.append("label").text((d) => d.name);
+    }
     setupChart() {
         this.svg = d3.select("#chart").append("svg");
         this.svg
@@ -317,8 +349,9 @@ export class NGramChart {
                     .style("opacity", .9)
 
                 this.tooltip.html(
-                    "<span><strong>Relative Frequency: </strong>" + d.freq.toPrecision(3) + "</span>" +
-                    "<span><strong>Absolute Frequency: </strong>" + d.term_frequency + "</span>" +
+                    "<span><strong>Absolute Corpus Frequency: </strong>" + d.term_frequency + "</span>" +
+                    "<span><strong>Relative Corpus Frequency: </strong>" + d.rel_corpus_frequency + "</span>" +
+                    "<span><strong>Relative Year Frequency: </strong>" + d.freq.toPrecision(3) + "</span>" +
                     "<span><strong>Total Words in Corpus:</strong> " + d.total + "</span>" +
                     "<span><strong>Year: </strong>" + new Date(d.year).getFullYear() + "</span>" +
                     `<div style='display: flex; alignItems:center;'><strong>Color:</strong> <div style='width: 20px; height: 20px; background-color: ${color}'/></div>`
@@ -379,4 +412,5 @@ export class NGramChart {
         this.nGram.select(".y.axis").call(this.nGramYAxis as any);
         this.ngramUpdate();
     }
+
 }

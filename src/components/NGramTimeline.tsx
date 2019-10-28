@@ -29,12 +29,7 @@ const tooltip: React.CSSProperties = {
     borderRadius: '5px',
     pointerEvents: 'none'
 }
-const frequencyContainer: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: '10px',
-}
+
 
 export default class NGramTimeline extends React.Component<IProps, IState> {
     state = {
@@ -89,14 +84,7 @@ export default class NGramTimeline extends React.Component<IProps, IState> {
                 (
                     <>
 
-                        <div id="frequency" style={frequencyContainer}>
-                            <input type="radio" value="term_freq" name="frequency" className="frequency" />
-                            <label style={{ marginRight: 20, fontSize: 14 }}>Absolute Corpus Frequency</label>
-                            <input type="radio" value="corpus_freq" name="frequency" className="frequency" />
-                            <label style={{ marginRight: 20, fontSize: 14 }}>Relative Corpus Frequency</label>
-                            <input type="radio" value="freq" name="frequency" className="frequency" checked readOnly />
-                            <label style={{ marginRight: 20, fontSize: 14 }}>Relative Year Frequency </label>
-                        </div>
+
                         <div id="chart" />
                         <div style={tooltip} className="tooltip" />
                     </>
