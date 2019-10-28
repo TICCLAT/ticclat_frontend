@@ -5,6 +5,7 @@ import Lexica from '../components/Lexica';
 import Paradigms from '../components/Paradigms';
 import HorizonChartContainer from '../components/HorizonChartContainer';
 import OCRPostcorrectionChartContainer from '../components/OCRPostcorrectionChartContainer';
+import DatabaseOverview from '../components/DatabaseOverview';
 
 import SearchBar from '../components/SearchBar';
 import { Info } from '@material-ui/icons';
@@ -132,6 +133,19 @@ const OverviewTabs = (props: IProps) => {
                             <Paper >
                                 <Header title={searchValue} section="OCR Postcorrection view" />
                                 <OCRPostcorrectionChartContainer wordform={searchValue} />
+                            </Paper>
+                        </Grid>
+                    </TabPanel>
+                )
+            }
+            {
+                selectedTab === 4 && (
+                    <TabPanel value={selectedTab} index="five">
+
+                        <Grid item={true} xs={12} md={12} lg={12}>
+                            <Paper >
+                                <Header title={searchValue} section="Database overview" />
+                                <DatabaseOverview />
                             </Paper>
                         </Grid>
                     </TabPanel>
