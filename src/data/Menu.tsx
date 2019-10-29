@@ -2,7 +2,7 @@ import React from 'react';
 import ChartIcon from '@material-ui/icons/BarChart';
 import InfoIcon from '@material-ui/icons/Info';
 import GlossaryIcon from '@material-ui/icons/LibraryBooks';
-
+import TutorialIcon from '@material-ui/icons/Assignment';
 const Menu = [
     {
         name: 'Overview',
@@ -16,12 +16,12 @@ const Menu = [
         name: 'Glossary',
         icon: <GlossaryIcon />
     },
-    /** Uncomment  to enable Tutorial Menu 
+
     {
         name: 'Tutorial',
         icon: <TutorialIcon />
     }
-    */
+
 
 ]
 

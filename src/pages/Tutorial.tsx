@@ -1,14 +1,12 @@
 import React from 'react';
 import { Grid, Paper } from '@material-ui/core';
-
+import Tutorials from '../components/Tutorials';
 const tutorial = () => {
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={9}>
                 <Paper>
-                    <div style={{ height: 200 }}>
-                        <p>Tutorial will be loaded soon...</p>
-                    </div>
+                    <Tutorials />
                 </Paper>
             </Grid>
         </Grid>
