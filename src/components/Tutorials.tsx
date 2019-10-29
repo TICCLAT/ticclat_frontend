@@ -1,6 +1,6 @@
 import React from 'react';
-import { Typography, CardMedia } from '@material-ui/core';
-
+import { Typography } from '@material-ui/core';
+import video from '../assets/video/overview_word_usage.mp4';
 const tutorials = () => {
     return (
         <>
@@ -37,7 +37,7 @@ const tutorials = () => {
             </Typography>
             <Typography component="div" align="center">
                 <video width="700px" height="400" controls>
-                    <source src="src/assets/video/overview_word_usage.mp4" type="video/mp4" />
+                    <source src={video} />
                 </video>
             </Typography>
             <Typography variant="subtitle1" color="primary">Glossary</Typography>
