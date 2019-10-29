@@ -140,24 +140,26 @@ class ParadigmTable extends React.Component<IProps, IState> {
         };
 
         return (
-            <Table aria-labelledby="tableTitle">
-                <ParadigmHeader
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={this.handleRequestSort}
-                    rowCount={variants.length}
-                    onSelectAllClick={handleSelectAllClick}
-                    numSelected={selected.length}
-                    isBagEmpty={this.context.words.length <= 0}
-                />
-                <TableBody>
-                    {sortedData.map((variant, index) => {
-                        const isItemSelected = this.context.words.includes(variant.wordform);
-                        // const isItemSelected = isSelected(variant.wordform);
-                        return <Row key={index} variant={variant} isItemSelected={isItemSelected} onClick={handleClick} />
-                    })}
-                </TableBody>
-            </Table>
+            <div style={{ overflowX: 'auto' }}>
+                <Table aria-labelledby="tableTitle">
+                    <ParadigmHeader
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={this.handleRequestSort}
+                        rowCount={variants.length}
+                        onSelectAllClick={handleSelectAllClick}
+                        numSelected={selected.length}
+                        isBagEmpty={this.context.words.length <= 0}
+                    />
+                    <TableBody>
+                        {sortedData.map((variant, index) => {
+                            const isItemSelected = this.context.words.includes(variant.wordform);
+                            // const isItemSelected = isSelected(variant.wordform);
+                            return <Row key={index} variant={variant} isItemSelected={isItemSelected} onClick={handleClick} />
+                        })}
+                    </TableBody>
+                </Table>
+            </div>
         );
     }
 }
