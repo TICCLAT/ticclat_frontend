@@ -1,7 +1,8 @@
-import { Typography } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import React from 'react';
 
+import React from 'react';
+import { Typography, IconButton } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import MailIcon from '@material-ui/icons/Mail';
 const about = () => {
     return (
         <Paper>
@@ -9,8 +10,11 @@ const about = () => {
             <Typography variant="body2" component="p">
                 The TICCLAT Explorer was initially developed by the <a href="https://www.esciencecenter.nl/">Netherlands eScience Center</a>  as part of the project entitled
                     <strong>“TICCLAT: Text-Induced Corpus Correction and Lexical Assessment Tool ” </strong>awarded to dr. Martin Reynaert.
-    For more information about the TICCLAT explorer contact dr. Martin Reynaert.
-                        <br />The code can be found here:<a href="https://github.com/TICCLAT" target="_blank"> https://github.com/TICCLAT</a>
+For more information about the TICCLAT explorer contact dr. Martin Reynaert
+                            <IconButton href="mailto:martin.reynaert@meertens.knaw.nl;reynaert@uvt.nl" size="small" color="primary">
+                    <MailIcon />
+                </IconButton>
+                <br />The code can be found here:<a href="https://github.com/TICCLAT" target="_blank"> https://github.com/TICCLAT</a>
                 {/* If you used this tool, please cite the software as follows: */}
             </Typography>
             <Typography variant="subtitle1" color="primary">Acknowledgements</Typography>
@@ -21,8 +25,12 @@ const about = () => {
                         A joint call by <a href="https://www.clariah.nl/">CLARIAH</a> and the Netherlands eScience Center.
                             <br />The following eScience research engineers worked on the project:
                             <br />dr. Patrick Bos, dr. Janneke van der Zwaan, Tom Klaver, Pushpanjali Pawar, and Maarten van Meersbergen.
-                        </li>
-                    {/* <li>Nijmegen, ponyland?</li> */}
+                    </li>
+                    <li>The TICCLAT team gratefully acknowledges use of the computer server facilities of the department of Cognitive Science and Artificial Intelligence at Tilburg University for data processing and at the Centre for Language and Speech Technology at Radboud University Nijmegen for data storage and transfer. We also acknowledge having relied heavily on the diachronic and synchronic lexical resources gracefully provided by project partner INT, the Institute for the Dutch Language in Leiden. Prior projects LINKS and Names under direction of dr.ir. Gerrit Bloothooft at Utrecht University provided the complete list of Dutch person names from A.D. 1811. We thank Geonames for Dutch spellings and variants for place names around the globe. Project Gutenberg provided the 1914 version of the Green Booklet, the official word list of Dutch. Stichting Open Taal offered us extensive lists of Dutch compounds, a word type traditionally neglected by lexicographers.
+
+TICCLAT relies heavily on the great range of Dutch corpora collected in NWO Groot project Nederlab. Major subcorpora in Nederlab were digitized by the Dutch National Library or KB whose portal Delpher freely provides access to fabulous collections of historical texts: newspapers, books, etc.
+
+At CLST senior programmer Ko van der Sloot develops and maintains TICCL, i.e. the OCR post-correction tool used in this work to identify and gather lexical variants in the Nederlab corpora and incorporated in TICCLAT.</li>
                     <li>SURFSara HPC cloud</li>
                 </ul>
             </Typography>
