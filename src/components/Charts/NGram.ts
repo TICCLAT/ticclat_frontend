@@ -201,7 +201,7 @@ export class NGramChart {
             .attr("fill", "#000")
             .text(() => {
                 if (this.yDomainType === 'term_freq') {
-                    return "Absolute Year Frequency"
+                    return "Absolute Corpus Frequency"
                 } else if (this.yDomainType === 'corpus_freq') {
                     return "Relative Corpus Frequency"
                 }

@@ -41,6 +41,9 @@ interface IData {
 
 const useStyles = makeStyles({
   root: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     '& svg circle:hover': {
       fill: 'green',
       cursor: 'pointer'
@@ -89,7 +92,7 @@ class VariantsList extends React.Component<{}, {
   }
 
   loadWXYZ(wxyz: WXYZ) {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     const { w, x, y, z } = wxyz;
     fetch(`${backendURL}/variants_by_wxyz?w=${w}&x=${x}&y=${y}&z=${z}`)
       .then(r => r.json())
@@ -112,12 +115,12 @@ class VariantsList extends React.Component<{}, {
     const loading = this.state.loading;
     return (
       <div>
-        <div style={{float: "right"}}>
+        <div style={{ float: "right" }}>
           <IconButton onClick={() => this.closeHandler()} color="primary" >
             <CloseIcon />
           </IconButton>
         </div>
-        { loading ? <div>loading</div> : (
+        {loading ? <div>loading</div> : (
           <div>
             <div>W: {w}</div>
             <div>X: {x}</div>
@@ -147,7 +150,7 @@ const ParadigmViz = React.memo((props: { wordform: string }) => {
     const container = selfRef.current;
     if (container) {
       if (shoppingBag.words.length === 0) {
-        container.innerHTML = '<strong>Shopping bag empty...Please add some words</strong>';
+        container.innerHTML = '<strong>Bag of words is empty...Please add some words</strong>';
         return;
       }
       container.innerHTML = '<strong>Loading...</strong>';
@@ -314,9 +317,9 @@ const d3Force = (wordform: string, data: IData, ref: HTMLDivElement, variantsLis
       updateVariantsListPopupContent();
       updateVariantsListPopupPosition();
     })
-    // .on('mouseout', () => {
-    //   portalContainer.style.display = 'none'
-    // });
+  // .on('mouseout', () => {
+  //   portalContainer.style.display = 'none'
+  // });
 
   const frequencyToRadius = d3.scaleLog().domain([1, 1e8]).range([0.1, 10]);
 
