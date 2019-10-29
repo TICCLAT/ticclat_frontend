@@ -75,7 +75,7 @@ const OverviewTabs = (props: IProps) => {
       >
         <Tab label="Word usage over time" />
         <Tab label="Paradigms Table" />
-        <Tab label="Paradigms over time" />
+        <Tab label="Word variants over time" />
         <Tab label="OCR Postcorrection view" />
         <Tab label="Paradigm network" />
         <Tab label="Database Overview" />
@@ -119,7 +119,7 @@ const OverviewTabs = (props: IProps) => {
 
             <Grid item={true} xs={12} md={12} lg={12}>
               <Paper >
-                <Header title={searchValue} section="Paradigms over time" />
+                <Header title={searchValue} section="Word variants over time" />
                 <HorizonChartContainer wordform={searchValue} />
               </Paper>
             </Grid>

@@ -152,17 +152,10 @@ export const drawChart = (correctionsData: ICorrectionsQueryData,
     const currentWidth = parseInt(d3.select('#OCRPostCorrectionChart').style('width'), 10);
     const chartMargins = ({ top: 30, right: 200, bottom: 10, left: 10 });
     const chartWidth = currentWidth - chartMargins.left - chartMargins.right;
-    const chartHeight = 700;
+    const chartHeight = chartWidth;
     const chartRadius = 466;
 
-    // const minFreqFilter = 1;
-    // const maxFreqFilter = 100;
-    // const stepFreqFilter = 1;
     const freqFilter = frequencyFilter
-
-    // const minDisplayNumber = 100;
-    // const maxDisplayNumber = 1500;
-    // const stepDisplayNumber = 10;
     const displayNumber = nWordsFilter;
 
     const colorScale = d3.scaleSequential((t) => {

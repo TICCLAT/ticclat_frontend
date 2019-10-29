@@ -29,6 +29,12 @@ module.exports = {
                     loader: 'babel-loader'
                 },
             },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    'file-loader',
+                ],
+            },
 
             // // css-loader to bundle all the css files into one file and style-loader to add all the styles  inside the style tag of the document
             // {
