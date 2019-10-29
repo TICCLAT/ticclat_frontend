@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import GlossaryDescription from '../components/GlossaryDescription';
 import TicclatDialog from '../components/TicclatDialog';
-
+import horizonchart1 from './assets/images/horizonchart_explanation.png';
+import ocrpostcorrectionimg from './assets/images/ocr_postcorrection_explanation.png';
 
 const glossary = () => {
     const [bibTex, setbibTex] = useState('');
@@ -318,14 +319,20 @@ const glossary = () => {
                                 </p>
                         </Typography>
                     </GlossaryDescription>
-                    <GlossaryDescription title="Horizon" >
-                        <Typography component="p" variant="body2" id="horizon">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </Typography>
+                    <GlossaryDescription title="Word variants over time" >
+                        <Typography component="p" variant="body2" id="Word variants over time">
+                            The "horizon chart" or "horizon graph" used in this visualization shows the usage of the word variants over time. Because the variability of the usage of paradigms is very high and we want to show the usage of several different paradigms at once, we have chosen this format to limit the amount of vertical space needed. The chart should be interpreted in the following manner:<br />
+                            <span><img src={horizonchart1} /></span><br />
+                            
+                        </Typography>
+                    </GlossaryDescription>
+                    <GlossaryDescription title="OCR Postcorrection view" >
+                        <Typography component="p" variant="body2" id="OCR Postcorrection view">
+                            In this chart, the multitude of words that have been postcorrected by the TICCL software are displayed. The distance to the search word is proportional to the levenshtein distance of the edits needed to get from the corrected variant to the source word. In case multiple successive edits would need to be done, the word variants are displayed with connecting lines.<br />
+                            For example, in the red outlined section of the image below, we can see the baseword in the center "binnenlandsche", the first edit "binnenlandiche" with levenshtein distance(ld) 1, the second edit (ld2) "binnenlandfiche" and the third edits (lv3) "binnenland-fiche", "binnenlanafiche" and "binnenlandfichè".<br />
+                            <span><img src={ocrpostcorrectionimg} /></span><br />
+                            
+                        </Typography>
                     </GlossaryDescription>
                     <GlossaryDescription title="Paradigm network" >
                         <Typography component="p" variant="body2" id="Paradigm network">
