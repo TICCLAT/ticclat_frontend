@@ -1,25 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import GlossaryDescription from '../components/GlossaryDescription';
 import TicclatDialog from '../components/TicclatDialog';
 
 
 const glossary = () => {
-    const [biText, setbiText] = useState('');
+    const [bibTex, setbibTex] = useState('');
+    const textToCopyRef = useRef(null);
+    const copyToClipboard = (e: any) => {
+        textToCopyRef.current.select();
+        document.execCommand('copy')
+        e.target.focus()
+    }
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12}>
                 <Paper>
-                    {biText &&
+                    {bibTex &&
                         <TicclatDialog
                             title={'BibTex'}
-                            onClose={() => setbiText('')}
+                            onClose={() => setbibTex('')}
+                            copyToClipboard={copyToClipboard}
                         >
-                            <pre
+                            <textarea ref={textToCopyRef} defaultValue={bibTex} readOnly />
+                            {/* <pre
+
                                 dangerouslySetInnerHTML={{
                                     __html: biText
                                 }}
-                            />
+                            /> */}
                         </TicclatDialog>
                     }
                     <GlossaryDescription title="Anagram hashing" >
@@ -27,15 +36,14 @@ const glossary = () => {
                             A system of calculating with words developed by Martin Reynaert in the course of his PhD work
                             <a
                                 href="#"
-                                onClick={() => setbiText(
-                                    `
-                                            @PhdThesis{Reynaert05,
-                                            author = {Reynaert, Martin},
-                                            title = {{T}ext-{I}nduced {S}pelling {C}orrection},
-                                            year = {2005},
-                                            school = {Tilburg University},
-                                            url = {http://ilk.uvt.nl/~mre/TISC.PhD.MartinReynaert.pdf.gz}
-                                            }`
+                                onClick={() => setbibTex(
+                                    `@PhdThesis{Reynaert05,
+                                        author = {Reynaert, Martin},
+                                        title = {{T}ext-{I}nduced {S}pelling {C}orrection},
+                                        year = {2005},
+                                        school = {Tilburg University},
+                                        url = {http://ilk.uvt.nl/~mre/TISC.PhD.MartinReynaert.pdf.gz}
+                                        }`
 
                                 )}
                             >
@@ -64,9 +72,8 @@ const glossary = () => {
                             The 'Format for Linguistic Annotations' or FoLiA xml is described in
                             <a
                                 href="#"
-                                onClick={() => setbiText(
-                                    `
-                                        @article{vanGompelReynaert2013,
+                                onClick={() => setbibTex(
+                                    ` @article{vanGompelReynaert2013,
                                             title = {{F}o{L}i{A}: {A} practical {XML} {F}ormat for {L}inguistic {A}nnotation - a descriptive and comparative study},
                                             journal = {Computational Linguistics in the Netherlands Journal},
                                             volume = {3},
@@ -75,7 +82,6 @@ const glossary = () => {
                                             url = {http://www.clinjournal.org/sites/clinjournal.org/files/05-vanGompel-Reynaert-CLIN2013.pdf},
                                             year = {2013}
                                         }
-                                        
                                         `
 
                                 )}
@@ -84,7 +90,7 @@ const glossary = () => {
                             </a>. A paper about the larger FoLiA infrastructure and tools:
                             <a
                                 href="#"
-                                onClick={() => setbiText(
+                                onClick={() => setbibTex(
                                     `@incollection{CLARINLOW2017a,
                                             booktitle = {{CLARIN-NL} in the Low Countries},
                                             editor = {Odijk, J. and van Hessen, A.},
@@ -128,7 +134,7 @@ const glossary = () => {
                                  (
                             <a
                                 href="#"
-                                onClick={() => setbiText(
+                                onClick={() => setbibTex(
                                     `@TechReport{Khmaladze1987,
                                             author = {Khmaladze, E.V.},
                                             title = {The statistical analysis of large number of rare events},
@@ -144,7 +150,7 @@ const glossary = () => {
                             ;
                             <a
                                 href="#"
-                                onClick={() => setbiText(
+                                onClick={() => setbibTex(
                                     `@book{Baayen01,
                                             Address = {Dordrecht},
                                             Author = {R. Harald Baayen},
@@ -180,7 +186,7 @@ const glossary = () => {
                             The Nederlab project has brought together the major collections of digitized texts relevant to the Dutch national heritage (c. A.D. 800 -- present) running to about 18.5 billion word tokens in a unified text format, i.e. FoLiA XML. Book chapter about the Nederlab project and portal, available in Open Access:
                             <a
                                 href="#"
-                                onClick={() => setbiText(
+                                onClick={() => setbibTex(
                                     ` @InProceedings{Brugman2016,
                                             author = {Brugman, Hennie and Reynaert, Martin and van der Sijs, Nicoline and {van Stipriaan}, Ren{\'e} and Tjong Kim Sang, Erik and van den Bosch, Antal},
                                             title = {{Nederlab:   Towards  a  Single  Portal  and  Research Environment for Diachronic Dutch Text Corpora.}},
