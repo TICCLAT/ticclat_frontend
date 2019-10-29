@@ -5,11 +5,11 @@ import React from 'react';
 const about = () => {
     return (
         <Paper>
-            <Typography variant="h5" align="center" color="primary">Ticclat</Typography>
+            <Typography variant="h5" align="center" color="primary">About</Typography>
             <Typography variant="body2" component="p">
                 The TICCLAT Explorer was initially developed by the <a href="https://www.esciencecenter.nl/">Netherlands eScience Center</a>  as part of the project entitled
                     <strong>“TICCLAT: Text-Induced Corpus Correction and Lexical Assessment Tool ” </strong>awarded to dr. Martin Reynaert.
-            For more information about the TICCLAT explorer contact dr. Martin Reynaert.
+    For more information about the TICCLAT explorer contact dr. Martin Reynaert.
                         <br />The code can be found here:<a href="https://github.com/TICCLAT" target="_blank"> https://github.com/TICCLAT</a>
                 {/* If you used this tool, please cite the software as follows: */}
             </Typography>

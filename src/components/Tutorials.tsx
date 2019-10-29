@@ -19,7 +19,7 @@ const tutorials = () => {
             <Typography variant="body2" component="div">
                 "Overview" section provides access to Searchbar and six different tabs.<br />
                 Screen by default shows information for the dutch word "regering", which is the contemporary Dutch lemma for the word 'government'.
-                You can search for any word by typing it in search bar and pressing search icon.<br />
+                You can search for any word by typing it in search bar and clicking on search icon or pressing "Enter" key.<br />
                 <ul>
                     <li><strong>Word Usage Over Time:</strong> <br />
                         <ul>
