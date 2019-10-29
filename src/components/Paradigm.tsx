@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+
 import React from 'react';
 import { backendURL } from '../settings';
 import ParadigmTable from './ParadigmTable/ParadigmTable';
@@ -10,6 +10,10 @@ export interface IProps {
 
 export interface IVariant {
   V: number,
+  W: number,
+  X: number,
+  Y: number,
+  Z: number,
   word_type_code: string,
   wordform: string,
   min_year: number | null,

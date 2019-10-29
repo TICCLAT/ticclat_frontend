@@ -57,7 +57,7 @@ class ParadigmHeader extends React.Component<IProps, {}> {
                             return (
                                 <TableCell
                                     key={row.id}
-                                    align={'left'}
+                                    align={row.id === 'V' ? 'center' : 'left'}
                                     sortDirection={orderBy === row.id ? order : false}
                                 >
                                     <Tooltip

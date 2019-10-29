@@ -72,7 +72,7 @@ const Row = (
                     word={variant.wordform as string}
                 />
             </TableCell>
-            <TableCell>{variant.V}</TableCell>
+            <TableCell>{"Z" + variant.Z + "Y" + variant.Y + "X" + variant.X + "W" + variant.W + "V" + variant.V}</TableCell>
             <TableCell>{variant.word_type_code}</TableCell>
             <TableCell>{variant.min_year || '?'}</TableCell>
             <TableCell>{variant.max_year || '?'}</TableCell>
