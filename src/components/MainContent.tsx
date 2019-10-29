@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: theme.spacing(3),
         paddingBottom: theme.spacing(3),
-        paddingLeft: theme.spacing(5),
+        paddingLeft: 0
     },
 }));
 export interface IProps {

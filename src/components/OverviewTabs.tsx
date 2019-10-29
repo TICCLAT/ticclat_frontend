@@ -39,7 +39,6 @@ function TabPanel(props: TabPanelProps) {
       role="tabpanel"
       id={`wrapped-tabpanel-${index}`}
       aria-labelledby={`wrapped-tab-${index}`}
-      style={{ margin: 20 }}
       {...other}
 
     >
@@ -72,7 +71,7 @@ const OverviewTabs = (props: IProps) => {
         onChange={handleChange}
         indicatorColor="primary"
         textColor="primary"
-        variant="fullWidth"
+        centered
       >
         <Tab label="Word usage over time" />
         <Tab label="Paradigms Table" />
