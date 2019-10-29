@@ -32,6 +32,7 @@ const glossary = () => {
                             /> */}
                         </TicclatDialog>
                     }
+                    <Typography variant="h5" color="primary" align="center">Glossary</Typography>
                     <GlossaryDescription title="Anagram hashing" >
                         <Typography variant="body2" id="Anagram hashing">
                             A system of calculating with words developed by Martin Reynaert in the course of his PhD work

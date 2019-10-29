@@ -8,7 +8,7 @@ const GlossaryDescription = (props: IProps) => {
     const { title, children } = props;
     return (
         <>
-            <Typography variant="h5" display="block" gutterBottom color="primary">{title}</Typography>
+            <Typography variant="subtitle1" display="block" color="primary">{title}</Typography>
             {children}
         </>
     )
