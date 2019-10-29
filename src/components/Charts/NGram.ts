@@ -111,6 +111,7 @@ export class NGramChart {
         }
     }
     setUpradioButtons() {
+        d3.select("#chart").selectAll("form").remove();
         const labels = [
             {
                 "name": "Absolute Corpus Frequency",
