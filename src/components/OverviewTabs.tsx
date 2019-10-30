@@ -76,8 +76,8 @@ const OverviewTabs = (props: IProps) => {
         <Tab label="Word usage over time" />
         <Tab label="Paradigms Table" />
         <Tab label="Word variants over time" />
-        <Tab label="OCR Postcorrection view" />
         <Tab label="Paradigm network" />
+        <Tab label="OCR Postcorrection view" />
         <Tab label="Database Overview" />
       </Tabs>
 
@@ -133,8 +133,8 @@ const OverviewTabs = (props: IProps) => {
 
             <Grid item={true} xs={12} md={12} lg={12}>
               <Paper >
-                <Header title={searchValue} section="OCR Postcorrection view" />
-                <OCRPostcorrectionChartContainer wordform={searchValue} />
+                <Header title="" section="Paradigm network" />
+                <ParadigmNetwork />
               </Paper>
             </Grid>
           </TabPanel>
@@ -146,13 +146,14 @@ const OverviewTabs = (props: IProps) => {
 
             <Grid item={true} xs={12} md={12} lg={12}>
               <Paper >
-                <Header title="" section="Paradigm network" />
-                <ParadigmNetwork />
+                <Header title={searchValue} section="OCR Postcorrection view" />
+                <OCRPostcorrectionChartContainer wordform={searchValue} />
               </Paper>
             </Grid>
           </TabPanel>
         )
       }
+
       {
         selectedTab === 5 && (
           <TabPanel value={selectedTab} index="six">
