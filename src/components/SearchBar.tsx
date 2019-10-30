@@ -50,7 +50,8 @@ const SearchBar = (props: IProps) => {
 
     useEffect(() => {
         if (wordform) {
-            return setSearchValue(wordform)
+            return setSearchValue(wordform.toLowerCase())   // For case insensitive search 
+            // return setSearchValue(wordform)          // For case sensitive
         }
     }, [wordform])
 

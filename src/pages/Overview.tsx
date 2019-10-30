@@ -14,7 +14,8 @@ const overview = ({ history }: RouteComponentProps) => {
         if (location.search) {
             const param = new URLSearchParams(location.search)
             const value = param.get('searching')
-            return setSearchValue(value!)
+            return setSearchValue(value!.toLowerCase())    // For Case Insensitive
+            // return setSearchValue(value!)                // For Case Sensitive
         }
         /** Set Default serach value  */
         const searchWordform = localStorage.getItem('searchValue')
@@ -24,8 +25,11 @@ const overview = ({ history }: RouteComponentProps) => {
 
     // set Search Value on pressing search button or Enter in search bar 
     const setValue = (value: string) => {
-        localStorage.setItem('searchValue', value)
-        setSearchValue(value)
+        localStorage.setItem('searchValue', value.toLowerCase())  // For Case Insensitive
+        // localStorage.setItem('searchValue', value)   // For Case Sensitive
+        setSearchValue(value.toLowerCase()) // For Case Insensitive
+        // setSearchValue(value)   // For Case Sensitive
+
     }
 
 

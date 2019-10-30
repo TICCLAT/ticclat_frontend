@@ -59,9 +59,15 @@ const AddButton = withRouter((props: { word: string, index: number } & RouteComp
     if (event.target.id === 'search' || event.target.parentElement.id === 'search') {
       props.history.push({
         pathname: '/overview',
-        search: '?searching=' + word
+        search: '?searching=' + word.toLowerCase()
       })
-      localStorage.setItem('searchValue', word)
+      /*  For Case Sensitive
+        props.history.push({
+          pathname: '/overview',
+          search: '?searching=' + word
+        })*/
+      localStorage.setItem('searchValue', word.toLowerCase())  // For Case Insensitive
+      // localStorage.setItem('searchValue', word)  // For Case Sensitive
       const chart = document.getElementById('chart')
       if (chart !== null) { chart.scrollIntoView({ behavior: 'smooth', block: 'center' }) }
       return

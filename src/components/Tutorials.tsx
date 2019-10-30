@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import video from '../assets/video/overview_word_usage.mp4';
-const tutorials = () => {
+const Tutorials = () => {
     return (
         <>
             <Typography variant="h5" align="center" color="primary">Tutorial</Typography>
@@ -52,4 +52,4 @@ const tutorials = () => {
     )
 }
 
-export default tutorials;
+export default Tutorials;
