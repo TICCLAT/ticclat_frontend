@@ -15,7 +15,29 @@ For more information about the TICCLAT explorer contact dr. Martin Reynaert
                     <MailIcon />
                 </IconButton>
                 <br />The code can be found here:<a href="https://github.com/TICCLAT" target="_blank"> https://github.com/TICCLAT</a>
-                {/* If you used this tool, please cite the software as follows: */}
+              <p>
+                If you used this tool, please cite the software as follows:<br/>
+                <pre
+                  style={{marginLeft: '2em'}}
+                  dangerouslySetInnerHTML={{__html: `
+@software{pawar_pushpanjali_2019_3520462,
+  author       = {Pawar, Pushpanjali and
+  Mendrik, Adriënne and
+  van Meersbergen, Maarten and
+  Bos, Patrick and
+  Klaver, Tom and
+  van der Zwaan, Janneke and
+  Reynaert, Martin},
+  title        = {TICCLAT},
+  month        = oct,
+  year         = 2019,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.3520455},
+  url          = {https://doi.org/10.5281/zenodo.3520455}
+}
+                    `}}
+                />
+              </p>
             </Typography>
             <Typography variant="subtitle1" color="primary">Acknowledgements</Typography>
             <Typography component="div" variant="body2">
