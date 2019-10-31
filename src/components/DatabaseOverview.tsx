@@ -44,21 +44,21 @@ const DatabaseOverview = () => {
         <Grid item xs={12} className={classes.plotContainerBig}>
           <BokehPlot source="/plots/word_count_per_year" />
         </Grid>
-        <Grid item xs={12} className={classes.plotContainerBig}>
-          <Paper>
-            <Grid container>
-              <Grid item xs={4} className={classes.plotContainerSmall}>
-                <BokehPlot source="/plots/paradigm_size?var=X" />
-              </Grid>
-              <Grid item xs={4} className={classes.plotContainerSmall}>
-                <BokehPlot source="/plots/paradigm_size?var=Y" />
-              </Grid>
-              <Grid item xs={4} className={classes.plotContainerSmall}>
-                <BokehPlot source="/plots/paradigm_size?var=Z" />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
+        {/*<Grid item xs={12} className={classes.plotContainerBig}>*/}
+        {/*  <Paper>*/}
+        {/*    <Grid container>*/}
+        {/*      <Grid item xs={4} className={classes.plotContainerSmall}>*/}
+        {/*        <BokehPlot source="/plots/paradigm_size?var=X" />*/}
+        {/*      </Grid>*/}
+        {/*      <Grid item xs={4} className={classes.plotContainerSmall}>*/}
+        {/*        <BokehPlot source="/plots/paradigm_size?var=Y" />*/}
+        {/*      </Grid>*/}
+        {/*      <Grid item xs={4} className={classes.plotContainerSmall}>*/}
+        {/*        <BokehPlot source="/plots/paradigm_size?var=Z" />*/}
+        {/*      </Grid>*/}
+        {/*    </Grid>*/}
+        {/*  </Paper>*/}
+        {/*</Grid>*/}
       </Grid>
     </Container>
   )
