@@ -31,7 +31,7 @@ const Paradigms = ({ wordform }: IProps) => {
   }, [wordform]);
 
   const Cards = lemmas.length > 0 ? lemmas.map(lemma => (
-    <Paradigm id={lemma.paradigm_id} key={lemma.paradigm_id} />
+    <Paradigm id={lemma.paradigm_id} key={lemma.paradigm_id} wordform={wordform} />
   ))
     : <p>No Paradigms found for the word <strong>{wordform}</strong> </p>;
 

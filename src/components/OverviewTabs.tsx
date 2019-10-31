@@ -18,9 +18,9 @@ interface TabPanelProps {
 }
 
 // Header Component for Tab Panel
-const Header = ({ title, section }: { title: string, section: string }) => {
+export const Header = ({ title, section }: { title: string, section: string }) => {
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', flex: 1 }}>
       <Typography variant="h6" id="tableTitle" align='center' style={{ flex: 8 }}>
         {title}
       </Typography>
@@ -102,10 +102,9 @@ const OverviewTabs = (props: IProps) => {
       {
         selectedTab === 1 && (
           <TabPanel value={selectedTab} index="two">
-
             <Grid item={true} xs={12} md={12} lg={12}>
               <Paper>
-                <Header title={searchValue} section="paradigm" />
+                {/* <Header title={searchValue} section="paradigm" /> */}
                 {searchValue !== '' ? <Paradigms wordform={searchValue} /> : null}
               </Paper>
             </Grid>

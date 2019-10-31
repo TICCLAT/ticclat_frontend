@@ -6,6 +6,7 @@ import LoadingIndicator from './LoadingIndiacator';
 
 export interface IProps {
   id: number;
+  wordform: string;
 }
 
 export interface IVariant {
@@ -24,7 +25,7 @@ export interface IVariant {
   num_paradigms: number,
 }
 
-const Paradigm = ({ id }: IProps) => {
+const Paradigm = ({ id, wordform }: IProps) => {
   const [variants, setVariants] = React.useState<IVariant[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   let content = null;
@@ -37,7 +38,7 @@ const Paradigm = ({ id }: IProps) => {
       });
   }, [id]);
 
-  const variant = variants.length > 0 ? <ParadigmTable variants={variants} /> : <p>No Variants</p>
+  const variant = variants.length > 0 ? <ParadigmTable variants={variants} wordform={wordform} /> : <p>No Variants</p>
   content = isLoading ? <LoadingIndicator /> : variant
 
   return content
