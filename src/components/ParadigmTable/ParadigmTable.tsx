@@ -72,6 +72,7 @@ const Row = (
                     word={variant.wordform as string}
                 />
             </TableCell>
+            <TableCell>{variant.frequency}</TableCell>
             <TableCell>{"Z" + variant.Z + "Y" + variant.Y + "X" + variant.X + "W" + variant.W + "V" + variant.V}</TableCell>
             <TableCell>{variant.word_type_code}</TableCell>
             <TableCell>{variant.min_year || '?'}</TableCell>
@@ -87,7 +88,7 @@ class ParadigmTable extends React.Component<IProps, IState> {
     static contextType = ShoppingBagContext;
     state = {
         order: 'asc' as Order,
-        orderBy: 'num_corpora',
+        orderBy: 'frequency',
         selected: [],
     };
 

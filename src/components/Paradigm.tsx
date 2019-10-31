@@ -14,6 +14,7 @@ export interface IVariant {
   X: number,
   Y: number,
   Z: number,
+  frequency: number,
   word_type_code: string,
   wordform: string,
   min_year: number | null,
