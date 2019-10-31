@@ -16,15 +16,25 @@ interface IProps {
     wordform: string
 }
 
-const DEFAULT_FREQUENCY_FILTER = 10;
-const DEFAULT_N_WORDS_FILTER = 150;
+const makeFilter = (min: number, max: number, defaultValue: number, nMarks: number) => ({
+    min,
+    max,
+    defaultValue,
+    marks: Array(nMarks + 1).fill(null).map((_, i) => {
+        const value = min + i * (max - min) / nMarks;
+        return {value, label: Math.floor(value)};
+    }),
+    step: (max - min) / 100,
+});
+const FREQUENCY_FILTER = makeFilter(0, 100, 0, 5);
+const N_WORDS_FILTER = makeFilter(0, 500, 100, 5);
 
 export default class OCRPostCorrectionChartContainer extends React.Component<IProps, IState> {
     state: IState = {
         info: null,
         isLoading: true,
-        frequencyFilter: DEFAULT_FREQUENCY_FILTER,
-        nWordsFilter: DEFAULT_N_WORDS_FILTER,
+        frequencyFilter: FREQUENCY_FILTER.defaultValue,
+        nWordsFilter: N_WORDS_FILTER.defaultValue,
     }
     public componentDidUpdate(prevProps: IProps) {
         if (prevProps.wordform !== this.props.wordform) {
@@ -71,13 +81,13 @@ export default class OCRPostCorrectionChartContainer extends React.Component<IPr
                                     Filter all words below this frequency
                                 </Typography>
                                 <Slider
-                                  defaultValue={DEFAULT_FREQUENCY_FILTER}
+                                  defaultValue={FREQUENCY_FILTER.defaultValue}
                                   aria-labelledby="label-frequency-filter"
-                                  valueLabelDisplay="auto"
+                                  valueLabelDisplay="on"
                                   step={1}
-                                  marks
-                                  min={0}
-                                  max={100}
+                                  marks={FREQUENCY_FILTER.marks}
+                                  min={FREQUENCY_FILTER.min}
+                                  max={FREQUENCY_FILTER.max}
                                   onChange={(e, val) => {
                                       this.setState({frequencyFilter: val as number});
                                       this.update();
@@ -89,13 +99,13 @@ export default class OCRPostCorrectionChartContainer extends React.Component<IPr
                                     Maximum # of words to display
                                 </Typography>
                                 <Slider
-                                  defaultValue={DEFAULT_N_WORDS_FILTER}
+                                  defaultValue={N_WORDS_FILTER.defaultValue}
                                   aria-labelledby="label-words-filter"
-                                  valueLabelDisplay="auto"
-                                  step={10}
-                                  marks
-                                  min={100}
-                                  max={1500}
+                                  valueLabelDisplay="on"
+                                  step={N_WORDS_FILTER.step}
+                                  marks={N_WORDS_FILTER.marks}
+                                  min={N_WORDS_FILTER.min}
+                                  max={N_WORDS_FILTER.max}
                                   onChange={(e, val) => {
                                       this.setState({nWordsFilter: val as number});
                                       this.update();

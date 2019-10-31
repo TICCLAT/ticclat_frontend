@@ -204,6 +204,10 @@ export const drawChart = (correctionsData: ICorrectionsQueryData,
 
 
     if (root) {
+        const text = d3.select("#OCRPostCorrectionChart")
+          .append("text")
+          .text(`Words displayed: ${treeData.length} out of ${filteredData.length}, words filtered: ${correctionsData.corrections.length - filteredData.length}`)
+
         const svg = d3.select("#OCRPostCorrectionChart").append("svg")
             .attr("width", chartWidth + chartMargins.left + chartMargins.right)
             .attr("height", chartHeight + chartMargins.top + chartMargins.bottom)
