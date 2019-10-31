@@ -1,7 +1,7 @@
 import React from 'react';
 import { backendURL } from '../settings';
 import Paradigm from './Paradigm';
-import LoadingIndicator from './LoadingIndiacator';
+import LoadingIndicator from './LoadingIndicator';
 
 export interface IProps {
   wordform: string;

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as d3Legend from 'd3-svg-legend';
 
-import { ILemma, ICorrections, ICorrectionsQueryData } from '../../../../types';
+import { ILemma, ICorrections, ICorrectionsQueryData } from '../../../types';
 
 interface IIntegratedData extends ILemma {
     wordform: string,

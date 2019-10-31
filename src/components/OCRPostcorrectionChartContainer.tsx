@@ -1,10 +1,10 @@
 import Paper from '@material-ui/core/Paper';
 import Slider from '@material-ui/core/Slider';
 import React from 'react';
-import { drawChart } from './Charts/OCRPostCorrection/OCRPostCorrectionChart';
+import { drawChart } from './Charts/OCRPostCorrectionChart';
 import { backendURL } from '../settings';
 import { Typography } from '@material-ui/core';
-import LoadingIndicator from './LoadingIndiacator';
+import LoadingIndicator from './LoadingIndicator';
 
 interface IState {
     info: any,

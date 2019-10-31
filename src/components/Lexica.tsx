@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableHead, TableCell, TableRow } from '@material-ui/core';
 import { Check, Close } from '@material-ui/icons';
 import { backendURL } from '../settings';
-import LoadingIndicator from './LoadingIndiacator';
+import LoadingIndicator from './LoadingIndicator';
 // Declare Prop Type
 export interface IProps {
     wordform: string;

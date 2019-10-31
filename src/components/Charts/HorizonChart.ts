@@ -11,6 +11,8 @@ interface IHorizonchartData {
     key: string,
     values: IHorizonchartFrequencyEntry[],
     sum: number,
+    startTime: Date,
+    medianTime: Date,
     clip: any,
     path: any
 }
@@ -33,7 +35,7 @@ function pathuid() {
     return { id, href: window.location + "#" + id, s: "url(" + window.location + "#" + id + ")" }
 }
 
-export const drawChart = (variantsData: IVariantsQueryData) => {
+export const drawChart = (variantsData: IVariantsQueryData, sortingmethod: string) => {
     const horizonchartMargin = ({ top: 30, right: 10, bottom: 0, left: 10 });
     const horizonchartWidth = parseInt(d3.select('#horizonchart').style('width'), 10);
 
@@ -73,16 +75,26 @@ export const drawChart = (variantsData: IVariantsQueryData) => {
                 for (const [key, value] of Object.entries(allFrequencies)) {
                     listedFrequencies.push({ name: variant.wordform, date: new Date(key), value });
                 }
-                listedFrequencies.sort((a, b) => a.date.getTime() - b.date.getTime());
+                
+                listedFrequencies.sort((a, b) => a.date.getTime() - b.date.getTime());                
                 if (listedFrequencies.length > 0) {
-                    result.push({ key: variant.wordform, values: listedFrequencies, sum, clip: {}, path: {} });
+                    result.push({ key: variant.wordform, values: listedFrequencies, sum, startTime: listedFrequencies[0].date, medianTime: listedFrequencies[Math.floor(listedFrequencies.length/2)].date ,clip: {}, path: {} });
                 }
             });
         });
         const keys = result.map(r => r.key);
         const deduplicatedResult = result.filter((value, index, self) => keys.indexOf(value.key) === index)
 
-        deduplicatedResult.sort((a, b) => b.sum - a.sum);
+        if (sortingmethod === 'frequency') {
+            deduplicatedResult.sort((a, b) => b.sum - a.sum);
+        } else if (sortingmethod === 'start-of-use-time') { 
+            deduplicatedResult.sort((a, b) => a.startTime.getUTCFullYear() - b.startTime.getUTCFullYear());
+        } else if (sortingmethod === 'median-of-use-time') { 
+            deduplicatedResult.sort((a, b) => a.medianTime.getUTCFullYear() - b.medianTime.getUTCFullYear());
+        } else {
+            deduplicatedResult.sort((a, b) => b.sum - a.sum);
+        }         
+
         return deduplicatedResult;
     }
 

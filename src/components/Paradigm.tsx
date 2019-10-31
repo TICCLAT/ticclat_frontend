@@ -2,7 +2,7 @@
 import React from 'react';
 import { backendURL } from '../settings';
 import ParadigmTable from './ParadigmTable/ParadigmTable';
-import LoadingIndicator from './LoadingIndiacator';
+import LoadingIndicator from './LoadingIndicator';
 
 export interface IProps {
   id: number;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 import { backendURL } from '../settings';
 import { IData } from '../../types';
-import LoadingIndicator from '../components/LoadingIndiacator';
+import LoadingIndicator from './LoadingIndicator';
 import { NGramChart } from './Charts/NGram';
 
 interface IProps {
