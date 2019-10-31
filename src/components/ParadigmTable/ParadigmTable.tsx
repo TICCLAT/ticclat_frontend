@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 
 import ParadigmHeader from './ParadigmHeader';
+import ParadigmToolbar from './ParadigmToolbar';
 import AddButton from '../ShoppingBag/AddButton';
 import { ShoppingBagContext } from '../../context/ShoppingBag';
 
@@ -45,17 +46,25 @@ export function desc<T>(a: T, b: T, orderBy: keyof T) {
 
 
 interface IProps {
-    variants: any
+    variants: any,
+    wordform: string;
 }
 interface IState {
     order: Order;  // state to save order to sort by (e.g 'asc' or 'dsc')
     orderBy: string; // state to save orderBy (e.g. frequency, year, corpora, etc)
     selected: string[]; // state to save selected word forms to add into bag of words
+    isFilter: boolean;
+    filterBy: string;
 }
 // Table Row Component
 const Row = (
-    { variant, isItemSelected, onClick }:
-        { variant: any, isItemSelected: boolean, onClick: (event: React.ChangeEvent<unknown>, checked: boolean, wordform: string) => void }
+    { variant, isItemSelected, onClick, onFilter }:
+        {
+            variant: any,
+            isItemSelected: boolean,
+            onClick: (event: React.ChangeEvent<unknown>, checked: boolean, wordform: string) => void,
+            onFilter: (filterByCode: string) => void
+        }
 ) => {
     return (
         <TableRow>
@@ -72,8 +81,9 @@ const Row = (
                     word={variant.wordform as string}
                 />
             </TableCell>
+            <TableCell>{variant.frequency}</TableCell>
             <TableCell>{"Z" + variant.Z + "Y" + variant.Y + "X" + variant.X + "W" + variant.W + "V" + variant.V}</TableCell>
-            <TableCell>{variant.word_type_code}</TableCell>
+            <TableCell onClick={() => onFilter(variant.word_type_code)}>{variant.word_type_code}</TableCell>
             <TableCell>{variant.min_year || '?'}</TableCell>
             <TableCell>{variant.max_year || '?'}</TableCell>
             <TableCell>{variant.num_corpora}</TableCell>
@@ -87,10 +97,17 @@ class ParadigmTable extends React.Component<IProps, IState> {
     static contextType = ShoppingBagContext;
     state = {
         order: 'asc' as Order,
-        orderBy: 'num_corpora',
+        orderBy: 'frequency',
         selected: [],
+        isFilter: false,
+        filterBy: 'HCL'
     };
-
+    filterData = (variants: any, filterBy: string) => {
+        if (filterBy === "None") {
+            return variants
+        };
+        return variants.filter((variant: any) => variant.word_type_code === filterBy)
+    }
     handleRequestSort = (event: any, property: any) => {
         const orderBy = property;
         let order = 'desc';
@@ -102,13 +119,15 @@ class ParadigmTable extends React.Component<IProps, IState> {
         this.setState({ order: order as Order, orderBy });
     }
     render() {
-        const { order, orderBy, selected } = this.state;
+        const { order, orderBy, selected, isFilter, filterBy } = this.state;
         const { variants } = this.props;
 
 
         const isSelected = (wordform: any) => selected.indexOf(wordform.toString()) !== -1;
-        const sortedData = stableSort(variants, getSorting(order, orderBy));
-
+        const sortedData = isFilter ? this.filterData(variants, filterBy) : stableSort(variants, getSorting(order, orderBy));
+        const getWordTypeCode = () => {
+            return variants.map((variant: any) => variant.word_type_code)
+        }
         const handleClick = (event: React.ChangeEvent<unknown>, checked: boolean, wordform: string) => {
             const selectedIndex = selected.indexOf(wordform);
             let newSelected: string[] = [];
@@ -140,24 +159,37 @@ class ParadigmTable extends React.Component<IProps, IState> {
         };
 
         return (
-            <Table aria-labelledby="tableTitle">
-                <ParadigmHeader
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={this.handleRequestSort}
-                    rowCount={variants.length}
-                    onSelectAllClick={handleSelectAllClick}
-                    numSelected={selected.length}
-                    isBagEmpty={this.context.words.length <= 0}
+            <div style={{ overflowX: 'auto' }}>
+                <ParadigmToolbar
+                    wordform={this.props.wordform}
+                    wordTypeCodes={getWordTypeCode()}
+                    onFilter={(filterByCode: string) => this.setState({ isFilter: true, filterBy: filterByCode })}
                 />
-                <TableBody>
-                    {sortedData.map((variant, index) => {
-                        const isItemSelected = this.context.words.includes(variant.wordform);
-                        // const isItemSelected = isSelected(variant.wordform);
-                        return <Row key={index} variant={variant} isItemSelected={isItemSelected} onClick={handleClick} />
-                    })}
-                </TableBody>
-            </Table>
+                <Table aria-labelledby="tableTitle">
+                    <ParadigmHeader
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={this.handleRequestSort}
+                        rowCount={variants.length}
+                        onSelectAllClick={handleSelectAllClick}
+                        numSelected={selected.length}
+                        isBagEmpty={this.context.words.length <= 0}
+                    />
+                    <TableBody>
+                        {sortedData.map((variant, index) => {
+                            const isItemSelected = this.context.words.includes(variant.wordform);
+                            // const isItemSelected = isSelected(variant.wordform);
+                            return <Row
+                                key={index}
+                                variant={variant}
+                                isItemSelected={isItemSelected}
+                                onClick={handleClick}
+                                onFilter={(filterByCode: string) => this.setState({ isFilter: true, filterBy: filterByCode })}
+                            />
+                        })}
+                    </TableBody>
+                </Table>
+            </div>
         );
     }
 }

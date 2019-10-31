@@ -47,6 +47,12 @@ const ShoppingBag = withRouter((props) => {
       deleteIcon={<DeleteIcon />}
       className={classes.item}
       onClick={() => {
+        /* props.history.push({
+          pathname: '/overview',
+          search: '?searching=' + word.toLowerCase(), // For Case Insensitive
+        })
+        localStorage.setItem('searchValue', word.toLowerCase())   // For Case Insensitive*/
+        // For Case Sensitive
         props.history.push({
           pathname: '/overview',
           search: '?searching=' + word,

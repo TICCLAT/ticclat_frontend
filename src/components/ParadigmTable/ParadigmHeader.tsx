@@ -27,7 +27,8 @@ class ParadigmHeader extends React.Component<IProps, {}> {
         // Declare title for each column 
         const rows = [
             { id: 'wordform', label: 'Wordform' },
-            { id: 'V', label: 'V' },
+            { id: 'frequency', label: 'Frequency' },
+            { id: 'V', label: 'Word Label(V)' },
             { id: 'word_type_code', label: 'Code' },
             { id: 'min_year', label: 'Min Year' },
             { id: 'max_year', label: 'Max Year' },
