@@ -76,8 +76,8 @@ export default class OCRPostCorrectionChartContainer extends React.Component<IPr
                 (
                     <>
                         <div style={{display: 'flex', flexDirection: 'horizontal'}}>
-                            <Paper style={{maxWidth: '200px', padding: '1em', marginRight: '1em'}}>
-                                <Typography id="label-frequency-filter" gutterBottom>
+                            <Paper style={{width: '400px', padding: '1em', marginRight: '1em'}}>
+                                <Typography id="label-frequency-filter" gutterBottom style={{marginBottom: '2em'}}>
                                     Filter all words below this frequency
                                 </Typography>
                                 <Slider
@@ -94,8 +94,8 @@ export default class OCRPostCorrectionChartContainer extends React.Component<IPr
                                   }}
                                 />
                             </Paper>
-                            <Paper style={{maxWidth: '200px', padding: '1em'}}>
-                                <Typography id="label-words-filter" gutterBottom>
+                            <Paper style={{width: '400px', padding: '1em'}}>
+                                <Typography id="label-words-filter" gutterBottom style={{marginBottom: '2em'}}>
                                     Maximum # of words to display
                                 </Typography>
                                 <Slider
